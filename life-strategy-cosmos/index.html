@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Life Strategy Cosmos - Grammy Edition</title>
+
+<style>
+
+  * {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+  }
+
+  
+
+  body {
+
+    font-family: 'Courier New', monospace;
+
+    overflow: hidden;
+
+    background: #000;
+
+  }
+
+  
+
+  #canvas {
+
+    display: block;
+
+    width: 100%;
+
+    height: 100vh;
+
+  }
+
+  
+
+  #ui {
+
+    position: fixed;
+
+    top: 20px;
+
+    left: 20px;
+
+    color: #fff;
+
+    z-index: 100;
+
+    background: rgba(0, 0, 0, 0.85);
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    border: 2px solid #00ffff;
+
+    max-width: 380px;
+
+    backdrop-filter: blur(15px);
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+  }
+
+  
+
+  #info {
+
+    position: fixed;
+
+    bottom: 20px;
+
+    right: 20px;
+
+    color: #fff;
+
+    z-index: 100;
+
+    background: rgba(0, 0, 0, 0.9);
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    border: 2px solid #ff00ff;
+
+    max-width: 500px;
+
+    max-height: 70vh;
+
+    overflow-y: auto;
+
+    backdrop-filter: blur(15px);
+
+    display: none;
+
+  }
+
+  
+
+  h1 {
+
+    color: #00ffff;
+
+    margin-bottom: 8px;
+
+    font-size: 20px;
+
+    text-shadow: 0 0 10px #00ffff;
+
+  }
+
+  
+
+  h2 {
+
+    color: #00ffff;
+
+    margin-bottom: 10px;
+
+    font-size: 16px;
+
+    margin-top: 10px;
+
+  }
+
+  
+
+  h3 {
+
+    color: #ff00ff;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    margin-top: 12px;
+
+  }
+
+  
+
+  p, li {
+
+    font-size: 12px;
+
+    line-height: 1.7;
+
+    color: #ccc;
+
+  }
+
+  
+
+  ul {
+
+    margin-left: 15px;
+
+    margin-top: 5px;
+
+  }
+
+  
+
+  .galaxy-item {
+
+    margin: 10px 0;
+
+    padding: 10px;
+
+    background: rgba(0, 255, 255, 0.08);
+
+    border-left: 4px solid #00ffff;
+
+    cursor: pointer;
+
+    transition: all 0.3s;
+
+    border-radius: 5px;
+
+  }
+
+  
+
+  .galaxy-item:hover {
+
+    background: rgba(0, 255, 255, 0.15);
+
+    transform: translateX(8px);
+
+    border-left-color: #ff00ff;
+
+  }
+
+  
+
+  .galaxy-item.grammy {
+
+    border-left-color: #ffd700;
+
+    background: rgba(255, 215, 0, 0.08);
+
+  }
+
+  
+
+  .galaxy-item.grammy:hover {
+
+    background: rgba(255, 215, 0, 0.15);
+
+  }
+
+  
+
+  .controls {
+
+    margin-top: 15px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #00ffff;
+
+    font-size: 11px;
+
+  }
+
+  
+
+  #quote {
+
+    position: fixed;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    color: #fff;
+
+    font-size: 28px;
+
+    text-align: center;
+
+    z-index: 50;
+
+    opacity: 0;
+
+    transition: opacity 1.5s;
+
+    pointer-events: none;
+
+    text-shadow: 0 0 30px #00ffff, 0 0 60px #ff00ff;
+
+    max-width: 80%;
+
+    font-weight: bold;
+
+  }
+
+  
+
+  .active {
+
+    opacity: 1 !important;
+
+  }
+
+  
+
+  .tag {
+
+    display: inline-block;
+
+    background: rgba(255, 0, 255, 0.3);
+
+    padding: 3px 8px;
+
+    border-radius: 4px;
+
+    font-size: 10px;
+
+    margin: 2px;
+
+    border: 1px solid rgba(255, 0, 255, 0.5);
+
+  }
+
+  
+
+  .tag.critical {
+
+    background: rgba(255, 0, 0, 0.3);
+
+    border-color: rgba(255, 0, 0, 0.5);
+
+  }
+
+  
+
+  .tag.grammy {
+
+    background: rgba(255, 215, 0, 0.3);
+
+    border-color: rgba(255, 215, 0, 0.5);
+
+  }
+
+  
+
+  .tag.foundation {
+
+    background: rgba(0, 255, 255, 0.3);
+
+    border-color: rgba(0, 255, 255, 0.5);
+
+  }
+
+  
+
+  .wisdom {
+
+    background: rgba(255, 215, 0, 0.1);
+
+    border-left: 3px solid #ffd700;
+
+    padding: 10px;
+
+    margin: 10px 0;
+
+    font-style: italic;
+
+    border-radius: 5px;
+
+  }
+
+  
+
+  .saturn-note {
+
+    background: rgba(138, 43, 226, 0.15);
+
+    border: 1px solid #8a2be2;
+
+    padding: 8px;
+
+    margin: 8px 0;
+
+    border-radius: 5px;
+
+    font-size: 11px;
+
+  }
+
+  
+
+  #stats {
+
+    position: fixed;
+
+    top: 20px;
+
+    right: 20px;
+
+    background: rgba(0, 0, 0, 0.85);
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    border: 2px solid #ffd700;
+
+    color: #ffd700;
+
+    font-size: 12px;
+
+    backdrop-filter: blur(15px);
+
+    min-width: 200px;
+
+  }
+
+  
+
+  .stat-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin: 5px 0;
+
+  }
+
+  
+
+  .energy-bar {
+
+    width: 100%;
+
+    height: 8px;
+
+    background: rgba(255, 255, 255, 0.2);
+
+    border-radius: 4px;
+
+    margin: 5px 0;
+
+    overflow: hidden;
+
+  }
+
+  
+
+  .energy-fill {
+
+    height: 100%;
+
+    background: linear-gradient(90deg, #00ffff, #ff00ff);
+
+    width: 75%;
+
+    border-radius: 4px;
+
+    animation: pulse 2s infinite;
+
+  }
+
+  
+
+  @keyframes pulse {
+
+    0%, 100% { opacity: 1; }
+
+    50% { opacity: 0.7; }
+
+  }
+
+  
+
+  ::-webkit-scrollbar {
+
+    width: 8px;
+
+  }
+
+  
+
+  ::-webkit-scrollbar-track {
+
+    background: rgba(0, 0, 0, 0.5);
+
+  }
+
+  
+
+  ::-webkit-scrollbar-thumb {
+
+    background: rgba(0, 255, 255, 0.5);
+
+    border-radius: 4px;
+
+  }
+
+  
+
+  ::-webkit-scrollbar-thumb:hover {
+
+    background: rgba(255, 0, 255, 0.7);
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="stats">
+
+  <h3 style="margin: 0 0 10px 0; text-align: center;">⚡ LIFE STATS</h3>
+
+  <div class="stat-row">
+
+    <span>Energy:</span>
+
+    <span>HIGH</span>
+
+  </div>
+
+  <div class="energy-bar">
+
+    <div class="energy-fill"></div>
+
+  </div>
+
+  <div class="stat-row">
+
+    <span>Galaxies:</span>
+
+    <span>7</span>
+
+  </div>
+
+  <div class="stat-row">
+
+    <span>Grammy Path:</span>
+
+    <span>ACTIVE</span>
+
+  </div>
+
+  <div class="stat-row">
+
+    <span>Saturn Mode:</span>
+
+    <span>ON</span>
+
+  </div>
+
+</div>
+
+<div id="ui">
+
+  <h1>🌌 Life Strategy Cosmos</h1>
+
+  <p style="margin-bottom: 15px;">Navigate your galaxies. Click to explore deep strategy.</p>
+
+  
+
+  <div class="galaxy-item foundation" data-planet="0">
+
+    <strong>🎯 FOUNDATIONAL GROUND</strong><br>
+
+    <div class="tag foundation">Van Life</div>
+
+    <div class="tag foundation">Date4Location</div>
+
+    <div class="tag">Vehicle Status</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="1">
+
+    <strong>💼 FOUNDATIONAL AIR</strong><br>
+
+    <div class="tag">Job Apps</div>
+
+    <div class="tag">Phone Vibe Code</div>
+
+    <div class="tag">Freestyle King</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item grammy" data-planet="2">
+
+    <strong>🏆 THE GRAMMY GALAXY</strong><br>
+
+    <div class="tag grammy">Astrobeats</div>
+
+    <div class="tag grammy">3JS Shaders</div>
+
+    <div class="tag grammy">Sleeper Vocals</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="3">
+
+    <strong>🎓 NETWORKING STREAM</strong><br>
+
+    <div class="tag">Music School</div>
+
+    <div class="tag">Virtual Study Hall</div>
+
+    <div class="tag">UX Fiverr</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="4">
+
+    <strong>🛠️ EMPLOYMENT STACK</strong><br>
+
+    <div class="tag">Unity .NET</div>
+
+    <div class="tag">3JS GLSL</div>
+
+    <div class="tag">Marvel App</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="5">
+
+    <strong>🚗 TWO-GARAGE VAN STRATEGY</strong><br>
+
+    <div class="tag critical">Milwaukee Play</div>
+
+    <div class="tag">Airport Camper</div>
+
+    <div class="tag">Cooking Trailer</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="6">
+
+    <strong>🎵 MUSIC DISCOVERY → UNITY</strong><br>
+
+    <div class="tag">TikTok Ready</div>
+
+    <div class="tag">Environmental Design</div>
+
+    <div class="tag">Animation</div>
+
+  </div>
+
+  
+
+  <div class="controls">
+
+    <strong>Controls:</strong><br>
+
+    🖱️ Drag to rotate universe<br>
+
+    🔍 Scroll to zoom in/out<br>
+
+    🖱️ Click galaxies for deep dive<br>
+
+    💫 Watch for wisdom quotes
+
+  </div>
+
+</div>
+
+<div id="info">
+
+  <h3 id="info-title">Galaxy Info</h3>
+
+  <div id="info-content"></div>
+
+</div>
+
+<div id="quote">Saturn actually rewards itself.</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+
+// Scene setup
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+renderer.setPixelRatio(window.devicePixelRatio);
+
+camera.position.z = 35;
+
+// Lighting
+
+const ambientLight = new THREE.AmbientLight(0x404040, 2);
+
+scene.add(ambientLight);
+
+const pointLight1 = new THREE.PointLight(0x00ffff, 1.5, 100);
+
+pointLight1.position.set(15, 15, 15);
+
+scene.add(pointLight1);
+
+const pointLight2 = new THREE.PointLight(0xff00ff, 1.5, 100);
+
+pointLight2.position.set(-15, -15, 15);
+
+scene.add(pointLight2);
+
+// Enhanced Starfield
+
+const starsGeometry = new THREE.BufferGeometry();
+
+const starsMaterial = new THREE.PointsMaterial({ 
+
+  color: 0xffffff, 
+
+  size: 0.15,
+
+  transparent: true,
+
+  opacity: 0.8
+
+});
+
+const starsVertices = [];
+
+for (let i = 0; i < 5000; i++) {
+
+  const x = (Math.random() - 0.5) * 250;
+
+  const y = (Math.random() - 0.5) * 250;
+
+  const z = (Math.random() - 0.5) * 250;
+
+  starsVertices.push(x, y, z);
+
+}
+
+starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+
+const stars = new THREE.Points(starsGeometry, starsMaterial);
+
+scene.add(stars);
+
+// Galaxy data with FULL strategy
+
+const galaxyData = [
+
+  {
+
+    name: "FOUNDATIONAL GROUND",
+
+    color: 0x00ffff,
+
+    position: { x: 0, y: 0, z: 0 },
+
+    size: 3.5,
+
+    info: `
+
+      <div class="wisdom">"Two garage vans + vehicle in between = You could get a Grammy off of that for sure"</div>
+
+      
+
+      <h3>🏠 Van Life + Date4Location</h3>
+
+      <ul>
+
+        <li><strong>Milwaukee Strategy:</strong> Work at UWM in summer, rest in van, network East Side to Tossa</li>
+
+        <li>Come home to garage, record Astrobeat vocals with autotune</li>
+
+        <li><strong>Arizona Equivalent:</strong> Airport parker camper + cooking trailer + Honda Element</li>
+
+        <li>Land ownership payment (Eloy, AZ) - 45min out but it's YOURS</li>
+
+      </ul>
+
+      
+
+      <h3>🚗 Vehicle Strategy</h3>
+
+      <ul>
+
+        <li><strong>Critical:</strong> In-between vehicle status (Good/Bad) determines timeline</li>
+
+        <li>Airport sleeper at 100% + maintain in-between vehicle</li>
+
+        <li>Prepare for worst: If $30k Sprinter is a lemon, need Uber/DoorDash backup</li>
+
+        <li>You WILL run through vehicles, but you'll have energy + money saved</li>
+
+      </ul>
+
+      
+
+      <div class="saturn-note">🪐 <strong>Saturn Note:</strong> Redundancy = preparedness for when investment falls through</div>
+
+    `
+
+  },
+
+  {
+
+    name: "FOUNDATIONAL AIR",
+
+    color: 0xff6600,
+
+    position: { x: -12, y: 6, z: -6 },
+
+    size: 2.8,
+
+    info: `
+
+      <h3>💼 Employment Game</h3>
+
+      <ul>
+
+        <li><strong>Priority 1:</strong> Job applications</li>
+
+        <li><strong>Job Security:</strong> Test many jobs until you find one you don't want to quit</li>
+
+        <li>Tech money → S&P 500 investment (NOT risky van purchases)</li>
+
+        <li>On-site work = advantage in job security</li>
+
+        <li>Guitar sales = huge backup income stream</li>
+
+      </ul>
+
+      
+
+      <h3>📱 Things You Can Do Anywhere</h3>
+
+      <ul>
+
+        <li>Job applications</li>
+
+        <li>Phone vibe coding</li>
+
+        <li>Freestyle King (Brazilian & Thai)</li>
+
+      </ul>
+
+      
+
+      <h3>🌍 Date4Location Strategy</h3>
+
+      <ul>
+
+        <li>Uber + DoorDash flexibility</li>
+
+        <li>WeWork access</li>
+
+        <li>Burpeethon (eccentric fitness)</li>
+
+        <li>Basketball, bike, iron gym, dumbbells, kettlebell, soccer ball with van</li>
+
+      </ul>
+
+      
+
+      <div class="wisdom">"Everything you do until you get a tech job. But tech job might just funnel your marketing..."</div>
+
+    `
+
+  },
+
+  {
+
+    name: "THE GRAMMY GALAXY",
+
+    color: 0xffd700,
+
+    position: { x: 12, y: -4, z: -9 },
+
+    size: 3.2,
+
+    info: `
+
+      <div class="wisdom" style="border-color: #ffd700; background: rgba(255,215,0,0.2);">
+
+        "BRO, THIS WHERE YOU GET THE GRAMMY. This is the portfolio."
+
+      </div>
+
+      
+
+      <h3>🏆 Grammy Components</h3>
+
+      <ul>
+
+        <li><strong>Astrobeats:</strong> Stream during day → record vocals at night in garage</li>
+
+        <li><strong>3JS Shaders:</strong> For playing guitar (visual performances)</li>
+
+        <li><strong>Blender Output Pipeline:</strong> Essential knowledge</li>
+
+        <li><strong>Guitar Setlists:</strong> Living legend with this organization</li>
+
+        <li><strong>Sleeper Vocals:</strong> The edible work (consumable content)</li>
+
+      </ul>
+
+      
+
+      <h3>🎵 Music Discovery → Unity</h3>
+
+      <ul>
+
+        <li><strong>Most underrated piece:</strong> Music discovery WITH Unity 3D</li>
+
+        <li>Environmental & interior design video editor</li>
+
+        <li>Animation pipeline</li>
+
+        <li><strong>TikTok ready:</strong> This is what goes on social media</li>
+
+        <li>Use as break from job apps + vibe coding</li>
+
+      </ul>
+
+      
+
+      <div class="saturn-note">🪐 <strong>Saturn Work:</strong> Code and music work is consumable. You can re-consume what you create (like vape sharing)</div>
+
+    `
+
+  },
+
+  {
+
+    name: "NETWORKING STREAM",
+
+    color: 0xff00ff,
+
+    position: { x: 10, y: 10, z: 6 },
+
+    size: 2.5,
+
+    info: `
+
+      <h3>🎓 Quality of Life = Friends</h3>
+
+      <ul>
+
+        <li>Burpeethon with shower</li>
+
+        <li>Freestyle King networking</li>
+
+        <li>DJ bar events</li>
+
+        <li>Concerts & condo gym</li>
+
+        <li><strong>Music school stream:</strong> Networking built-in</li>
+
+      </ul>
+
+      
+
+      <h3>💻 Virtual Study Hall</h3>
+
+      <ul>
+
+        <li>Phone vibe code + UX</li>
+
+        <li>Host things virtually (no expensive Airbnb for dates)</li>
+
+        <li>Coffee shop = virtual study hall</li>
+
+        <li><strong>Crucial:</strong> Hire UX via Fiverr (don't do it yourself)</li>
+
+      </ul>
+
+      
+
+      <h3>⚠️ Heckler Alert</h3>
+
+      <ul>
+
+        <li>Watch for self-destructive people = undercover "friends"</li>
+
+        <li>Emotionally unstable = hecklers = useless long-term</li>
+
+        <li>Your abundance comes from compounding networking</li>
+
+      </ul>
+
+      
+
+      <div class="wisdom">"Airport, Uber, DoorDash = ways to get PAID to network. Lottery plays."</div>
+
+    `
+
+  },
+
+  {
+
+    name: "EMPLOYMENT STACK",
+
+    color: 0x00ff00,
+
+    position: { x: -10, y: -10, z: 4 },
+
+    size: 2.6,
+
+    info: `
+
+      <h3>🛠️ High-Value Skills Stack</h3>
+
+      <ul>
+
+        <li><strong>Unity (.NET):</strong> Environmental/interior design "video editor"</li>
+
+        <li><strong>3JS (GLSL):</strong> Shader work for web experiences</li>
+
+        <li><strong>MarvelApp:</strong> Prototyping & flows</li>
+
+        <li><strong>GitHub:</strong> ALL coding here (crucial for long-run)</li>
+
+      </ul>
+
+      
+
+      <h3>🎨 Utility Tools</h3>
+
+      <ul>
+
+        <li><strong>Figma:</strong> Design system</li>
+
+        <li><strong>Blender:</strong> 3D pipeline</li>
+
+        <li><strong>Canva:</strong> Quick graphics</li>
+
+        <li>Balsamiq, Google Draw</li>
+
+        <li>Fonts & Color Palettes</li>
+
+      </ul>
+
+      
+
+      <h3>📸 Shot Collection</h3>
+
+      <ul>
+
+        <li>Essential for interior design portfolio</li>
+
+        <li>Reference library for Unity environments</li>
+
+      </ul>
+
+      
+
+      <div class="saturn-note">
+
+        🪐 <strong>Energy Cost Reality:</strong> Job apps + shaders + astrobeats + freestyle king = HEFTY DAY. 
+
+        These are all high-value skills but maximize rest. Everything that isn't sleeper health COSTS energy.
+
+      </div>
+
+    `
+
+  },
+
+  {
+
+    name: "TWO-GARAGE VAN STRATEGY",
+
+    color: 0xff0066,
+
+    position: { x: -6, y: 8, z: -12 },
+
+    size: 2.4,
+
+    info: `
+
+      <div class="wisdom" style="background: rgba(255,0,102,0.15); border-color: #ff0066;">
+
+        "You could literally win a Grammy off of this Milwaukee strategy"
+
+      </div>
+
+      
+
+      <h3>🏙️ Milwaukee Two-Garage Play</h3>
+
+      <ul>
+
+        <li><strong>Summer:</strong> Work at UWM, rest in van</li>
+
+        <li><strong>Networking:</strong> East Side to Tossa routes</li>
+
+        <li><strong>Night:</strong> Come home to garage, record Astrobeat vocals</li>
+
+        <li>Autotune setup in garage = Grammy potential</li>
+
+      </ul>
+
+      
+
+      <h3>🌵 Arizona Equivalent</h3>
+
+      <ul>
+
+        <li><strong>Setup:</strong> Airport parker camper + cooking trailer + Honda Element</li>
+
+        <li>Cooking trailer = very crucial for income</li>
+
+        <li>Land in Eloy (45min out) vs trailer home in city</li>
+
+        <li><strong>Trade-off:</strong> Can't invite people back to place (use Airbnb or virtual)</li>
+
+      </ul>
+
+      
+
+      <h3>💰 Financial Flow</h3>
+
+      <ul>
+
+        <li>Every dollar → UI/UX Fiverr OR vehicle health</li>
+
+        <li>Both vehicles need maintenance</li>
+
+        <li>Always have Uber rental as backup</li>
+
+        <li>Times when you DON'T need money = huge advantage</li>
+
+      </ul>
+
+    `
+
+  },
+
+  {
+
+    name: "MUSIC DISCOVERY UNITY",
+
+    color: 0x8a2be2,
+
+    position: { x: 6, y: -8, z: 8 },
+
+    size: 2.7,
+
+    info: `
+
+      <div class="wisdom" style="background: rgba(138,43,226,0.2); border-color: #8a2be2;">
+
+        "Music discovery with Unity 3D is the MOST UNDERRATED ASPECT HERE"
+
+      </div>
+
+      
+
+      <h3>🎵 The Breakthrough Combo</h3>
+
+      <ul>
+
+        <li><strong>Music Discovery:</strong> Finding new sounds, styles, vibes</li>
+
+        <li><strong>+ Unity 3D:</strong> Environmental design, interior scenes, animation</li>
+
+        <li><strong>Output:</strong> TikTok-ready content (this is THE social media play)</li>
+
+      </ul>
+
+      
+
+      <h3>🎬 Production Pipeline</h3>
+
+      <ul>
+
+        <li>Use as BREAK from job apps + vibe coding</li>
+
+        <li>Last play of the day (after DJs, bartenders, events)</li>
+
+        <li>Environmental & interior design animation</li>
+
+        <li>Video editor capabilities through Unity</li>
+
+      </ul>
+
+      
+
+      <h3>📱 Social Media Afterthought</h3>
+
+      <ul>
+
+        <li>If you do social media right, DJ/concert networking becomes "extra credit"</li>
+
+        <li>"Oh yeah, I got one of the coolest social media accounts"</li>
+
+        <li>Takes ALL pressure off in-person networking</li>
+
+        <li>Becomes your "part of fortune"</li>
+
+      </ul>
+
+      
+
+      <div class="saturn-note">
+
+        🪐 <strong>Saturn & Aquarius Living:</strong> This is the moment-to-moment quality. 
+
+        It's hard to understand from paper notes, but the Aquarian nature is living in THE MOMENT.
+
+      </div>
+
+    `
+
+  }
+
+];
+
+// Create galaxies (planets)
+
+const galaxies = [];
+
+const orbitSpeeds = [0, 0.0008, 0.0012, 0.0015, 0.001, 0.0011, 0.0013];
+
+galaxyData.forEach((data, index) => {
+
+  const geometry = new THREE.SphereGeometry(data.size, 64, 64);
+
+  const material = new THREE.MeshPhongMaterial({ 
+
+    color: data.color,
+
+    emissive: data.color,
+
+    emissiveIntensity: 0.4,
+
+    shininess: 100,
+
+    transparent: true,
+
+    opacity: 0.95
+
+  });
+
+  const planet = new THREE.Mesh(geometry, material);
+
+  planet.position.set(data.position.x, data.position.y, data.position.z);
+
+  planet.userData = data;
+
+  
+
+  // Enhanced glow
+
+  const glowGeometry = new THREE.SphereGeometry(data.size * 1.3, 32, 32);
+
+  const glowMaterial = new THREE.MeshBasicMaterial({
+
+    color: data.color,
+
+    transparent: true,
+
+    opacity: 0.25
+
+  });
+
+  const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+
+  planet.add(glow);
+
+  
+
+  // Second glow layer
+
+  const glow2Geometry = new THREE.SphereGeometry(data.size * 1.6, 32, 32);
+
+  const glow2Material = new THREE.MeshBasicMaterial({
+
+    color: data.color,
+
+    transparent: true,
+
+    opacity: 0.1
+
+  });
+
+  const glow2 = new THREE.Mesh(glow2Geometry, glow2Material);
+
+  planet.add(glow2);
+
+  
+
+  scene.add(planet);
+
+  galaxies.push(planet);
+
+  
+
+  // Create orbit path (skip center planet)
+
+  if (index > 0) {
+
+    const orbitRadius = Math.sqrt(data.position.x ** 2 + data.position.y ** 2 + data.position.z ** 2);
+
+    const curve = new THREE.EllipseCurve(
+
+      0, 0,
+
+      orbitRadius, orbitRadius,
+
+      0, 2 * Math.PI,
+
+      false,
+
+      0
+
+    );
+
+    const points = curve.getPoints(100);
+
+    const orbitGeometry = new THREE.BufferGeometry().setFromPoints(points);
+
+    const orbitMaterial = new THREE.LineBasicMaterial({ 
+
+      color: data.color, 
+
+      transparent: true, 
+
+      opacity: 0.15 
+
+    });
+
+    const orbit = new THREE.Line(orbitGeometry, orbitMaterial);
+
+    orbit.rotation.x = Math.PI / 2;
+
+    scene.add(orbit);
+
+  }
+
+});
+
+// Mouse interaction
+
+const raycaster = new THREE.Raycaster();
+
+const mouse = new THREE.Vector2();
+
+let isDragging = false;
+
+let previousMousePosition = { x: 0, y: 0 };
+
+window.addEventListener('mousemove', (event) => {
+
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  
+
+  if (isDragging) {
+
+    const deltaX = event.clientX - previousMousePosition.x;
+
+    const deltaY = event.clientY - previousMousePosition.y;
+
+    
+
+    scene.rotation.y += deltaX * 0.005;
+
+    scene.rotation.x += deltaY * 0.005;
+
+  }
+
+  
+
+  previousMousePosition = { x: event.clientX, y: event.clientY };
+
+});
+
+window.addEventListener('mousedown', () => { isDragging = true; });
+
+window.addEventListener('mouseup', () => { isDragging = false; });
+
+window.addEventListener('click', (event) => {
+
+  if (event.target.closest('#ui') || event.target.closest('#info')) return;
+
+  
+
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObjects(galaxies);
+
+  
+
+  if (intersects.length > 0) {
+
+    const clicked = intersects[0].object;
+
+    showInfo(clicked.userData);
+
+  }
+
+});
+
+// Zoom with mouse wheel
+
+window.addEventListener('wheel', (event) => {
+
+  camera.position.z += event.deltaY * 0.02;
+
+  camera.position.z = Math.max(15, Math.min(60, camera.position.z));
+
+});
+
+// Info panel
+
+function showInfo(data) {
+
+  const infoPanel = document.getElementById('info');
+
+  const infoTitle = document.getElementById('info-title');
+
+  const infoContent = document.getElementById('info-content');
+
+  
+
+  infoTitle.textContent = data.name;
+
+  infoContent.innerHTML = data.info;
+
+  infoPanel.style.display = 'block';
+
+  
+
+  // Auto-hide after 15 seconds
+
+  setTimeout(() => {
+
+    infoPanel.style.display = 'none';
+
+  }, 15000);
+
+}
+
+// UI interaction
+
+document.querySelectorAll('.galaxy-item').forEach((item, index) => {
+
+  item.addEventListener('click', () => {
+
+    showInfo(galaxyData[index]);
+
+    
+
+    // Animate camera to galaxy
+
+    const target = galaxies[index].position;
+
+    animateCamera(target);
+
+  });
+
+});
+
+function animateCamera(targetPos) {
+
+  const startPos = camera.position.clone();
+
+  const endPos = new THREE.Vector3(targetPos.x, targetPos.y, targetPos.z + 18);
+
+  let progress = 0;
+
+  
+
+  function animate() {
+
+    progress += 0.015;
+
+    if (progress < 1) {
+
+      camera.position.lerpVectors(startPos, endPos, progress);
+
+      camera.lookAt(targetPos);
+
+      requestAnimationFrame(animate);
+
+    }
+
+  }
+
+  animate();
+
+}
+
+// Wisdom quotes rotation
+
+const quotes = [
+
+  "Saturn actually rewards itself.",
+
+  "Your code and music work is edible.",
+
+  "You could get a Grammy off of this.",
+
+  "Moment to moment just becomes better.",
+
+  "Everything else costs energy.",
+
+  "Compounding networking = abundance.",
+
+  "Music discovery + Unity = most underrated."
+
+];
+
+let currentQuoteIndex = 0;
+
+let quoteTimer = 0;
+
+function showNextQuote() {
+
+  const quoteEl = document.getElementById('quote');
+
+  quoteEl.textContent = quotes[currentQuoteIndex];
+
+  quoteEl.classList.add('active');
+
+  
+
+  setTimeout(() => {
+
+    quoteEl.classList.remove('active');
+
+  }, 4000);
+
+  
+
+  currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+
+}
+
+// Show first quote after 3 seconds
+
+setTimeout(showNextQuote, 3000);
+
+// Animation loop
+
+let time = 0;
+
+function animate() {
+
+  requestAnimationFrame(animate);
+
+  time += 0.01;
+
+  quoteTimer += 0.01;
+
+  
+
+  // Show quote every 12 seconds
+
+  if (quoteTimer > 12) {
+
+    showNextQuote();
+
+    quoteTimer = 0;
+
+  }
+
+  
+
+  // Rotate galaxies
+
+  galaxies.forEach((planet, index) => {
+
+    planet.rotation.y += 0.003;
+
+    
+
+    // Orbit around center (skip center planet)
+
+    if (index > 0) {
+
+      const data = planet.userData;
+
+      const radius = Math.sqrt(data.position.x ** 2 + data.position.y ** 2);
+
+      const baseAngle = Math.atan2(data.position.z, data.position.x);
+
+      const angle = baseAngle + (time * orbitSpeeds[index]);
+
+      planet.position.x = Math.cos(angle) * radius;
+
+      planet.position.z = Math.sin(angle) * radius;
+
+    }
+
+  });
+
+  
+
+  // Rotate starfield
+
+  stars.rotation.y += 0.00015;
+
+  stars.rotation.x += 0.00005;
+
+  
+
+  // Pulse lights
+
+  pointLight1.intensity = 1.5 + Math.sin(time * 0.5) * 0.3;
+
+  pointLight2.intensity = 1.5 + Math.cos(time * 0.5) * 0.3;
+
+  
+
+  // Hover effect
+
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObjects(galaxies);
+
+  
+
+  galaxies.forEach(planet => {
+
+    planet.scale.set(1, 1, 1);
+
+  });
+
+  
+
+  if (intersects.length > 0) {
+
+    intersects[0].object.scale.set(1.15, 1.15, 1.15);
+
+    document.body.style.cursor = 'pointer';
+
+  } else {
+
+    document.body.style.cursor = 'default';
+
+  }
+
+  
+
+  renderer.render(scene, camera);
+
+}
+
+animate();
+
+// Responsive
+
+window.addEventListener('resize', () => {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+});
+
+// Close info panel on click outside
+
+document.addEventListener('click', (e) => {
+
+  const infoPanel = document.getElementById('info');
+
+  if (!infoPanel.contains(e.target) && !e.target.closest('.galaxy-item') && !e.target.closest('canvas')) {
+
+    if (infoPanel.style.display === 'block') {
+
+      infoPanel.style.display = 'none';
+
+    }
+
+  }
+
+});
+
+</script>
+
+</body>
+
+</html>
