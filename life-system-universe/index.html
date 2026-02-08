@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Life System Universe</title>
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+        
+
+        body {
+
+            font-family: 'Courier New', monospace;
+
+            background: #000;
+
+            overflow: hidden;
+
+            color: #fff;
+
+        }
+
+        
+
+        #canvas {
+
+            display: block;
+
+            width: 100vw;
+
+            height: 100vh;
+
+        }
+
+        
+
+        #ui {
+
+            position: absolute;
+
+            top: 20px;
+
+            left: 20px;
+
+            background: rgba(0, 0, 0, 0.8);
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            border: 2px solid #00ffff;
+
+            max-width: 300px;
+
+            backdrop-filter: blur(10px);
+
+        }
+
+        
+
+        #info {
+
+            position: absolute;
+
+            bottom: 20px;
+
+            right: 20px;
+
+            background: rgba(0, 0, 0, 0.8);
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            border: 2px solid #ff00ff;
+
+            max-width: 350px;
+
+            backdrop-filter: blur(10px);
+
+        }
+
+        
+
+        h2 {
+
+            color: #00ffff;
+
+            margin-bottom: 10px;
+
+            font-size: 18px;
+
+            text-transform: uppercase;
+
+        }
+
+        
+
+        .category {
+
+            margin: 10px 0;
+
+            padding: 8px;
+
+            background: rgba(255, 255, 255, 0.05);
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            transition: all 0.3s;
+
+        }
+
+        
+
+        .category:hover {
+
+            background: rgba(255, 255, 255, 0.1);
+
+            transform: translateX(5px);
+
+        }
+
+        
+
+        .category-title {
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+
+        }
+
+        
+
+        .coding { border-left: 3px solid #00ffff; }
+
+        .fitness { border-left: 3px solid #ff0066; }
+
+        .music { border-left: 3px solid #ffff00; }
+
+        .astrology { border-left: 3px solid #ff00ff; }
+
+        .networking { border-left: 3px solid #00ff00; }
+
+        .income { border-left: 3px solid #ffa500; }
+
+        
+
+        #controls {
+
+            position: absolute;
+
+            top: 20px;
+
+            right: 20px;
+
+            background: rgba(0, 0, 0, 0.8);
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            border: 2px solid #00ff00;
+
+            backdrop-filter: blur(10px);
+
+        }
+
+        
+
+        button {
+
+            background: rgba(0, 255, 255, 0.2);
+
+            border: 1px solid #00ffff;
+
+            color: #00ffff;
+
+            padding: 8px 15px;
+
+            margin: 5px;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            font-family: 'Courier New', monospace;
+
+            transition: all 0.3s;
+
+        }
+
+        
+
+        button:hover {
+
+            background: rgba(0, 255, 255, 0.4);
+
+            transform: scale(1.05);
+
+        }
+
+        
+
+        .active {
+
+            background: rgba(0, 255, 255, 0.6) !important;
+
+        }
+
+        
+
+        #node-info {
+
+            font-size: 14px;
+
+            line-height: 1.6;
+
+        }
+
+        
+
+        .node-title {
+
+            color: #ff00ff;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+        }
+
+        
+
+        .connection {
+
+            color: #00ff00;
+
+            margin: 5px 0;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    
+
+    <div id="ui">
+
+        <h2>⚡ Life System Map</h2>
+
+        <div class="category coding" data-filter="coding">
+
+            <div class="category-title">💻 CODING</div>
+
+            <div style="font-size: 12px; opacity: 0.8;">3JS, Shaders, Unity, GitHub</div>
+
+        </div>
+
+        <div class="category fitness" data-filter="fitness">
+
+            <div class="category-title">💪 FITNESS</div>
+
+            <div style="font-size: 12px; opacity: 0.8;">Gym, Mobility, Longevity</div>
+
+        </div>
+
+        <div class="category music" data-filter="music">
+
+            <div class="category-title">🎵 MUSIC</div>
+
+            <div style="font-size: 12px; opacity: 0.8;">Set Lists, DJ, Discovery</div>
+
+        </div>
+
+        <div class="category astrology" data-filter="astrology">
+
+            <div class="category-title">✨ ASTROLOGY</div>
+
+            <div style="font-size: 12px; opacity: 0.8;">Divination, Astro Beats</div>
+
+        </div>
+
+        <div class="category networking" data-filter="networking">
+
+            <div class="category-title">🌐 NETWORKING</div>
+
+            <div style="font-size: 12px; opacity: 0.8;">Streaming, Events, Virtual</div>
+
+        </div>
+
+        <div class="category income" data-filter="income">
+
+            <div class="category-title">💰 INCOME</div>
+
+            <div style="font-size: 12px; opacity: 0.8;">Uber, Subscriptions</div>
+
+        </div>
+
+    </div>
+
+    
+
+    <div id="controls">
+
+        <h2 style="color: #00ff00; margin-bottom: 10px;">Controls</h2>
+
+        <button id="rotateBtn" class="active">🔄 Auto-Rotate</button>
+
+        <button id="connectBtn">🔗 Show All Links</button>
+
+        <button id="resetBtn">↺ Reset View</button>
+
+    </div>
+
+    
+
+    <div id="info">
+
+        <div id="node-info">
+
+            <div class="node-title">🌌 The System</div>
+
+            <p>Click on any sphere to explore connections. Drag to rotate the universe.</p>
+
+            <p style="margin-top: 10px; opacity: 0.7;">Each node represents a piece of your integrated lifestyle system.</p>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const canvas = document.getElementById('canvas');
+
+        const ctx = canvas.getContext('2d');
+
+        
+
+        let width = canvas.width = window.innerWidth;
+
+        let height = canvas.height = window.innerHeight;
+
+        
+
+        window.addEventListener('resize', () => {
+
+            width = canvas.width = window.innerWidth;
+
+            height = canvas.height = window.innerHeight;
+
+        });
+
+        
+
+        // Node data structure
+
+        const nodes = [
+
+            // CODING NODES
+
+            { id: 1, name: "3JS Journey", category: "coding", color: "#00ffff", size: 25, 
+
+              desc: "Core skill for virtual spaces and interactive web experiences",
+
+              connections: [2, 3, 13, 19] },
+
+            { id: 2, name: "Shaders", category: "coding", color: "#00ccff", size: 22,
+
+              desc: "Visual effects engine for streams and Astro Beats",
+
+              connections: [1, 14, 17] },
+
+            { id: 3, name: "Unity 3D", category: "coding", color: "#0099ff", size: 24,
+
+              desc: "LinkedIn content and animation showcase",
+
+              connections: [1, 15, 20] },
+
+            { id: 4, name: "GitHub", category: "coding", color: "#0066ff", size: 20,
+
+              desc: "Portfolio and code showcase lifestyle",
+
+              connections: [1, 3, 21] },
+
+            
+
+            // FITNESS NODES
+
+            { id: 5, name: "Gym Routine", category: "fitness", color: "#ff0066", size: 22,
+
+              desc: "Quality of life foundation paired with coding",
+
+              connections: [6, 23] },
+
+            { id: 6, name: "Mobility", category: "fitness", color: "#ff0099", size: 18,
+
+              desc: "Longevity and physical freedom",
+
+              connections: [5] },
+
+            
+
+            // MUSIC NODES
+
+            { id: 7, name: "Set Lists", category: "music", color: "#ffff00", size: 23,
+
+              desc: "Guitar + shader streams for networking and output",
+
+              connections: [2, 8, 14, 17] },
+
+            { id: 8, name: "Music Discovery", category: "music", color: "#ffcc00", size: 20,
+
+              desc: "Stream content and personal inspiration",
+
+              connections: [7, 17] },
+
+            { id: 9, name: "Freestyle King", category: "music", color: "#ff9900", size: 24,
+
+              desc: "Rap bot + networking platform ($1/mo subscription)",
+
+              connections: [11, 17, 22] },
+
+            { id: 10, name: "Own Music", category: "music", color: "#ffaa00", size: 21,
+
+              desc: "Performance and listening rotation",
+
+              connections: [7, 17] },
+
+            
+
+            // ASTROLOGY NODES
+
+            { id: 11, name: "Astro Beats", category: "astrology", color: "#ff00ff", size: 25,
+
+              desc: "Live streams with animated crystals and cards",
+
+              connections: [2, 12, 14, 17] },
+
+            { id: 12, name: "Divination Tool", category: "astrology", color: "#cc00ff", size: 23,
+
+              desc: "Downloadable 3JS app with shaders ($1/mo)",
+
+              connections: [1, 11, 9] },
+
+            { id: 13, name: "Virtual Space", category: "astrology", color: "#9900ff", size: 20,
+
+              desc: "3JS hangout environment for community",
+
+              connections: [1, 11, 15] },
+
+            
+
+            // NETWORKING NODES
+
+            { id: 14, name: "Streaming", category: "networking", color: "#00ff00", size: 26,
+
+              desc: "Double-time: content creation + networking simultaneously",
+
+              connections: [2, 7, 11, 17, 18] },
+
+            { id: 15, name: "DJ/Bar Events", category: "networking", color: "#00cc00", size: 21,
+
+              desc: "Real-world networking rotation",
+
+              connections: [7, 16, 18] },
+
+            { id: 16, name: "College Campus", category: "networking", color: "#009900", size: 19,
+
+              desc: "UWM streaming hub and social filter",
+
+              connections: [14, 15] },
+
+            { id: 17, name: "TikTok/YouTube", category: "networking", color: "#00ff66", size: 24,
+
+              desc: "Platform for visibility and community building",
+
+              connections: [8, 9, 11, 14] },
+
+            { id: 18, name: "LinkedIn", category: "networking", color: "#00ff99", size: 22,
+
+              desc: "Professional network via Unity animations and code",
+
+              connections: [3, 4, 20] },
+
+            
+
+            // INCOME NODES
+
+            { id: 19, name: "Uber/DoorDash", category: "income", color: "#ffa500", size: 20,
+
+              desc: "Baseline $30/day job security",
+
+              connections: [23] },
+
+            { id: 20, name: "Subscriptions", category: "income", color: "#ff8800", size: 23,
+
+              desc: "Freestyle King + Astro tools revenue stream",
+
+              connections: [9, 12] },
+
+            { id: 21, name: "Code Portfolio", category: "income", color: "#ff6600", size: 19,
+
+              desc: "GitHub showcase for job opportunities",
+
+              connections: [4, 18] },
+
+            
+
+            // META NODES
+
+            { id: 22, name: "Rap Bot", category: "astrology", color: "#ff00aa", size: 21,
+
+              desc: "AI freestyling based on astrology card pulls - THE MERGE",
+
+              connections: [9, 11, 12] },
+
+            { id: 23, name: "Honda Element", category: "fitness", color: "#ff3366", size: 18,
+
+              desc: "Mobile base station for the whole system",
+
+              connections: [5, 15, 16, 19] },
+
+        ];
+
+        
+
+        // 3D rotation
+
+        let angleX = 0;
+
+        let angleY = 0;
+
+        let autoRotate = true;
+
+        let showAllConnections = false;
+
+        let isDragging = false;
+
+        let lastMouseX = 0;
+
+        let lastMouseY = 0;
+
+        
+
+        // Initialize positions in 3D sphere
+
+        nodes.forEach((node, i) => {
+
+            const phi = Math.acos(-1 + (2 * i) / nodes.length);
+
+            const theta = Math.sqrt(nodes.length * Math.PI) * phi;
+
+            
+
+            node.x = 300 * Math.cos(theta) * Math.sin(phi);
+
+            node.y = 300 * Math.sin(theta) * Math.sin(phi);
+
+            node.z = 300 * Math.cos(phi);
+
+            node.vx = 0;
+
+            node.vy = 0;
+
+            node.vz = 0;
+
+        });
+
+        
+
+        let selectedNode = null;
+
+        let highlightedConnections = new Set();
+
+        
+
+        function rotate3D(x, y, z, ax, ay) {
+
+            // Rotate around Y axis
+
+            let tempX = x * Math.cos(ay) - z * Math.sin(ay);
+
+            let tempZ = x * Math.sin(ay) + z * Math.cos(ay);
+
+            x = tempX;
+
+            z = tempZ;
+
+            
+
+            // Rotate around X axis
+
+            let tempY = y * Math.cos(ax) - z * Math.sin(ax);
+
+            tempZ = y * Math.sin(ax) + z * Math.cos(ax);
+
+            y = tempY;
+
+            z = tempZ;
+
+            
+
+            return { x, y, z };
+
+        }
+
+        
+
+        function project3D(x, y, z) {
+
+            const scale = 400 / (400 + z);
+
+            return {
+
+                x: x * scale + width / 2,
+
+                y: y * scale + height / 2,
+
+                scale: scale
+
+            };
+
+        }
+
+        
+
+        function drawConnections() {
+
+            nodes.forEach(node => {
+
+                if (showAllConnections || (selectedNode && selectedNode.id === node.id)) {
+
+                    node.connections.forEach(connId => {
+
+                        const targetNode = nodes.find(n => n.id === connId);
+
+                        if (targetNode) {
+
+                            const rotated1 = rotate3D(node.x, node.y, node.z, angleX, angleY);
+
+                            const rotated2 = rotate3D(targetNode.x, targetNode.y, targetNode.z, angleX, angleY);
+
+                            const proj1 = project3D(rotated1.x, rotated1.y, rotated1.z);
+
+                            const proj2 = project3D(rotated2.x, rotated2.y, rotated2.z);
+
+                            
+
+                            ctx.beginPath();
+
+                            ctx.moveTo(proj1.x, proj1.y);
+
+                            ctx.lineTo(proj2.x, proj2.y);
+
+                            
+
+                            const isHighlighted = selectedNode && 
+
+                                (selectedNode.id === node.id || selectedNode.id === connId);
+
+                            
+
+                            if (isHighlighted) {
+
+                                ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+
+                                ctx.lineWidth = 2;
+
+                            } else {
+
+                                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+
+                                ctx.lineWidth = 1;
+
+                            }
+
+                            
+
+                            ctx.stroke();
+
+                        }
+
+                    });
+
+                }
+
+            });
+
+        }
+
+        
+
+        function drawNodes() {
+
+            // Sort by z for proper layering
+
+            const sortedNodes = [...nodes].sort((a, b) => {
+
+                const rotA = rotate3D(a.x, a.y, a.z, angleX, angleY);
+
+                const rotB = rotate3D(b.x, b.y, b.z, angleX, angleY);
+
+                return rotA.z - rotB.z;
+
+            });
+
+            
+
+            sortedNodes.forEach(node => {
+
+                const rotated = rotate3D(node.x, node.y, node.z, angleX, angleY);
+
+                const proj = project3D(rotated.x, rotated.y, rotated.z);
+
+                
+
+                const size = node.size * proj.scale;
+
+                const isSelected = selectedNode && selectedNode.id === node.id;
+
+                
+
+                // Glow effect
+
+                if (isSelected || rotated.z > 0) {
+
+                    ctx.shadowBlur = isSelected ? 30 : 15;
+
+                    ctx.shadowColor = node.color;
+
+                }
+
+                
+
+                // Draw sphere
+
+                const gradient = ctx.createRadialGradient(
+
+                    proj.x - size/3, proj.y - size/3, 0,
+
+                    proj.x, proj.y, size
+
+                );
+
+                
+
+                gradient.addColorStop(0, node.color);
+
+                gradient.addColorStop(0.5, node.color + '88');
+
+                gradient.addColorStop(1, node.color + '22');
+
+                
+
+                ctx.fillStyle = gradient;
+
+                ctx.beginPath();
+
+                ctx.arc(proj.x, proj.y, size, 0, Math.PI * 2);
+
+                ctx.fill();
+
+                
+
+                if (isSelected) {
+
+                    ctx.strokeStyle = '#ffffff';
+
+                    ctx.lineWidth = 3;
+
+                    ctx.stroke();
+
+                }
+
+                
+
+                ctx.shadowBlur = 0;
+
+                
+
+                // Label
+
+                if (proj.scale > 0.8) {
+
+                    ctx.fillStyle = '#ffffff';
+
+                    ctx.font = `${12 * proj.scale}px Courier New`;
+
+                    ctx.textAlign = 'center';
+
+                    ctx.fillText(node.name, proj.x, proj.y + size + 15);
+
+                }
+
+                
+
+                node.projX = proj.x;
+
+                node.projY = proj.y;
+
+                node.projSize = size;
+
+            });
+
+        }
+
+        
+
+        function animate() {
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+
+            ctx.fillRect(0, 0, width, height);
+
+            
+
+            // Draw starfield
+
+            for (let i = 0; i < 100; i++) {
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5})`;
+
+                ctx.fillRect(
+
+                    Math.random() * width,
+
+                    Math.random() * height,
+
+                    1, 1
+
+                );
+
+            }
+
+            
+
+            if (autoRotate && !isDragging) {
+
+                angleY += 0.005;
+
+                angleX = Math.sin(Date.now() * 0.0001) * 0.2;
+
+            }
+
+            
+
+            drawConnections();
+
+            drawNodes();
+
+            
+
+            requestAnimationFrame(animate);
+
+        }
+
+        
+
+        // Mouse interaction
+
+        canvas.addEventListener('mousedown', (e) => {
+
+            isDragging = true;
+
+            lastMouseX = e.clientX;
+
+            lastMouseY = e.clientY;
+
+            
+
+            // Check for node click
+
+            const clickedNode = nodes.find(node => {
+
+                if (node.projX && node.projY) {
+
+                    const dx = e.clientX - node.projX;
+
+                    const dy = e.clientY - node.projY;
+
+                    return Math.sqrt(dx*dx + dy*dy) < node.projSize;
+
+                }
+
+                return false;
+
+            });
+
+            
+
+            if (clickedNode) {
+
+                selectedNode = clickedNode;
+
+                updateInfo(clickedNode);
+
+            } else {
+
+                selectedNode = null;
+
+                updateInfo(null);
+
+            }
+
+        });
+
+        
+
+        canvas.addEventListener('mousemove', (e) => {
+
+            if (isDragging) {
+
+                const deltaX = e.clientX - lastMouseX;
+
+                const deltaY = e.clientY - lastMouseY;
+
+                
+
+                angleY += deltaX * 0.01;
+
+                angleX += deltaY * 0.01;
+
+                
+
+                lastMouseX = e.clientX;
+
+                lastMouseY = e.clientY;
+
+            }
+
+        });
+
+        
+
+        canvas.addEventListener('mouseup', () => {
+
+            isDragging = false;
+
+        });
+
+        
+
+        function updateInfo(node) {
+
+            const infoDiv = document.getElementById('node-info');
+
+            if (node) {
+
+                const connectedNodes = node.connections
+
+                    .map(id => nodes.find(n => n.id === id))
+
+                    .filter(Boolean);
+
+                
+
+                infoDiv.innerHTML = `
+
+                    <div class="node-title">${node.name}</div>
+
+                    <p>${node.desc}</p>
+
+                    <p style="margin-top: 10px; color: #00ff00; font-weight: bold;">Connected to:</p>
+
+                    ${connectedNodes.map(n => `
+
+                        <div class="connection">→ ${n.name}</div>
+
+                    `).join('')}
+
+                `;
+
+            } else {
+
+                infoDiv.innerHTML = `
+
+                    <div class="node-title">🌌 The System</div>
+
+                    <p>Click on any sphere to explore connections. Drag to rotate the universe.</p>
+
+                    <p style="margin-top: 10px; opacity: 0.7;">Each node represents a piece of your integrated lifestyle system.</p>
+
+                `;
+
+            }
+
+        }
+
+        
+
+        // Category filters
+
+        document.querySelectorAll('.category').forEach(cat => {
+
+            cat.addEventListener('click', () => {
+
+                const filter = cat.dataset.filter;
+
+                const filtered = nodes.filter(n => n.category === filter);
+
+                
+
+                // Highlight category
+
+                if (filtered.length > 0) {
+
+                    selectedNode = filtered[0];
+
+                    updateInfo(filtered[0]);
+
+                }
+
+            });
+
+        });
+
+        
+
+        // Controls
+
+        document.getElementById('rotateBtn').addEventListener('click', function() {
+
+            autoRotate = !autoRotate;
+
+            this.classList.toggle('active');
+
+        });
+
+        
+
+        document.getElementById('connectBtn').addEventListener('click', function() {
+
+            showAllConnections = !showAllConnections;
+
+            this.classList.toggle('active');
+
+        });
+
+        
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+
+            angleX = 0;
+
+            angleY = 0;
+
+            selectedNode = null;
+
+            updateInfo(null);
+
+        });
+
+        
+
+        animate();
+
+    </script>
+
+</body>
+
+</html>
+
