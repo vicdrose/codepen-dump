@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Inevitable Routine - Complete Life OS</title>
+
+<style>
+
+  * {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+  }
+
+  
+
+  body {
+
+    font-family: 'Courier New', monospace;
+
+    overflow: hidden;
+
+    background: #000;
+
+  }
+
+  
+
+  #canvas {
+
+    display: block;
+
+    width: 100%;
+
+    height: 100vh;
+
+  }
+
+  
+
+  #ui {
+
+    position: fixed;
+
+    top: 20px;
+
+    left: 20px;
+
+    color: #fff;
+
+    z-index: 100;
+
+    background: rgba(0, 0, 0, 0.92);
+
+    padding: 22px;
+
+    border-radius: 16px;
+
+    border: 3px solid #ff0066;
+
+    max-width: 420px;
+
+    backdrop-filter: blur(25px);
+
+    max-height: 93vh;
+
+    overflow-y: auto;
+
+    box-shadow: 0 0 40px rgba(255, 0, 102, 0.4);
+
+  }
+
+  
+
+  #info {
+
+    position: fixed;
+
+    bottom: 20px;
+
+    right: 20px;
+
+    color: #fff;
+
+    z-index: 100;
+
+    background: rgba(0, 0, 0, 0.95);
+
+    padding: 24px;
+
+    border-radius: 16px;
+
+    border: 3px solid #00ffff;
+
+    max-width: 600px;
+
+    max-height: 80vh;
+
+    overflow-y: auto;
+
+    backdrop-filter: blur(25px);
+
+    display: none;
+
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
+
+  }
+
+  
+
+  h1 {
+
+    color: #ff0066;
+
+    margin-bottom: 12px;
+
+    font-size: 24px;
+
+    text-shadow: 0 0 20px #ff0066;
+
+    text-align: center;
+
+  }
+
+  
+
+  h2 {
+
+    color: #00ffff;
+
+    margin-bottom: 12px;
+
+    font-size: 17px;
+
+    margin-top: 14px;
+
+  }
+
+  
+
+  h3 {
+
+    color: #ff00ff;
+
+    margin-bottom: 10px;
+
+    font-size: 15px;
+
+    margin-top: 16px;
+
+  }
+
+  
+
+  p, li {
+
+    font-size: 13px;
+
+    line-height: 1.9;
+
+    color: #eee;
+
+  }
+
+  
+
+  ul, ol {
+
+    margin-left: 18px;
+
+    margin-top: 8px;
+
+  }
+
+  
+
+  .galaxy-item {
+
+    margin: 12px 0;
+
+    padding: 14px;
+
+    background: rgba(255, 0, 102, 0.1);
+
+    border-left: 5px solid #ff0066;
+
+    cursor: pointer;
+
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    border-radius: 8px;
+
+  }
+
+  
+
+  .galaxy-item:hover {
+
+    background: rgba(255, 0, 102, 0.25);
+
+    transform: translateX(12px) scale(1.02);
+
+    border-left-color: #00ffff;
+
+    box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+
+  }
+
+  
+
+  .galaxy-item.center {
+
+    border: 3px solid #ff0066;
+
+    background: rgba(255, 0, 102, 0.2);
+
+    box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+
+  }
+
+  
+
+  .galaxy-item.center:hover {
+
+    box-shadow: 0 0 40px rgba(255, 0, 102, 0.6);
+
+  }
+
+  
+
+  .galaxy-item.foundation {
+
+    border-left-color: #00ffff;
+
+    background: rgba(0, 255, 255, 0.08);
+
+  }
+
+  
+
+  .galaxy-item.foundation:hover {
+
+    background: rgba(0, 255, 255, 0.2);
+
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+
+  }
+
+  
+
+  .controls {
+
+    margin-top: 20px;
+
+    padding-top: 20px;
+
+    border-top: 2px solid #ff0066;
+
+    font-size: 12px;
+
+  }
+
+  
+
+  #quote {
+
+    position: fixed;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    color: #fff;
+
+    font-size: 36px;
+
+    text-align: center;
+
+    z-index: 50;
+
+    opacity: 0;
+
+    transition: opacity 2.5s;
+
+    pointer-events: none;
+
+    text-shadow: 0 0 50px #ff0066, 0 0 100px #00ffff;
+
+    max-width: 90%;
+
+    font-weight: bold;
+
+    line-height: 1.5;
+
+  }
+
+  
+
+  .active {
+
+    opacity: 1 !important;
+
+  }
+
+  
+
+  .tag {
+
+    display: inline-block;
+
+    background: rgba(255, 0, 255, 0.35);
+
+    padding: 4px 10px;
+
+    border-radius: 5px;
+
+    font-size: 11px;
+
+    margin: 4px 3px;
+
+    border: 1px solid rgba(255, 0, 255, 0.7);
+
+  }
+
+  
+
+  .tag.inevitable {
+
+    background: rgba(255, 0, 102, 0.4);
+
+    border-color: rgba(255, 0, 102, 0.8);
+
+    font-weight: bold;
+
+  }
+
+  
+
+  .tag.foundation {
+
+    background: rgba(0, 255, 255, 0.4);
+
+    border-color: rgba(0, 255, 255, 0.7);
+
+  }
+
+  
+
+  .tag.eternal {
+
+    background: rgba(138, 43, 226, 0.4);
+
+    border-color: rgba(138, 43, 226, 0.8);
+
+  }
+
+  
+
+  .routine {
+
+    background: linear-gradient(135deg, rgba(255, 0, 102, 0.15), rgba(138, 43, 226, 0.15));
+
+    border: 3px solid #ff0066;
+
+    padding: 16px;
+
+    margin: 16px 0;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+
+    font-size: 13px;
+
+    line-height: 2;
+
+  }
+
+  
+
+  .eternal-truth {
+
+    background: rgba(138, 43, 226, 0.2);
+
+    border-left: 5px solid #8a2be2;
+
+    padding: 14px;
+
+    margin: 14px 0;
+
+    border-radius: 8px;
+
+    font-style: italic;
+
+    line-height: 1.7;
+
+  }
+
+  
+
+  .wisdom {
+
+    background: rgba(255, 215, 0, 0.15);
+
+    border-left: 5px solid #ffd700;
+
+    padding: 14px;
+
+    margin: 14px 0;
+
+    font-style: italic;
+
+    border-radius: 8px;
+
+    line-height: 1.8;
+
+  }
+
+  
+
+  .revelation {
+
+    background: rgba(255, 0, 102, 0.2);
+
+    border: 2px solid #ff0066;
+
+    padding: 14px;
+
+    margin: 14px 0;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+
+  }
+
+  
+
+  .hack-alert {
+
+    background: rgba(0, 255, 0, 0.18);
+
+    border: 3px solid #00ff00;
+
+    padding: 14px;
+
+    margin: 14px 0;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+
+  }
+
+  
+
+  #stats {
+
+    position: fixed;
+
+    top: 20px;
+
+    right: 20px;
+
+    background: rgba(0, 0, 0, 0.92);
+
+    padding: 20px;
+
+    border-radius: 14px;
+
+    border: 3px solid #ff0066;
+
+    color: #ff0066;
+
+    font-size: 13px;
+
+    backdrop-filter: blur(25px);
+
+    min-width: 240px;
+
+    box-shadow: 0 0 40px rgba(255, 0, 102, 0.3);
+
+  }
+
+  
+
+  .stat-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin: 8px 0;
+
+  }
+
+  
+
+  .energy-bar {
+
+    width: 100%;
+
+    height: 12px;
+
+    background: rgba(255, 255, 255, 0.2);
+
+    border-radius: 6px;
+
+    margin: 8px 0;
+
+    overflow: hidden;
+
+  }
+
+  
+
+  .energy-fill {
+
+    height: 100%;
+
+    background: linear-gradient(90deg, #ff0066, #00ffff, #8a2be2);
+
+    width: 85%;
+
+    border-radius: 6px;
+
+    animation: pulse 3s infinite;
+
+  }
+
+  
+
+  @keyframes pulse {
+
+    0%, 100% { opacity: 1; width: 85%; }
+
+    50% { opacity: 0.7; width: 90%; }
+
+  }
+
+  
+
+  @keyframes glow {
+
+    0%, 100% { box-shadow: 0 0 15px rgba(255, 0, 102, 0.5); }
+
+    50% { box-shadow: 0 0 35px rgba(255, 0, 102, 1); }
+
+  }
+
+  
+
+  .galaxy-item.center {
+
+    animation: glow 4s infinite;
+
+  }
+
+  
+
+  ::-webkit-scrollbar {
+
+    width: 12px;
+
+  }
+
+  
+
+  ::-webkit-scrollbar-track {
+
+    background: rgba(0, 0, 0, 0.7);
+
+  }
+
+  
+
+  ::-webkit-scrollbar-thumb {
+
+    background: rgba(255, 0, 102, 0.7);
+
+    border-radius: 6px;
+
+  }
+
+  
+
+  ::-webkit-scrollbar-thumb:hover {
+
+    background: rgba(0, 255, 255, 0.9);
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="stats">
+
+  <h3 style="margin: 0 0 14px 0; text-align: center;">⚡ INEVITABLE STATUS</h3>
+
+  <div class="stat-row">
+
+    <span>Energy:</span>
+
+    <span>MAXIMUM</span>
+
+  </div>
+
+  <div class="energy-bar">
+
+    <div class="energy-fill"></div>
+
+  </div>
+
+  <div class="stat-row">
+
+    <span>Routine:</span>
+
+    <span>INEVITABLE</span>
+
+  </div>
+
+  <div class="stat-row">
+
+    <span>Party Status:</span>
+
+    <span>ETERNAL</span>
+
+  </div>
+
+  <div class="stat-row">
+
+    <span>Job Game:</span>
+
+    <span>ACTIVE</span>
+
+  </div>
+
+  <div class="stat-row">
+
+    <span>Freedom:</span>
+
+    <span>$40K+</span>
+
+  </div>
+
+</div>
+
+<div id="ui">
+
+  <h1>🔄 THE INEVITABLE ROUTINE</h1>
+
+  <p style="margin-bottom: 20px; text-align: center; font-style: italic;">"Your livestream and comments are the eternal party you're hosting"</p>
+
+  
+
+  <div class="galaxy-item center" data-planet="0">
+
+    <strong>🔄 SETLIST ROUTINE (CENTER)</strong><br>
+
+    <div class="tag inevitable">Inevitable</div>
+
+    <div class="tag inevitable">Loop</div>
+
+    <div class="tag inevitable">Freedom Path</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item foundation" data-planet="1">
+
+    <strong>🏠 VAN ECOSYSTEM</strong><br>
+
+    <div class="tag foundation">East Side</div>
+
+    <div class="tag foundation">Family Garage</div>
+
+    <div class="tag foundation">Honda Element</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="2">
+
+    <strong>🚶 WALKING = FREESTYLE KING</strong><br>
+
+    <div class="tag">Multilingual</div>
+
+    <div class="tag eternal">Always On</div>
+
+    <div class="tag">Filtration</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="3">
+
+    <strong>🛑 STOPS = ASTROBEATS/SETLIST</strong><br>
+
+    <div class="tag">Performance</div>
+
+    <div class="tag">Resolume Pi400</div>
+
+    <div class="tag">College Campuses</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="4">
+
+    <strong>🍺 NETWORKING BARS</strong><br>
+
+    <div class="tag">Vibe Code Phone</div>
+
+    <div class="tag">Job Apps</div>
+
+    <div class="tag">Early Arrival</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="5">
+
+    <strong>🎨 CREATIVE STACK</strong><br>
+
+    <div class="tag">3JS → Resolume</div>
+
+    <div class="tag">Blender Unity</div>
+
+    <div class="tag">Music Videos</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="6">
+
+    <strong>🎯 THREE-PHASE GAME</strong><br>
+
+    <div class="tag">Job Apps</div>
+
+    <div class="tag">Brown Nosing</div>
+
+    <div class="tag">Freedom ($$$)</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="7">
+
+    <strong>🎵 VIRTUAL ASTRO HANGOUT</strong><br>
+
+    <div class="tag eternal">Eternal Party</div>
+
+    <div class="tag">FreeStyle King</div>
+
+    <div class="tag">InfiniDJ ToneJS</div>
+
+  </div>
+
+  
+
+  <div class="galaxy-item" data-planet="8">
+
+    <strong>🚴 BIKE STREAM URANUS</strong><br>
+
+    <div class="tag">Outside Clubs</div>
+
+    <div class="tag">Feels Alive</div>
+
+    <div class="tag">Becoming</div>
+
+  </div>
+
+  
+
+  <div class="controls">
+
+    <strong>Universal Law:</strong><br>
+
+    🔄 The routine is inevitable<br>
+
+    🎭 The party is eternal<br>
+
+    💰 Freedom at $40K+ (single)<br>
+
+    🌐 Stream the process<br>
+
+    🎯 Showcase on interval
+
+  </div>
+
+</div>
+
+<div id="info">
+
+  <h3 id="info-title">System Deep Dive</h3>
+
+  <div id="info-content"></div>
+
+</div>
+
+<div id="quote">Your livestream and comments section literally are the eternal party you're hosting.</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+
+// Scene setup
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+renderer.setPixelRatio(window.devicePixelRatio);
+
+camera.position.z = 45;
+
+// Lighting
+
+const ambientLight = new THREE.AmbientLight(0x404040, 2.5);
+
+scene.add(ambientLight);
+
+const pointLight1 = new THREE.PointLight(0xff0066, 2.5, 150);
+
+pointLight1.position.set(25, 25, 25);
+
+scene.add(pointLight1);
+
+const pointLight2 = new THREE.PointLight(0x00ffff, 2.5, 150);
+
+pointLight2.position.set(-25, -25, 25);
+
+scene.add(pointLight2);
+
+const pointLight3 = new THREE.PointLight(0x8a2be2, 2, 120);
+
+pointLight3.position.set(0, 0, 35);
+
+scene.add(pointLight3);
+
+// Enhanced Starfield
+
+const starsGeometry = new THREE.BufferGeometry();
+
+const starsMaterial = new THREE.PointsMaterial({ 
+
+  color: 0xffffff, 
+
+  size: 0.2,
+
+  transparent: true,
+
+  opacity: 0.95
+
+});
+
+const starsVertices = [];
+
+for (let i = 0; i < 7000; i++) {
+
+  const x = (Math.random() - 0.5) * 350;
+
+  const y = (Math.random() - 0.5) * 350;
+
+  const z = (Math.random() - 0.5) * 350;
+
+  starsVertices.push(x, y, z);
+
+}
+
+starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+
+const stars = new THREE.Points(starsGeometry, starsMaterial);
+
+scene.add(stars);
+
+// Galaxy data - THE COMPLETE INEVITABLE SYSTEM
+
+const galaxyData = [
+
+  {
+
+    name: "SETLIST ROUTINE (INEVITABLE)",
+
+    color: 0xff0066,
+
+    position: { x: 0, y: 0, z: 0 },
+
+    size: 4.5,
+
+    info: `
+
+      <div class="routine">
+
+        <strong>THE INEVITABLE LOOP:</strong><br>
+
+        UBlender → Astrobeats → Fitness → Job Apps (social vape sharing) → Network Check-in → Set Prep → Performance (practice or real with footage) → Sleep → Uber Airport → REPEAT
+
+      </div>
+
+      
+
+      <div class="revelation">
+
+        "If you do this and save all your money into vehicle maintenance... WeWork works here, along with van private parking via networking"
+
+      </div>
+
+      
+
+      <h3>🎯 The Three-Phase Game</h3>
+
+      <ol>
+
+        <li><strong>Job Application Game:</strong> Your life is essentially this at first</li>
+
+        <li><strong>Boss Brown Nosing (Job Security):</strong> Advances to this phase</li>
+
+        <li><strong>Freedom:</strong> At a certain dollar amount ($40K+) you are FREE (if single & childless)</li>
+
+      </ol>
+
+      
+
+      <h3>💰 Money Flow</h3>
+
+      <ul>
+
+        <li>Save ALL money into vehicle maintenance</li>
+
+        <li>WeWork works when you're disciplined</li>
+
+        <li>Van private parking via networking</li>
+
+        <li>Arizona = only land ownership payment (winter)</li>
+
+      </ul>
+
+      
+
+      <h3>🎸 Daily Performance</h3>
+
+      <ul>
+
+        <li><strong>3JS GLSL shaders into Resolume:</strong> Very fun for everything</li>
+
+        <li>Play guitar over this at college campuses</li>
+
+        <li>Resolume from Pi400 setup</li>
+
+        <li>More guitar practice streaming needed</li>
+
+      </ul>
+
+      
+
+      <h3>🎬 Content Pipeline</h3>
+
+      <ul>
+
+        <li>Blender → Unity → Aframe → Resolume</li>
+
+        <li>Paired with social media Astrobeat posts</li>
+
+        <li>Music videos & game cutscenes</li>
+
+        <li>Virtual astro hangout and website/app</li>
+
+      </ul>
+
+      
+
+      <div class="wisdom">
+
+        "Great Blender renders. Music videos. Hang out with friends. Go to concerts alone. Own cheap lot rent spot."
+
+      </div>
+
+    `
+
+  },
+
+  {
+
+    name: "VAN ECOSYSTEM",
+
+    color: 0x00ffff,
+
+    position: { x: -15, y: 9, z: -8 },
+
+    size: 3.5,
+
+    info: `
+
+      <h3>🏠 The Complete Setup</h3>
+
+      
+
+      <h3>East Side Van</h3>
+
+      <ul>
+
+        <li>Fold bike inside</li>
+
+        <li>Honda Element trunk</li>
+
+        <li>+ Storage optimization</li>
+
+      </ul>
+
+      
+
+      <h3>Family Garage Van</h3>
+
+      <ul>
+
+        <li>Basement access</li>
+
+        <li>Bedroom for extended stays</li>
+
+        <li>Recording studio setup</li>
+
+      </ul>
+
+      
+
+      <h3>🚗 Vehicle Philosophy</h3>
+
+      <ul>
+
+        <li><strong>Honda Element:</strong> Trunk space, versatility</li>
+
+        <li><strong>Airport car camper:</strong> Paid parking strategy</li>
+
+        <li><strong>Cooking trailer:</strong> Optional income stream</li>
+
+        <li>Vehicle status: Good/Bad determines timeline</li>
+
+      </ul>
+
+      
+
+      <h3>📍 Parking Strategy</h3>
+
+      <ul>
+
+        <li>Private parking via networking</li>
+
+        <li>WeWork locations when available</li>
+
+        <li>Airport paid parking (safe + Uber ready)</li>
+
+        <li>East Side Milwaukee spots</li>
+
+      </ul>
+
+      
+
+      <div class="wisdom">
+
+        <strong>Van Rest = Absolute Key</strong><br>
+
+        After money is secured, van rest becomes the foundation of everything else.
+
+      </div>
+
+    `
+
+  },
+
+  {
+
+    name: "WALKING = FREESTYLE KING",
+
+    color: 0xff3366,
+
+    position: { x: 15, y: -6, z: -11 },
+
+    size: 3.3,
+
+    info: `
+
+      <div class="revelation">
+
+        "Walking around should be Freestyle King → multilingual"
+
+      </div>
+
+      
+
+      <h3>🚶 Movement Philosophy</h3>
+
+      <ul>
+
+        <li><strong>Always On:</strong> Walking = freestyling opportunity</li>
+
+        <li><strong>Multilingual:</strong> Brazilian & Thai languages</li>
+
+        <li>Filtration system constantly running</li>
+
+        <li>Low-quality, high-quantity social opportunities</li>
+
+        <li>15 at 0.4 points > 3 at 1.0 points (the math works)</li>
+
+      </ul>
+
+      
+
+      <h3>🎤 The Strategy</h3>
+
+      <ul>
+
+        <li>Freestyle while alone/walking</li>
+
+        <li>When people show up: STOP</li>
+
+        <li>Hand them Freestyle King business card</li>
+
+        <li>Start doing burpees</li>
+
+        <li>"They're definitely going to follow you"</li>
+
+      </ul>
+
+      
+
+      <h3>🎯 Filtration System</h3>
+
+      <ul>
+
+        <li>Attract high quantity, low quality first</li>
+
+        <li>More access to their social networks</li>
+
+        <li>Social circle expansion > solid connections initially</li>
+
+        <li>Eventually convert quantity to quality</li>
+
+      </ul>
+
+      
+
+      <div class="wisdom">
+
+        "If you can freestyle poorly and still keep going and not be bothered, you're gonna have a great life."
+
+      </div>
+
+    `
+
+  },
+
+  {
+
+    name: "STOPS = ASTROBEATS/SETLIST",
+
+    color: 0xffd700,
+
+    position: { x: -12, y: -12, z: 6 },
+
+    size: 3.4,
+
+    info: `
+
+      <div class="revelation">
+
+        "Stops should be Astrobeats/Setlist"
+
+      </div>
+
+      
+
+      <h3>🎵 Performance Stops</h3>
+
+      <ul>
+
+        <li><strong>Astrobeats:</strong> Live stream performances</li>
+
+        <li><strong>Setlist:</strong> Guitar over 3JS shaders</li>
+
+        <li><strong>Location:</strong> College campuses primarily</li>
+
+        <li><strong>Tech:</strong> Resolume from Pi400</li>
+
+      </ul>
+
+      
+
+      <h3>🎸 Guitar Setup</h3>
+
+      <ul>
+
+        <li>3JS GLSL shaders → Resolume (everyday play)</li>
+
+        <li>College campuses with Pi400</li>
+
+        <li>Guitar practice streaming essential</li>
+
+        <li>Setlist = guitar sales vehicle</li>
+
+      </ul>
+
+      
+
+      <h3>🎓 Music School Strategy</h3>
+
+      <ul>
+
+        <li><strong>UWM:</strong> Fast internet, later in day</li>
+
+        <li><strong>Marquette:</strong> Early in day</li>
+
+        <li>Music school networking stream built-in</li>
+
+        <li>WeWork for shader work</li>
+
+      </ul>
+
+      
+
+      <h3>🎥 Content Creation</h3>
+
+      <ul>
+
+        <li>Blender, Unity, Aframe, Resolume pipeline</li>
+
+        <li>Music videos for social media</li>
+
+        <li>Game cutscenes</li>
+
+        <li>All becomes Astrobeat posts</li>
+
+      </ul>
+
+      
+
+      <div class="hack-alert">
+
+        <strong>Hardware Stack:</strong> Win4, Artist13 tablet, Odin 2
+
+      </div>
+
+    `
+
+  },
+
+  {
+
+    name: "NETWORKING BARS",
+
+    color: 0x00ff88,
+
+    position: { x: 13, y: 11, z: 8 },
+
+    size: 3.2,
+
+    info: `
+
+      <div class="revelation">
+
+        "Networking should be bars where you vibe code on your phone and apply to jobs"
+
+      </div>
+
+      
+
+      <h3>🍺 Bar Strategy</h3>
+
+      <ul>
+
+        <li><strong>Arrive SUPER EARLY</strong> before it gets packed</li>
+
+        <li>Get pizza slice, find seat</li>
+
+        <li>Vibe code on phone (voice to text)</li>
+
+        <li>Apply to jobs on laptop</li>
+
+        <li><strong>LEAVE before criminals arrive</strong></li>
+
+      </ul>
+
+      
+
+      <h3>⏰ Timing Is Everything</h3>
+
+      <ul>
+
+        <li>Best DJs are early (experimental, not headliners)</li>
+
+        <li>Bar owners take chances with experimental early</li>
+
+        <li>Once it gets packed = criminals come out</li>
+
+        <li>"That's their domain during best hours"</li>
+
+        <li>You want to be gone by then</li>
+
+      </ul>
+
+      
+
+      <h3>💼 Job Application Game</h3>
+
+      <ul>
+
+        <li>Test many jobs until you find one you don't want to quit</li>
+
+        <li>Job apps + music discovery simultaneously possible</li>
+
+        <li>Social vape sharing = networking during apps</li>
+
+        <li>Network check-in between sets</li>
+
+      </ul>
+
+      
+
+      <h3>🎯 Three Networking Pillars</h3>
+
+      <ol>
+
+        <li><strong>DJ/Bartender/Event networking</strong> at bars</li>
+
+        <li><strong>Music school networking</strong> via streams</li>
+
+        <li><strong>Volleyball networking</strong> for variety</li>
+
+      </ol>
+
+      
+
+      <div class="wisdom">
+
+        "Add job security via music school/concert/DJ bartender networking"
+
+      </div>
+
+    `
+
+  },
+
+  {
+
+    name: "CREATIVE STACK",
+
+    color: 0xff00ff,
+
+    position: { x: -10, y: 8, z: -14 },
+
+    size: 3.3,
+
+    info: `
+
+      <h3>🎨 The Complete Creative Pipeline</h3>
+
+      
+
+      <h3>Primary Stack</h3>
+
+      <ul>
+
+        <li><strong>Unity (.NET):</strong> Environmental/interior design "video editor"</li>
+
+        <li><strong>3JS (GLSL):</strong> Shaders for live performance</li>
+
+        <li><strong>Blender:</strong> 3D renders, images as planes</li>
+
+        <li><strong>Resolume:</strong> Live visual performance</li>
+
+      </ul>
+
+      
+
+      <h3>Support Tools</h3>
+
+      <ul>
+
+        <li><strong>Marvel App:</strong> Where Fiverr UI gets deployed</li>
+
+        <li><strong>Figma:</strong> Design systems</li>
+
+        <li><strong>Canva:</strong> Quick graphics</li>
+
+        <li>Balsamiq, Google Draw</li>
+
+        <li>Fonts & Color Palettes</li>
+
+      </ul>
+
+      
+
+      <div class="hack-alert">
+
+        <strong>MASSIVE HACK:</strong><br>
+
+        Hire UI help via Fiverr (easy + cheap) → Put into Marvel App → Interactive app experience<br>
+
+        <br>
+
+        "That's easy. Hacks!"
+
+      </div>
+
+      
+
+      <h3>🎥 Output Types</h3>
+
+      <ul>
+
+        <li><strong>Music videos:</strong> Unity + Blender (vape sharing concept)</li>
+
+        <li><strong>Game cutscenes:</strong> For social media</li>
+
+        <li><strong>Live visuals:</strong> 3JS → Resolume</li>
+
+        <li><strong>Astrobeat posts:</strong> Paired with everything</li>
+
+      </ul>
+
+      
+
+      <h3>📚 Learning Resources</h3>
+
+      <ul>
+
+        <li><strong>IQ:</strong> Shader mastery (study first)</li>
+
+        <li><strong>Brackys:</strong> Essential Unity</li>
+
+        <li><strong>Ian Hubert:</strong> Images as planes, low poly</li>
+
+        <li><strong>Ducky3D:</strong> Additional resources</li>
+
+      </ul>
+
+      
+
+      <div class="wisdom">
+
+        "I think music videos and Unity video is huge here (vape sharing). Same with Blender and 3JS shaders."
+
+      </div>
+
+    `
+
+  },
+
+  {
+
+    name: "THREE-PHASE GAME",
+
+    color: 0x00aaff,
+
+    position: { x: 10, y: -10, z: -17 },
+
+    size: 3.1,
+
+    info: `
+
+      <div class="routine">
+
+        <strong>THE THREE PHASES:</strong><br>
+
+        <br>
+
+        Phase 1: JOB APPLICATION GAME<br>
+
+        Phase 2: BOSS BROWN NOSING (Job Security)<br>
+
+        Phase 3: FREEDOM ($40K+ if single & childless)
+
+      </div>
+
+      
+
+      <h3>📊 Phase 1: Job Apps</h3>
+
+      <ul>
+
+        <li>"Your life is essentially a job application game"</li>
+
+        <li>Test many jobs until you find one you don't want to quit</li>
+
+        <li>Music discovery paired with applications</li>
+
+        <li>Social vape sharing during the process</li>
+
+        <li>Network check-ins between apps</li>
+
+      </ul>
+
+      
+
+      <h3>🎯 Phase 2: Job Security</h3>
+
+      <ul>
+
+        <li>"At a point it advances into boss brown nosing game"</li>
+
+        <li>Music school/concert/DJ bartender networking</li>
+
+        <li>Build relationships that secure position</li>
+
+        <li>Save money into vehicle maintenance</li>
+
+      </ul>
+
+      
+
+      <h3>🏆 Phase 3: Freedom</h3>
+
+      <ul>
+
+        <li>"At a certain dollar amount you are FREE"</li>
+
+        <li><strong>Target: $40K+</strong> (if single & childless)</li>
+
+        <li>Can maintain lifestyle without traditional employment</li>
+
+        <li>Uber/DoorDash + WeWork as needed</li>
+
+        <li>Van life fully sustainable</li>
+
+      </ul>
+
+      
+
+      <h3>💰 Financial Strategy</h3>
+
+      <ul>
+
+        <li>ALL money into vehicle maintenance</li>
+
+        <li>Invest into sleeper health</li>
+
+        <li>Arizona land = winter payment only</li>
+
+        <li>Own cheap lot rent spot</li>
+
+      </ul>
+
+      
+
+      <div class="wisdom">
+
+        "If you do this and save all your money... WeWork will work here."
+
+      </div>
+
+    `
+
+  },
+
+  {
+
+    name: "VIRTUAL ASTRO HANGOUT",
+
+    color: 0x8a2be2,
+
+    position: { x: -8, y: -8, z: 10 },
+
+    size: 3.4,
+
+    info: `
+
+      <div class="eternal-truth">
+
+        "Your livestream and comments section literally are the eternal party you're hosting. Just think of them as eternal."
+
+      </div>
+
+      
+
+      <h3>🎭 The Eternal Party Concept</h3>
+
+      <ul>
+
+        <li><strong>Core Insight:</strong> Your stream IS the party</li>
+
+        <li>Comments section = social gathering space</li>
+
+        <li>Not temporary - it's ETERNAL</li>
+
+        <li>Virtual study hall concept merged with this</li>
+
+      </ul>
+
+      
+
+      <h3>🎵 Virtual Astro Hangout</h3>
+
+      <ul>
+
+        <li>Website/app for persistent hangout</li>
+
+        <li>Freestyle King integration</li>
+
+        <li>InfiniDJ with ToneJS</li>
+
+        <li>WebSockets for real-time interaction</li>
+
+        <li>Virtual study hall + vibe code + UX</li>
+
+      </ul>
+
+      
+
+      <h3>🎨 Content Integration</h3>
+
+      <ul>
+
+        <li>Astrobeat streams as hangout soundtrack</li>
+
+        <li>Music videos playing in background</li>
+
+        <li>Game cutscenes as transitions</li>
+
+        <li>3JS shaders running live</li>
+
+      </ul>
+
+      
+
+      <h3>💻 Technical Stack</h3>
+
+      <ul>
+
+        <li><strong>Frontend:</strong> 3JS, ToneJS, WebSockets</li>
+
+        <li><strong>Backend:</strong> Hosting persistent rooms</li>
+
+        <li><strong>Content:</strong> Unity videos, Blender renders</li>
+
+        <li><strong>UX:</strong> Paid via Fiverr, deployed to Marvel App</li>
+
+      </ul>
+
+      
+
+      <div class="hack-alert">
+
+        <strong>Key Realization:</strong><br>
+
+        If you do social media RIGHT, DJ/concert networking becomes "extra credit" - just an afterthought because your online presence is so strong.
+
+      </div>
+
+      
+
+      <div class="wisdom">
+
+        "Paying for UX help is a good investment in Fiverr. I can code from there."
+
+      </div>
+
+    `
+
+  },
+
+  {
+
+    name: "BIKE STREAM URANUS",
+
+    color: 0xff6600,
+
+    position: { x: 8, y: 12, z: -20 },
+
+    size: 3,
+
+    info: `
+
+      <div class="eternal-truth">
+
+        "I'm super into streaming off a bike outside the clubs playing music. Why? Good question. Feels alive. Becoming. Uranus Capricorn."
+
+      </div>
+
+      
+
+      <h3>🚴 The Bike Stream Concept</h3>
+
+      <ul>
+
+        <li><strong>Setup:</strong> Streaming from bike outside clubs</li>
+
+        <li><strong>Playing music:</strong> Live mixing/performance</li>
+
+        <li><strong>Why:</strong> Feels ALIVE</li>
+
+        <li>Uranus Capricorn energy - becoming</li>
+
+      </ul>
+
+      
+
+      <h3>🎵 Mobile Performance Setup</h3>
+
+      <ul>
+
+        <li>Fold bike (fits in Honda Element)</li>
+
+        <li>Portable streaming rig</li>
+
+        <li>Play outside clubs (not inside - avoiding criminals)</li>
+
+        <li>Capture content for later use</li>
+
+      </ul>
+
+      
+
+      <h3>🎯 Stream Philosophy</h3>
+
+      <ul>
+
+        <li><strong>Stream the process</strong></li>
+
+        <li><strong>Taurus showcase on an interval</strong></li>
+
+        <li>Not constant, but rhythmic</li>
+
+        <li>Process over perfection</li>
+
+      </ul>
+
+      
+
+      <h3>🏋️ Fitness Integration</h3>
+
+      <ul>
+
+        <li>Kettlebell (all you really need)</li>
+
+        <li>Light dumbbells for shoulders</li>
+
+        <li>Iron gym for outside vehicle</li>
+
+        <li><strong>Open fitness class:</strong> Do Freestyle King if alone</li>
+
+        <li>When people show up: business card + burpees</li>
+
+      </ul>
+
+      
+
+      <h3>📍 Location Strategy</h3>
+
+      <ul>
+
+        <li>Locate nearest study hall locations</li>
+
+        <li>"From here life is pretty good"</li>
+
+        <li>Study halls + nightlife coding + music discovery</li>
+
+        <li>Hang out with TikTok friends at study halls</li>
+
+      </ul>
+
+      
+
+      <div class="wisdom">
+
+        "This becomes an open fitness class where you can do Freestyle King if you're alone."
+
+      </div>
+
+    `
+
+  }
+
+];
+
+// Create galaxies
+
+const galaxies = [];
+
+const orbitSpeeds = [0, 0.0005, 0.0008, 0.001, 0.0007, 0.0009, 0.0006, 0.00085, 0.00075];
+
+galaxyData.forEach((data, index) => {
+
+  const geometry = new THREE.SphereGeometry(data.size, 64, 64);
+
+  const material = new THREE.MeshPhongMaterial({ 
+
+    color: data.color,
+
+    emissive: data.color,
+
+    emissiveIntensity: 0.55,
+
+    shininess: 150,
+
+    transparent: true,
+
+    opacity: 0.98
+
+  });
+
+  const planet = new THREE.Mesh(geometry, material);
+
+  planet.position.set(data.position.x, data.position.y, data.position.z);
+
+  planet.userData = data;
+
+  
+
+  // Quad glow for maximum impact
+
+  for (let i = 1; i <= 4; i++) {
+
+    const glowGeometry = new THREE.SphereGeometry(data.size * (1 + i * 0.2), 32, 32);
+
+    const glowMaterial = new THREE.MeshBasicMaterial({
+
+      color: data.color,
+
+      transparent: true,
+
+      opacity: 0.3 / i
+
+    });
+
+    const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+
+    planet.add(glow);
+
+  }
+
+  
+
+  scene.add(planet);
+
+  galaxies.push(planet);
+
+  
+
+  // Create orbit paths
+
+  if (index > 0) {
+
+    const orbitRadius = Math.sqrt(data.position.x ** 2 + data.position.y ** 2 + data.position.z ** 2);
+
+    const curve = new THREE.EllipseCurve(
+
+      0, 0,
+
+      orbitRadius, orbitRadius,
+
+      0, 2 * Math.PI,
+
+      false,
+
+      0
+
+    );
+
+    const points = curve.getPoints(150);
+
+    const orbitGeometry = new THREE.BufferGeometry().setFromPoints(points);
+
+    const orbitMaterial = new THREE.LineBasicMaterial({ 
+
+      color: data.color, 
+
+      transparent: true, 
+
+      opacity: 0.2 
+
+    });
+
+    const orbit = new THREE.Line(orbitGeometry, orbitMaterial);
+
+    orbit.rotation.x = Math.PI / 2;
+
+    scene.add(orbit);
+
+  }
+
+});
+
+// Mouse interaction
+
+const raycaster = new THREE.Raycaster();
+
+const mouse = new THREE.Vector2();
+
+let isDragging = false;
+
+let previousMousePosition = { x: 0, y: 0 };
+
+window.addEventListener('mousemove', (event) => {
+
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  
+
+  if (isDragging) {
+
+    const deltaX = event.clientX - previousMousePosition.x;
+
+    const deltaY = event.clientY - previousMousePosition.y;
+
+    
+
+    scene.rotation.y += deltaX * 0.005;
+
+    scene.rotation.x += deltaY * 0.005;
+
+  }
+
+  
+
+  previousMousePosition = { x: event.clientX, y: event.clientY };
+
+});
+
+window.addEventListener('mousedown', () => { isDragging = true; });
+
+window.addEventListener('mouseup', () => { isDragging = false; });
+
+window.addEventListener('click', (event) => {
+
+  if (event.target.closest('#ui') || event.target.closest('#info') || event.target.closest('#stats')) return;
+
+  
+
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObjects(galaxies);
+
+  
+
+  if (intersects.length > 0) {
+
+    const clicked = intersects[0].object;
+
+    showInfo(clicked.userData);
+
+  }
+
+});
+
+// Zoom
+
+window.addEventListener('wheel', (event) => {
+
+  camera.position.z += event.deltaY * 0.03;
+
+  camera.position.z = Math.max(20, Math.min(80, camera.position.z));
+
+});
+
+// Info panel
+
+function showInfo(data) {
+
+  const infoPanel = document.getElementById('info');
+
+  const infoTitle = document.getElementById('info-title');
+
+  const infoContent = document.getElementById('info-content');
+
+  
+
+  infoTitle.textContent = data.name;
+
+  infoContent.innerHTML = data.info;
+
+  infoPanel.style.display = 'block';
+
+  
+
+  setTimeout(() => {
+
+    infoPanel.style.display = 'none';
+
+  }, 25000);
+
+}
+
+// UI interaction
+
+document.querySelectorAll('.galaxy-item').forEach((item, index) => {
+
+  item.addEventListener('click', () => {
+
+    showInfo(galaxyData[index]);
+
+    
+
+    const target = galaxies[index].position;
+
+    animateCamera(target);
+
+  });
+
+});
+
+function animateCamera(targetPos) {
+
+  const startPos = camera.position.clone();
+
+  const endPos = new THREE.Vector3(targetPos.x, targetPos.y, targetPos.z + 22);
+
+  let progress = 0;
+
+  
+
+  function animate() {
+
+    progress += 0.01;
+
+    if (progress < 1) {
+
+      camera.position.lerpVectors(startPos, endPos, progress);
+
+      camera.lookAt(targetPos);
+
+      requestAnimationFrame(animate);
+
+    }
+
+  }
+
+  animate();
+
+}
+
+// Wisdom quotes - THE COMPLETE SET
+
+const quotes = [
+
+  "Your livestream and comments are the eternal party you're hosting.",
+
+  "The routine is inevitable.",
+
+  "Walking around should be Freestyle King.",
+
+  "Stops should be Astrobeats/Setlist.",
+
+  "Networking should be bars where you vibe code.",
+
+  "Feels alive. Becoming. Uranus Capricorn.",
+
+  "Stream the process, showcase on an interval.",
+
+  "At $40K+ you are FREE (if single & childless).",
+
+  "Hire UI help. That's easy. Then put it into Marvel App. Hacks!",
+
+  "15 at 0.4 points > 3 at 1.0 points.",
+
+  "Leave before the criminals come out.",
+
+  "Your code and music work is edible.",
+
+  "Saturn actually rewards itself.",
+
+  "If you do this and save all money into vehicle maintenance... WeWork works."
+
+];
+
+let currentQuoteIndex = 0;
+
+let quoteTimer = 0;
+
+function showNextQuote() {
+
+  const quoteEl = document.getElementById('quote');
+
+  quoteEl.textContent = quotes[currentQuoteIndex];
+
+  quoteEl.classList.add('active');
+
+  
+
+  setTimeout(() => {
+
+    quoteEl.classList.remove('active');
+
+  }, 6000);
+
+  
+
+  currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+
+}
+
+setTimeout(showNextQuote, 5000);
+
+// Animation loop
+
+let time = 0;
+
+function animate() {
+
+  requestAnimationFrame(animate);
+
+  time += 0.01;
+
+  quoteTimer += 0.01;
+
+  
+
+  if (quoteTimer > 18) {
+
+    showNextQuote();
+
+    quoteTimer = 0;
+
+  }
+
+  
+
+  // Rotate galaxies
+
+  galaxies.forEach((planet, index) => {
+
+    planet.rotation.y += 0.004;
+
+    
+
+    if (index > 0) {
+
+      const data = planet.userData;
+
+      const radius = Math.sqrt(data.position.x ** 2 + data.position.y ** 2);
+
+      const baseAngle = Math.atan2(data.position.z, data.position.x);
+
+      const angle = baseAngle + (time * orbitSpeeds[index]);
+
+      planet.position.x = Math.cos(angle) * radius;
+
+      planet.position.z = Math.sin(angle) * radius;
+
+    }
+
+  });
+
+  
+
+  // Rotate starfield
+
+  stars.rotation.y += 0.00025;
+
+  stars.rotation.x += 0.0001;
+
+  
+
+  // Pulse lights
+
+  pointLight1.intensity = 2.5 + Math.sin(time * 0.7) * 0.5;
+
+  pointLight2.intensity = 2.5 + Math.cos(time * 0.7) * 0.5;
+
+  pointLight3.intensity = 2 + Math.sin(time * 0.5) * 0.4;
+
+  
+
+  // Hover effect
+
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObjects(galaxies);
+
+  
+
+  galaxies.forEach(planet => {
+
+    planet.scale.set(1, 1, 1);
+
+  });
+
+  
+
+  if (intersects.length > 0) {
+
+    intersects[0].object.scale.set(1.2, 1.2, 1.2);
+
+    document.body.style.cursor = 'pointer';
+
+  } else {
+
+    document.body.style.cursor = 'default';
+
+  }
+
+  
+
+  renderer.render(scene, camera);
+
+}
+
+animate();
+
+// Responsive
+
+window.addEventListener('resize', () => {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+});
+
+// Close info panel
+
+document.addEventListener('click', (e) => {
+
+  const infoPanel = document.getElementById('info');
+
+  if (!infoPanel.contains(e.target) && !e.target.closest('.galaxy-item') && !e.target.closest('canvas')) {
+
+    if (infoPanel.style.display === 'block') {
+
+      infoPanel.style.display = 'none';
+
+    }
+
+  }
+
+});
+
+</script>
+
+</body>
+
+</html>
+
