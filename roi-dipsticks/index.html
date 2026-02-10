@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ROI Dipsticks</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+  <style>
+
+    body {
+
+      background: #111;
+
+      color: #ddd;
+
+      font-family: sans-serif;
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      justify-content: center;
+
+      height: 100vh;
+
+      margin: 0;
+
+    }
+
+    h1 {
+
+      color: #facc15;
+
+      margin-bottom: 1rem;
+
+    }
+
+    .label {
+
+      fill: #ddd;
+
+      font-size: 14px;
+
+      text-anchor: middle;
+
+    }
+
+    .roi-text {
+
+      fill: #aaa;
+
+      font-size: 12px;
+
+      text-anchor: middle;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <h1>ROI Dipsticks</h1>
+
+  <svg id="chart" width="600" height="400"></svg>
+
+  <script>
+
+    const data = [
+
+      { name: "Job Security", roi: 9 },
+
+      { name: "Creative Fire", roi: 6 },
+
+      { name: "Resource Base", roi: 5 }
+
+    ];
+
+    const width = 600, height = 400;
+
+    const svg = d3.select("#chart");
+
+    const xScale = d3.scaleBand()
+
+      .domain(data.map(d => d.name))
+
+      .range([80, width - 80])
+
+      .padding(0.5);
+
+    const yScale = d3.scaleLinear()
+
+      .domain([0, d3.max(data, d => d.roi) + 1])
+
+      .range([height - 60, 60]);
+
+    // Bars (dipsticks)
+
+    svg.selectAll("rect")
+
+      .data(data)
+
+      .enter()
+
+      .append("rect")
+
+      .attr("x", d => xScale(d.name))
+
+      .attr("width", xScale.bandwidth())
+
+      .attr("y", yScale(0))
+
+      .attr("height", 0)
+
+      .attr("rx", 8)
+
+      .attr("fill", d => d.name === "Job Security" ? "#facc15" : "#38bdf8")
+
+      .transition()
+
+      .duration(1200)
+
+      .attr("y", d => yScale(d.roi))
+
+      .attr("height", d => yScale(0) - yScale(d.roi));
+
+    // Labels
+
+    svg.selectAll(".label")
+
+      .data(data)
+
+      .enter()
+
+      .append("text")
+
+      .attr("class", "label")
+
+      .attr("x", d => xScale(d.name) + xScale.bandwidth()/2)
+
+      .attr("y", height - 20)
+
+      .text(d => d.name);
+
+    // ROI numbers
+
+    svg.selectAll(".roi-text")
+
+      .data(data)
+
+      .enter()
+
+      .append("text")
+
+      .attr("class", "roi-text")
+
+      .attr("x", d => xScale(d.name) + xScale.bandwidth()/2)
+
+      .attr("y", d => yScale(d.roi) - 10)
+
+      .text(d => `ROI: ${d.roi}`);
+
+    // Champion glow
+
+    svg.selectAll("rect")
+
+      .filter(d => d.name === "Job Security")
+
+      .attr("stroke", "#facc15")
+
+      .attr("stroke-width", 4)
+
+      .attr("filter", "url(#glow)");
+
+    // Glow filter
+
+    const defs = svg.append("defs");
+
+    const filter = defs.append("filter").attr("id", "glow");
+
+    filter.append("feGaussianBlur")
+
+      .attr("stdDeviation", "4")
+
+      .attr("result", "coloredBlur");
+
+    const feMerge = filter.append("feMerge");
+
+    feMerge.append("feMergeNode").attr("in", "coloredBlur");
+
+    feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+
+  </script>
+
+</body>
+
+</html>
