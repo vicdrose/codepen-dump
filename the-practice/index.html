@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Ai slop game</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/WbxOzyW">
+  
+  
+  
+  
+<style>
+* {
+
+  box-sizing: border-box;
+
+  font-family: system-ui, sans-serif;
+
+}
+
+body {
+
+  margin: 0;
+
+  background: radial-gradient(circle at top, #111 0%, #000 70%);
+
+  color: #eaeaea;
+
+  height: 100vh;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+#world {
+
+  width: 90%;
+
+  max-width: 800px;
+
+  padding: 2rem;
+
+  border-radius: 20px;
+
+  background: rgba(255,255,255,0.02);
+
+  box-shadow: 0 0 60px rgba(0,0,0,0.8);
+
+}
+
+header h1 {
+
+  font-size: 2.5rem;
+
+  margin: 0;
+
+  letter-spacing: 2px;
+
+}
+
+#subtitle {
+
+  opacity: 0.6;
+
+}
+
+#ritual {
+
+  margin: 3rem 0;
+
+  text-align: center;
+
+}
+
+#playBtn {
+
+  background: linear-gradient(135deg, #7f5af0, #2cb67d);
+
+  border: none;
+
+  color: black;
+
+  font-size: 1.2rem;
+
+  padding: 1rem 2rem;
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  transition: transform 0.2s ease;
+
+}
+
+#playBtn:hover {
+
+  transform: scale(1.05);
+
+}
+
+#pulse {
+
+  width: 20px;
+
+  height: 20px;
+
+  margin: 1.5rem auto;
+
+  border-radius: 50%;
+
+  background: #2cb67d;
+
+  opacity: 0;
+
+}
+
+#counter {
+
+  font-size: 0.9rem;
+
+  opacity: 0.7;
+
+}
+
+#path {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 1rem;
+
+}
+
+.node {
+
+  flex: 1;
+
+  padding: 1rem;
+
+  border-radius: 12px;
+
+  text-align: center;
+
+  transition: all 0.5s ease;
+
+}
+
+.locked {
+
+  background: rgba(255,255,255,0.05);
+
+  color: rgba(255,255,255,0.3);
+
+}
+
+.unlocked {
+
+  background: rgba(44,182,125,0.15);
+
+  color: #2cb67d;
+
+  box-shadow: 0 0 20px rgba(44,182,125,0.3);
+
+}
+
+footer {
+
+  margin-top: 2rem;
+
+  text-align: center;
+
+  opacity: 0.4;
+
+  font-size: 0.8rem;
+
+}
+</style>
+
+  
+  
+  
+</head>
+
+<body>
+  <div id="world">
+  <header>
+    <h1>The Practice</h1>
+    <p id="subtitle">Play it again. Then again. Then it becomes real.</p>
+  </header>
+
+  <main>
+    <section id="ritual">
+      <button id="playBtn">Create</button>
+      <div id="pulse"></div>
+      <div id="counter">Sessions: 0</div>
+    </section>
+
+    <section id="path">
+      <div class="node locked">Discipline</div>
+      <div class="node locked">Visibility</div>
+      <div class="node locked">Authority</div>
+    </section>
+  </main>
+
+  <footer>
+    <p id="whisper">Consistency reveals what inspiration hides.</p>
+  </footer>
+</div>
+  
+    <script id="rendered-js" >
+let sessions = 0;
+
+const btn = document.getElementById("playBtn");
+
+const counter = document.getElementById("counter");
+
+const pulse = document.getElementById("pulse");
+
+const nodes = document.querySelectorAll(".node");
+
+const whisper = document.getElementById("whisper");
+
+const messages = [
+
+  "Play is harmless until you repeat it.",
+
+  "Repetition creates gravity.",
+
+  "What you practice begins to pull others in.",
+
+  "Responsibility arrives quietly.",
+
+  "You are being watched now."
+
+];
+
+btn.addEventListener("click", () => {
+
+  sessions++;
+
+  counter.textContent = `Sessions: ${sessions}`;
+
+  pulse.style.opacity = 1;
+
+  pulse.animate(
+
+    [
+
+      { transform: "scale(1)", opacity: 1 },
+
+      { transform: "scale(6)", opacity: 0 }
+
+    ],
+
+    { duration: 800, easing: "ease-out" }
+
+  );
+
+  setTimeout(() => pulse.style.opacity = 0, 800);
+
+  if (sessions >= 3) unlock(0);
+
+  if (sessions >= 6) unlock(1);
+
+  if (sessions >= 10) unlock(2);
+
+  whisper.textContent = messages[Math.min(sessions - 1, messages.length - 1)];
+
+});
+
+function unlock(index) {
+
+  nodes[index].classList.remove("locked");
+
+  nodes[index].classList.add("unlocked");
+
+}
+  </script>
+
+  
+</body>
+
+</html>
