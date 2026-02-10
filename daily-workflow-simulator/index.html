@@ -1,410 +1,1378 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Daily Workflow Simulator</title>
+<div id="app">
+
+  <!-- Navigation -->
+
+  <div id="nav">
+
+    <div class="nav-dots">
+
+      <div class="nav-dot active" data-scene="1" title="Uber + Job Apps"></div>
+
+      <div class="nav-dot" data-scene="2" title="Fitness"></div>
+
+      <div class="nav-dot" data-scene="3" title="Music Stream"></div>
+
+      <div class="nav-dot" data-scene="4" title="Study Hall"></div>
+
+      <div class="nav-dot" data-scene="5" title="Networking"></div>
+
+      <div class="nav-dot" data-scene="6" title="Night Coding"></div>
+
+    </div>
+
+    <div id="energy-meter">
+
+      <span>Energy:</span>
+
+      <div class="energy-bar">
+
+        <div class="energy-fill" style="width: 80%"></div>
+
+      </div>
+
+      <span id="energy-text">80%</span>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 1: Uber Airport + Music + Job Apps -->
+
+  <div id="scene1" class="scene active">
+
+    <h1 class="scene-title">🚗 Morning Hustle: Travel + Applications</h1>
+
+    <div class="canvas-container">
+
+      <div class="car"></div>
+
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+
+        <div class="music-player">
+
+          <button class="play-btn" onclick="toggleMusic(1)">▶</button>
+
+          <div>
+
+            <div style="font-weight: bold;">Discover New Tracks</div>
+
+            <div style="font-size: 0.8rem; opacity: 0.7;">Focus Mode Playlist</div>
+
+          </div>
+
+        </div>
+
+        <div id="job-apps" style="margin-top: 20px;">
+
+          <div class="job-app" onclick="completeJob(this)">
+
+            <strong>Frontend Developer</strong><br>
+
+            <small>Apply to TechCorp</small>
+
+          </div>
+
+          <div class="job-app" onclick="completeJob(this)">
+
+            <strong>Full Stack Engineer</strong><br>
+
+            <small>Apply to StartupXYZ</small>
+
+          </div>
+
+          <div class="job-app" onclick="completeJob(this)">
+
+            <strong>3D Graphics Developer</strong><br>
+
+            <small>Apply to GameStudio</small>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="nextScene()">Next Scene →</button>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 2: Fitness -->
+
+  <div id="scene2" class="scene">
+
+    <h1 class="scene-title">💪 High-Energy Workout</h1>
+
+    <div class="canvas-container">
+
+      <div class="avatar"></div>
+
+      <div class="rep-counter" id="rep-counter">0</div>
+
+      <div style="text-align: center;">
+
+        <div style="font-size: 1.2rem; margin: 10px;">Current: <span id="exercise-type">Burpees</span></div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="changeExercise('Burpees')">Burpees</button>
+
+      <button class="btn" onclick="changeExercise('Kettlebell')">Kettlebell</button>
+
+      <button class="btn" onclick="changeExercise('Dumbbell')">Dumbbell</button>
+
+      <button class="btn" onclick="startWorkout()">Start Rep</button>
+
+      <button class="btn active" id="mode-toggle" onclick="toggleMode()">Solo Mode</button>
+
+      <button class="btn" onclick="nextScene()">Next Scene →</button>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 3: Music Stream -->
+
+  <div id="scene3" class="scene">
+
+    <h1 class="scene-title">🎵 Campus Beat Session</h1>
+
+    <div class="canvas-container">
+
+      <div style="padding: 40px; text-align: center;">
+
+        <div class="visualizer" id="visualizer"></div>
+
+        <div style="margin-top: 30px;">
+
+          <button class="play-btn" onclick="toggleMusic(3)">▶</button>
+
+        </div>
+
+        <div style="margin-top: 20px;">
+
+          <label style="display: block; margin: 10px;">
+
+            Subwoofer: <input type="range" min="0" max="100" value="70" onchange="updateSubwoofer(this.value)">
+
+          </label>
+
+          <div style="margin-top: 20px; font-size: 1.2rem;">Audience Vibe: <span id="audience-vibe">🔥 LIT</span></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="improvise()">Improvise 🎹</button>
+
+      <button class="btn" onclick="nextScene()">Next Scene →</button>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 4: Study Hall -->
+
+  <div id="scene4" class="scene">
+
+    <h1 class="scene-title">☕ Virtual Study Hall</h1>
+
+    <div class="canvas-container">
+
+      <div style="padding: 20px; overflow-y: auto; height: 100%;">
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+
+          <div class="desk" onclick="sitAtDesk(1)">
+
+            <div class="laptop"></div>
+
+            <div style="text-align: center; margin-top: 60px; font-size: 0.8rem;">Desk 1</div>
+
+          </div>
+
+          <div class="desk" onclick="sitAtDesk(2)">
+
+            <div class="laptop"></div>
+
+            <div style="text-align: center; margin-top: 60px; font-size: 0.8rem;">Desk 2</div>
+
+          </div>
+
+          <div class="desk" onclick="sitAtDesk(3)">
+
+            <div class="laptop"></div>
+
+            <div style="text-align: center; margin-top: 60px; font-size: 0.8rem;">Desk 3</div>
+
+          </div>
+
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+
+          <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; display: inline-block;">
+
+            <div>💬 Network Chat</div>
+
+            <div id="chat-messages" style="margin-top: 10px; font-size: 0.9rem;">
+
+              <div>Alex: Working on React project</div>
+
+              <div>Sam: Anyone up for code review?</div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="sendMessage()">Send Message</button>
+
+      <button class="btn" onclick="nextScene()">Next Scene →</button>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 5: Networking -->
+
+  <div id="scene5" class="scene">
+
+    <h1 class="scene-title">🎉 Social Energy Zone</h1>
+
+    <div class="canvas-container">
+
+      <div class="crowd" id="crowd"></div>
+
+      <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); text-align: center;">
+
+        <div style="font-size: 1.5rem; margin: 10px;">Connections Made: <span id="connections">0</span></div>
+
+        <div class="music-player">
+
+          <button class="play-btn" onclick="toggleMusic(5)">▶</button>
+
+          <div>DJ Set Playing</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="mingleCrowd()">Mingle 🤝</button>
+
+      <button class="btn" onclick="danceBurst()">Dance Burst 💃</button>
+
+      <button class="btn" onclick="nextScene()">Next Scene →</button>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 6: Night Coding -->
+
+  <div id="scene6" class="scene">
+
+    <h1 class="scene-title">🌙 Deep Work: Code + Create</h1>
+
+    <div class="canvas-container">
+
+      <div class="code-editor" id="code-editor"></div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="toggleWorkspace('Unity')">Unity 🎮</button>
+
+      <button class="btn" onclick="toggleWorkspace('Blender')">Blender 🎨</button>
+
+      <button class="btn" onclick="toggleWorkspace('TouchDesigner')">TouchDesigner ✨</button>
+
+      <button class="btn" onclick="showSummary()">Day Summary 📊</button>
+
+    </div>
+
+  </div>
+
+  <!-- Tooltip -->
+
+  <div class="tooltip" id="tooltip"></div>
+
+</div>
 
 <style>
-/* ====== GLOBAL RESET ====== */
-* {
+  * {
+
   margin: 0;
+
   padding: 0;
+
   box-sizing: border-box;
+
 }
 
 body {
+
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
   overflow: hidden;
+
   background: #0a0a0a;
+
   color: #fff;
+
 }
 
 #app {
+
   width: 100vw;
+
   height: 100vh;
+
   position: relative;
+
   overflow: hidden;
+
 }
 
-/* ====== SCENE SYSTEM ====== */
+/* Scene System */
+
 .scene {
+
   position: absolute;
+
   width: 100%;
+
   height: 100%;
+
   opacity: 0;
+
   pointer-events: none;
+
   transition: opacity 0.8s ease;
+
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
+
   justify-content: center;
+
   padding: 20px;
+
 }
 
 .scene.active {
+
   opacity: 1;
+
   pointer-events: all;
+
 }
 
 /* Scene Backgrounds */
+
 #scene1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+
 #scene2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+
 #scene3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+
 #scene4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
 #scene5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+
 #scene6 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
 
-/* ====== NAV ====== */
+/* Navigation Bar */
+
 #nav {
+
   position: fixed;
+
   top: 0;
+
   left: 0;
+
   right: 0;
-  background: rgba(0,0,0,0.8);
+
+  background: rgba(0, 0, 0, 0.8);
+
   backdrop-filter: blur(10px);
+
   padding: 15px 20px;
+
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
+
   z-index: 1000;
+
   border-bottom: 2px solid #00ff88;
+
 }
 
 .nav-dots {
+
   display: flex;
+
   gap: 10px;
+
 }
 
 .nav-dot {
+
   width: 12px;
+
   height: 12px;
+
   border-radius: 50%;
-  background: rgba(255,255,255,0.3);
+
+  background: rgba(255, 255, 255, 0.3);
+
   cursor: pointer;
+
   transition: all 0.3s;
+
 }
 
 .nav-dot.active {
+
   background: #00ff88;
+
   transform: scale(1.3);
+
+}
+
+.nav-dot:hover {
+
+  background: #00ffaa;
+
+  transform: scale(1.2);
+
+}
+
+/* Energy Meter */
+
+#energy-meter {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
 }
 
 .energy-bar {
+
   width: 150px;
+
   height: 8px;
-  background: rgba(255,255,255,0.2);
+
+  background: rgba(255, 255, 255, 0.2);
+
   border-radius: 10px;
+
   overflow: hidden;
+
 }
 
 .energy-fill {
+
   height: 100%;
-  background: linear-gradient(90deg,#ff4444,#ffaa00,#00ff88);
+
+  background: linear-gradient(90deg, #ff4444, #ffaa00, #00ff88);
+
   transition: width 0.5s ease;
+
+  border-radius: 10px;
+
 }
 
-/* ====== COMMON ELEMENTS ====== */
+/* Scene Elements */
+
 .scene-title {
-  font-size: 2.2rem;
+
+  font-size: 2.5rem;
+
   font-weight: bold;
+
   margin-bottom: 20px;
+
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+
   text-align: center;
+
 }
 
 .canvas-container {
+
   width: 90%;
-  max-width: 1100px;
+
+  max-width: 1200px;
+
   height: 60%;
-  background: rgba(0,0,0,0.3);
+
+  background: rgba(0, 0, 0, 0.3);
+
   border-radius: 20px;
+
   position: relative;
+
   overflow: hidden;
+
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+
 }
 
 .controls {
+
   margin-top: 20px;
+
   display: flex;
-  gap: 10px;
+
+  gap: 15px;
+
   flex-wrap: wrap;
+
   justify-content: center;
+
 }
 
 .btn {
-  padding: 10px 20px;
-  background: rgba(255,255,255,0.2);
-  border: 2px solid rgba(255,255,255,0.5);
+
+  padding: 12px 24px;
+
+  background: rgba(255, 255, 255, 0.2);
+
+  border: 2px solid rgba(255, 255, 255, 0.5);
+
   border-radius: 10px;
+
   color: white;
+
   cursor: pointer;
+
+  font-size: 1rem;
+
   transition: all 0.3s;
+
+  backdrop-filter: blur(10px);
+
 }
 
 .btn:hover {
-  background: rgba(255,255,255,0.4);
+
+  background: rgba(255, 255, 255, 0.4);
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+
 }
 
-/* Scene 1 */
+.btn.active {
+
+  background: #00ff88;
+
+  color: #000;
+
+  border-color: #00ff88;
+
+}
+
+/* Scene 1: Car Animation */
+
 .car {
+
   width: 80px;
+
   height: 40px;
+
   background: #ffcc00;
-  border-radius: 10px;
+
+  border-radius: 10px 10px 5px 5px;
+
   position: absolute;
+
   top: 50%;
+
   animation: drive 4s linear infinite;
+
 }
 
 @keyframes drive {
+
   0% { left: -100px; }
+
   100% { left: calc(100% + 100px); }
+
 }
 
 .job-app {
-  background: white;
-  color: black;
-  padding: 12px;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  color: #333;
+
+  padding: 15px;
+
   border-radius: 10px;
+
   margin: 10px;
+
   cursor: pointer;
+
+  transition: all 0.3s;
+
+  max-width: 300px;
+
+}
+
+.job-app:hover {
+
+  transform: scale(1.05);
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+
 }
 
 .job-app.completed {
+
+  opacity: 0.5;
+
   background: #00ff88;
+
 }
 
-/* Scene 2 */
+.music-player {
+
+  background: rgba(0, 0, 0, 0.5);
+
+  padding: 15px;
+
+  border-radius: 10px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  margin: 10px;
+
+}
+
+.play-btn {
+
+  width: 50px;
+
+  height: 50px;
+
+  border-radius: 50%;
+
+  background: #00ff88;
+
+  border: none;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 1.5rem;
+
+  transition: all 0.3s;
+
+}
+
+.play-btn:hover {
+
+  transform: scale(1.1);
+
+  box-shadow: 0 5px 20px rgba(0, 255, 136, 0.5);
+
+}
+
+/* Scene 2: Fitness Avatar */
+
 .avatar {
-  width: 150px;
-  height: 200px;
-  background: #764ba2;
+
+  width: 200px;
+
+  height: 300px;
+
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
   border-radius: 20px;
-  animation: workout 2s infinite;
+
+  position: relative;
+
+  margin: 20px auto;
+
+  animation: workout 2s ease-in-out infinite;
+
 }
 
 @keyframes workout {
-  50% { transform: translateY(-20px); }
+
+  0%, 100% { transform: translateY(0) scale(1); }
+
+  50% { transform: translateY(-20px) scale(1.05); }
+
 }
 
 .rep-counter {
-  font-size: 2rem;
-  margin: 15px;
+
+  font-size: 3rem;
+
+  font-weight: bold;
+
+  text-align: center;
+
+  margin: 20px;
+
 }
 
-/* Scene 3 */
+/* Scene 3: Audio Visualizer */
+
 .visualizer {
+
   display: flex;
-  gap: 5px;
-  height: 150px;
+
   align-items: flex-end;
+
+  justify-content: center;
+
+  height: 200px;
+
+  gap: 5px;
+
 }
 
 .bar {
-  width: 15px;
-  background: #00ff88;
+
+  width: 20px;
+
+  background: linear-gradient(to top, #00ff88, #00ffff);
+
+  border-radius: 5px 5px 0 0;
+
+  transition: height 0.1s;
+
 }
 
-/* Scene 4 */
+/* Scene 4: Virtual Study Hall */
+
 .desk {
-  width: 120px;
-  height: 80px;
-  background: brown;
-  margin: 10px;
+
+  width: 150px;
+
+  height: 100px;
+
+  background: #8b4513;
+
+  border-radius: 10px;
+
+  position: relative;
+
+  margin: 20px;
+
   display: inline-block;
+
   cursor: pointer;
+
+  transition: transform 0.3s;
+
 }
 
-/* Scene 5 */
-.person {
-  width: 30px;
-  height: 50px;
-  background: pink;
-  margin: 5px;
-  display: inline-block;
-  animation: bounce 1s infinite;
+.desk:hover {
+
+  transform: scale(1.05);
+
 }
+
+.laptop {
+
+  width: 80px;
+
+  height: 50px;
+
+  background: #333;
+
+  border-radius: 5px;
+
+  position: absolute;
+
+  top: 20px;
+
+  left: 35px;
+
+}
+
+/* Scene 5: Crowd Animation */
+
+.crowd {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 20px;
+
+}
+
+.person {
+
+  width: 40px;
+
+  height: 60px;
+
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+
+  border-radius: 50% 50% 0 0;
+
+  animation: bounce 1s ease-in-out infinite;
+
+  cursor: pointer;
+
+}
+
+.person:nth-child(2n) { animation-delay: 0.2s; }
+
+.person:nth-child(3n) { animation-delay: 0.4s; }
 
 @keyframes bounce {
-  50% { transform: translateY(-10px); }
+
+  0%, 100% { transform: translateY(0); }
+
+  50% { transform: translateY(-15px); }
+
 }
 
-/* Scene 6 */
+/* Scene 6: Code Editor */
+
 .code-editor {
+
   width: 100%;
+
   height: 100%;
+
   background: #1e1e1e;
-  padding: 15px;
-  font-family: monospace;
+
+  color: #d4d4d4;
+
+  font-family: 'Courier New', monospace;
+
+  padding: 20px;
+
   overflow-y: auto;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+
 }
+
+.code-line { 
+
+  opacity: 0; 
+
+}
+
+.progress-summary {
+
+  background: rgba(0, 0, 0, 0.8);
+
+  padding: 20px;
+
+  border-radius: 10px;
+
+  margin-top: 20px;
+
+  max-width: 600px;
+
+}
+
+.progress-item {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  margin: 10px 0;
+
+  padding: 10px;
+
+  background: rgba(255, 255, 255, 0.1);
+
+  border-radius: 5px;
+
+}
+
+/* Tooltip */
 
 .tooltip {
+
   position: absolute;
-  background: black;
-  padding: 8px;
-  border-radius: 5px;
-  font-size: 0.8rem;
+
+  background: rgba(0, 0, 0, 0.9);
+
+  color: white;
+
+  padding: 10px 15px;
+
+  border-radius: 8px;
+
+  font-size: 0.9rem;
+
+  pointer-events: none;
+
   opacity: 0;
+
   transition: opacity 0.3s;
+
+  z-index: 2000;
+
+  max-width: 250px;
+
 }
-.tooltip.show { opacity: 1; }
 
+.tooltip.show {
+
+  opacity: 1;
+
+}
+
+/* Animations */
+
+@keyframes float {
+
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0; }
+
+  50% { transform: translateY(-50px) scale(1.5); opacity: 1; }
+
+}
+
+@keyframes fadeIn {
+
+  from { opacity: 0; transform: scale(0.95); }
+
+  to { opacity: 1; transform: scale(1); }
+
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+
+  .scene-title { font-size: 1.8rem; }
+
+  .canvas-container { height: 50%; }
+
+  .controls { gap: 10px; }
+
+  .btn { padding: 10px 18px; font-size: 0.9rem; }
+
+}
 </style>
-</head>
-
-<body>
-
-<div id="app">
-
-<!-- NAV -->
-<div id="nav">
-  <div class="nav-dots">
-    <div class="nav-dot active" data-scene="1"></div>
-    <div class="nav-dot" data-scene="2"></div>
-    <div class="nav-dot" data-scene="3"></div>
-    <div class="nav-dot" data-scene="4"></div>
-    <div class="nav-dot" data-scene="5"></div>
-    <div class="nav-dot" data-scene="6"></div>
-  </div>
-  <div>
-    Energy:
-    <div class="energy-bar">
-      <div class="energy-fill" style="width:80%"></div>
-    </div>
-    <span id="energy-text">80%</span>
-  </div>
-</div>
-
-<!-- SCENES -->
-<div id="scene1" class="scene active">
-  <h1 class="scene-title">🚗 Morning Hustle</h1>
-  <div class="canvas-container">
-    <div class="car"></div>
-  </div>
-  <div class="controls">
-    <button class="btn" onclick="nextScene()">Next →</button>
-  </div>
-</div>
-
-<div id="scene2" class="scene">
-  <h1 class="scene-title">💪 Workout</h1>
-  <div class="canvas-container">
-    <div class="avatar"></div>
-    <div class="rep-counter" id="rep-counter">0</div>
-  </div>
-  <div class="controls">
-    <button class="btn" onclick="startWorkout()">Rep</button>
-    <button class="btn" onclick="nextScene()">Next →</button>
-  </div>
-</div>
-
-<div id="scene3" class="scene">
-  <h1 class="scene-title">🎵 Music Session</h1>
-  <div class="canvas-container">
-    <div class="visualizer" id="visualizer"></div>
-  </div>
-  <div class="controls">
-    <button class="btn" onclick="toggleMusic()">Play</button>
-    <button class="btn" onclick="nextScene()">Next →</button>
-  </div>
-</div>
-
-<div id="scene4" class="scene">
-  <h1 class="scene-title">☕ Study Hall</h1>
-  <div class="canvas-container">
-    <div class="desk" onclick="showTooltip(this,'Coding mode!')"></div>
-  </div>
-  <div class="controls">
-    <button class="btn" onclick="nextScene()">Next →</button>
-  </div>
-</div>
-
-<div id="scene5" class="scene">
-  <h1 class="scene-title">🎉 Networking</h1>
-  <div class="canvas-container" id="crowd"></div>
-  <div class="controls">
-    <button class="btn" onclick="nextScene()">Next →</button>
-  </div>
-</div>
-
-<div id="scene6" class="scene">
-  <h1 class="scene-title">🌙 Deep Work</h1>
-  <div class="canvas-container">
-    <div class="code-editor" id="code-editor">// Coding...</div>
-  </div>
-</div>
-
-<div class="tooltip" id="tooltip"></div>
-
-</div>
-
 <script>
+  // Global State
 let currentScene = 1;
 let energy = 80;
 let reps = 0;
-let musicOn = false;
+let connections = 0;
+let completedJobs = 0;
+let currentExercise = 'Burpees';
+let isOpenClass = false;
+let musicPlaying = {};
 
-document.querySelectorAll('.nav-dot').forEach(dot=>{
-  dot.onclick=()=>goToScene(parseInt(dot.dataset.scene));
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+  initializeVisualizer();
+  initializeCrowd();
+  initializeCodeEditor();
+  updateEnergyMeter();
+  setupNavigation();
+  createParticles();
 });
 
-function nextScene(){
-  goToScene(currentScene<6?currentScene+1:1);
+// === NAVIGATION SYSTEM ===
+function setupNavigation() {
+  document.querySelectorAll('.nav-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      goToScene(parseInt(dot.dataset.scene));
+    });
+  });
+  
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') nextScene();
+    else if (e.key === 'ArrowLeft' && currentScene > 1) goToScene(currentScene - 1);
+    else if (e.key >= '1' && e.key <= '6') goToScene(parseInt(e.key));
+  });
 }
 
-function goToScene(num){
-  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-dot').forEach(d=>d.classList.remove('active'));
-  document.getElementById('scene'+num).classList.add('active');
-  document.querySelector(`[data-scene="${num}"]`).classList.add('active');
-  currentScene=num;
+function nextScene() {
+  goToScene(currentScene < 6 ? currentScene + 1 : 1);
 }
 
-function startWorkout(){
-  reps++;
-  document.getElementById('rep-counter').textContent=reps;
-  energy=Math.max(0,energy-2);
-  updateEnergy();
+function goToScene(sceneNum) {
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-dot').forEach(d => d.classList.remove('active'));
+  
+  document.getElementById(`scene${sceneNum}`).classList.add('active');
+  document.querySelector(`[data-scene="${sceneNum}"]`).classList.add('active');
+  
+  currentScene = sceneNum;
+  updateEnergyForScene(sceneNum);
 }
 
-function updateEnergy(){
-  document.querySelector('.energy-fill').style.width=energy+'%';
-  document.getElementById('energy-text').textContent=energy+'%';
+// === ENERGY SYSTEM ===
+function updateEnergyForScene(scene) {
+  const energyLevels = [80, 90, 75, 50, 70, 40];
+  energy = energyLevels[scene - 1];
+  updateEnergyMeter();
 }
 
-function toggleMusic(){
-  musicOn=!musicOn;
-  if(musicOn) animateVisualizer();
+function updateEnergyMeter() {
+  const fill = document.querySelector('.energy-fill');
+  const text = document.getElementById('energy-text');
+  fill.style.width = energy + '%';
+  text.textContent = energy + '%';
 }
 
-function animateVisualizer(){
-  const vis=document.getElementById('visualizer');
-  vis.innerHTML='';
-  for(let i=0;i<15;i++){
-    let bar=document.createElement('div');
-    bar.className='bar';
-    bar.style.height=Math.random()*120+'px';
-    vis.appendChild(bar);
+// === SCENE 1: UBER + JOB APPS ===
+function completeJob(element) {
+  if (!element.classList.contains('completed')) {
+    element.classList.add('completed');
+    completedJobs++;
+    showTooltip(element, '✓ Application Submitted!');
   }
 }
 
-function showTooltip(el,text){
-  const tip=document.getElementById('tooltip');
-  const rect=el.getBoundingClientRect();
-  tip.textContent=text;
-  tip.style.left=rect.left+'px';
-  tip.style.top=rect.top-30+'px';
-  tip.classList.add('show');
-  setTimeout(()=>tip.classList.remove('show'),1500);
+function toggleMusic(scene) {
+  const btn = event.target;
+  musicPlaying[scene] = !musicPlaying[scene];
+  btn.textContent = musicPlaying[scene] ? '⏸' : '▶';
+  
+  if (scene === 3 && musicPlaying[scene]) {
+    animateVisualizer();
+  }
 }
 
-for(let i=0;i<20;i++){
-  let p=document.createElement('div');
-  p.className='person';
-  document.getElementById('crowd').appendChild(p);
+// === SCENE 2: FITNESS ===
+function startWorkout() {
+  reps++;
+  document.getElementById('rep-counter').textContent = reps;
+  
+  const avatar = document.querySelector('.avatar');
+  avatar.style.animation = 'none';
+  setTimeout(() => {
+    avatar.style.animation = 'workout 0.5s ease-in-out';
+  }, 10);
+  
+  energy = Math.max(20, energy - 2);
+  updateEnergyMeter();
 }
 
-console.log("🎮 Workflow Simulator Loaded");
+function changeExercise(exercise) {
+  currentExercise = exercise;
+  document.getElementById('exercise-type').textContent = exercise;
+  
+  const avatar = document.querySelector('.avatar');
+  const gradients = {
+    'Burpees': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    'Kettlebell': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    'Dumbbell': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+  };
+  avatar.style.background = gradients[exercise];
+}
+
+function toggleMode() {
+  isOpenClass = !isOpenClass;
+  const btn = document.getElementById('mode-toggle');
+  btn.textContent = isOpenClass ? 'Open Class Mode' : 'Solo Mode';
+  btn.classList.toggle('active');
+}
+
+// === SCENE 3: AUDIO VISUALIZER ===
+function initializeVisualizer() {
+  const visualizer = document.getElementById('visualizer');
+  for (let i = 0; i < 20; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = '20px';
+    visualizer.appendChild(bar);
+  }
+}
+
+function animateVisualizer() {
+  const bars = document.querySelectorAll('#visualizer .bar');
+  setInterval(() => {
+    if (musicPlaying[3]) {
+      bars.forEach(bar => {
+        const height = Math.random() * 150 + 20;
+        bar.style.height = height + 'px';
+      });
+    }
+  }, 100);
+}
+
+function updateSubwoofer(value) {
+  const vibe = document.getElementById('audience-vibe');
+  const vibes = {
+    high: '🔥 INSANE',
+    mid: '🔥 LIT',
+    low: '👍 VIBING',
+    chill: '😌 CHILL'
+  };
+  
+  if (value > 80) vibe.textContent = vibes.high;
+  else if (value > 60) vibe.textContent = vibes.mid;
+  else if (value > 40) vibe.textContent = vibes.low;
+  else vibe.textContent = vibes.chill;
+}
+
+function improvise() {
+  const phrases = ['🎹 Sick Drop!', '🎸 Guitar Solo!', '🥁 Beat Switch!', '🎤 Freestyle Bars!'];
+  const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+  showTooltip(event.target, phrase);
+}
+
+// === SCENE 4: STUDY HALL ===
+function sitAtDesk(deskNum) {
+  showTooltip(event.target, `Now coding at Desk ${deskNum}`);
+  energy = Math.min(100, energy + 5);
+  updateEnergyMeter();
+}
+
+function sendMessage() {
+  const messages = [
+    'You: Just finished a component!',
+    'You: Anyone tried Three.js?',
+    'You: Coffee break?',
+    'You: Looking for pair programming',
+    'You: Check out my portfolio!'
+  ];
+  const chat = document.getElementById('chat-messages');
+  const msg = document.createElement('div');
+  msg.textContent = messages[Math.floor(Math.random() * messages.length)];
+  msg.style.marginTop = '5px';
+  chat.appendChild(msg);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// === SCENE 5: NETWORKING ===
+function initializeCrowd() {
+  const crowd = document.getElementById('crowd');
+  for (let i = 0; i < 30; i++) {
+    const person = document.createElement('div');
+    person.className = 'person';
+    person.onclick = makeConnection;
+    crowd.appendChild(person);
+  }
+}
+
+function makeConnection() {
+  connections++;
+  document.getElementById('connections').textContent = connections;
+  showTooltip(event.target, '🤝 Connection Made!');
+}
+
+function mingleCrowd() {
+  connections += 3;
+  document.getElementById('connections').textContent = connections;
+  showTooltip(event.target, '🤝 Made 3 new connections!');
+}
+
+function danceBurst() {
+  const people = document.querySelectorAll('.person');
+  people.forEach(p => {
+    p.style.animation = 'bounce 0.3s ease-in-out 3';
+  });
+  energy = Math.max(20, energy - 5);
+  updateEnergyMeter();
+}
+
+// === SCENE 6: CODE EDITOR ===
+function initializeCodeEditor() {
+  const codeLines = [
+    '// Unity Game Development',
+    'using UnityEngine;',
+    '',
+    'public class PlayerController : MonoBehaviour {',
+    '    void Update() {',
+    '        // Movement logic',
+    '        transform.Translate(Input.GetAxis("Horizontal"), 0, 0);',
+    '    }',
+    '}',
+    '',
+    '// Blender Python Scripting',
+    'import bpy',
+    'bpy.ops.mesh.primitive_cube_add()',
+    '',
+    '// TouchDesigner GLSL',
+    'out vec4 fragColor;',
+    'void main() {',
+    '    fragColor = vec4(1.0, 0.5, 0.0, 1.0);',
+    '}'
+  ];
+  
+  const editor = document.getElementById('code-editor');
+  codeLines.forEach((line, i) => {
+    const div = document.createElement('div');
+    div.className = 'code-line';
+    div.textContent = line || ' ';
+    editor.appendChild(div);
+    
+    setTimeout(() => {
+      div.style.opacity = '1';
+      div.style.transition = 'opacity 0.3s';
+    }, i * 100);
+  });
+}
+
+function toggleWorkspace(workspace) {
+  const editor = document.getElementById('code-editor');
+  const workspaces = {
+    'Unity': '🎮 Unity workspace loaded...\nGameObject spawned!\n',
+    'Blender': '🎨 Blender viewport active...\n3D model rendering...\n',
+    'TouchDesigner': '✨ TouchDesigner network opened...\nVisual nodes connected!\n'
+  };
+  
+  const msg = document.createElement('div');
+  msg.style.color = '#00ff88';
+  msg.style.marginTop = '10px';
+  msg.textContent = workspaces[workspace];
+  editor.appendChild(msg);
+  editor.scrollTop = editor.scrollHeight;
+}
+
+function showSummary() {
+  const editor = document.getElementById('code-editor');
+  const musicSessions = Object.keys(musicPlaying).filter(k => musicPlaying[k]).length;
+  const emoji = energy > 60 ? '🌟 Great Day!' : energy > 40 ? '💪 Solid Effort!' : '😴 Rest Up!';
+  
+  editor.innerHTML = `
+    <div class="progress-summary">
+      <h2 style="text-align: center; margin-bottom: 20px;">📊 Day Summary</h2>
+      <div class="progress-item">
+        <span>Job Applications:</span>
+        <span>${completedJobs}/3 Completed</span>
+      </div>
+      <div class="progress-item">
+        <span>Workout Reps:</span>
+        <span>${reps} Total</span>
+      </div>
+      <div class="progress-item">
+        <span>Music Sessions:</span>
+        <span>${musicSessions} Active</span>
+      </div>
+      <div class="progress-item">
+        <span>Network Connections:</span>
+        <span>${connections} Made</span>
+      </div>
+      <div class="progress-item">
+        <span>Final Energy Level:</span>
+        <span>${energy}%</span>
+      </div>
+      <div style="text-align: center; margin-top: 30px; font-size: 1.5rem;">
+        ${emoji}
+      </div>
+    </div>
+  `;
+}
+
+// === TOOLTIP SYSTEM ===
+function showTooltip(element, text) {
+  const tooltip = document.getElementById('tooltip');
+  const rect = element.getBoundingClientRect();
+  
+  tooltip.textContent = text;
+  tooltip.style.left = rect.left + rect.width / 2 + 'px';
+  tooltip.style.top = rect.top - 50 + 'px';
+  tooltip.style.transform = 'translateX(-50%)';
+  tooltip.classList.add('show');
+  
+  setTimeout(() => {
+    tooltip.classList.remove('show');
+  }, 2000);
+}
+
+// === PARTICLE EFFECTS ===
+function createParticles() {
+  setInterval(() => {
+    const activeScene = document.querySelector('.scene.active');
+    if (!activeScene) return;
+
+    const particle = document.createElement('div');
+    particle.style.position = 'absolute';
+    particle.style.width = '4px';
+    particle.style.height = '4px';
+    particle.style.background = 'rgba(255, 255, 255, 0.5)';
+    particle.style.borderRadius = '50%';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = Math.random() * 100 + '%';
+    particle.style.pointerEvents = 'none';
+    particle.style.animation = 'float 3s ease-in-out infinite';
+    
+    activeScene.appendChild(particle);
+    
+    setTimeout(() => particle.remove(), 3000);
+  }, 500);
+}
+
+// Welcome Console Message
+console.log(`
+🎮 Daily Workflow Simulator Loaded!
+
+⌨️  Keyboard Shortcuts:
+→ Next Scene
+← Previous Scene
+1-6: Jump to Scene
+
+💡 Tips:
+- Click nav dots to jump between scenes
+- Hover over elements for tooltips
+- Interact with all clickable elements
+- Watch your energy meter throughout the day
+
+Enjoy your immersive workflow journey!
+`);
 </script>
-
-</body>
-</html>
