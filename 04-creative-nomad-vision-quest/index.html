@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Nomad Vision Quest</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFD166;
+            --dark: #2D3047;
+            --light: #F7FFF7;
+            --earth: #A17C6B;
+            --fire: #FF9A76;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        .inspiration-meter {
+            width: 80%;
+            height: 20px;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            margin: 0 auto 30px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid var(--dark);
+        }
+        
+        .inspiration-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--fire));
+            border-radius: 10px;
+            animation: pulse 2s infinite alternate;
+            position: absolute;
+            left: -100%;
+            animation: inspirationFlow 3s infinite alternate;
+        }
+        
+        @keyframes inspirationFlow {
+            0% { left: -100%; }
+            100% { left: 0; }
+        }
+        
+        .philosophy-card {
+            background: rgba(45, 48, 71, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 40px;
+            border-left: 5px solid var(--secondary);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+        
+        .philosophy-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            color: var(--primary);
+        }
+        
+        .vision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .vision-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .vision-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary);
+        }
+        
+        .vision-card.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(255, 209, 102, 0.3);
+        }
+        
+        .vision-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .tech-chip {
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--secondary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+        
+        .visualizer-container {
+            height: 300px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        #visualizer {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            background: linear-gradient(135deg, var(--primary), var(--fire));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .control-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.6);
+        }
+        
+        .control-btn.secondary {
+            background: linear-gradient(135deg, var(--secondary), #2a9d8f);
+        }
+        
+        .control-btn.secondary:hover {
+            box-shadow: 0 8px 20px rgba(78, 205, 196, 0.6);
+        }
+        
+        .zodiac-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .zodiac-sign {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .capricorn {
+            background: radial-gradient(circle, var(--earth), #5d4037);
+            border: 3px solid #8d6e63;
+        }
+        
+        .taurus {
+            background: radial-gradient(circle, #81c784, #2e7d32);
+            border: 3px solid #66bb6a;
+        }
+        
+        .zodiac-sign::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, transparent 60%, rgba(255, 255, 255, 0.1) 100%);
+        }
+        
+        .zodiac-icon {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .zodiac-name {
+            font-weight: bold;
+            color: white;
+        }
+        
+        .manifestation-area {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            min-height: 200px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .manifestation-text {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+        
+        .manifestation-input {
+            width: 80%;
+            margin: 0 auto;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--secondary);
+            border-radius: 10px;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            outline: none;
+        }
+        
+        .manifestation-input:focus {
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+        }
+        
+        .audio-visualizer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 3px;
+            padding: 20px;
+            z-index: 5;
+        }
+        
+        .audio-bar {
+            width: 8px;
+            background: linear-gradient(to top, var(--primary), var(--accent));
+            border-radius: 4px 4px 0 0;
+            animation: audioWave 1.5s infinite ease-in-out;
+            animation-delay: calc(var(--i) * 0.05s);
+        }
+        
+        @keyframes audioWave {
+            0%, 100% { height: 20px; }
+            50% { height: 80px; }
+        }
+        
+        .satellite {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--secondary), #2a9d8f);
+            box-shadow: 0 0 20px var(--secondary);
+            z-index: 5;
+            top: 50%;
+            left: 50%;
+            animation: orbit 15s linear infinite;
+        }
+        
+        .satellite::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            top: 5px;
+            left: 5px;
+        }
+        
+        @keyframes orbit {
+            0% {
+                transform: rotate(0deg) translateX(250px) rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg) translateX(250px) rotate(-360deg);
+            }
+        }
+        
+        .family-center {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary), #c62828);
+            box-shadow: 0 0 30px var(--primary);
+            top: calc(50% - 30px);
+            left: calc(50% - 30px);
+            z-index: 4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .mobile-message {
+            display: none;
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .vision-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-btn {
+                width: 90%;
+                justify-content: center;
+            }
+            
+            .mobile-message {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="satellite"></div>
+    <div class="family-center">
+        <i class="fas fa-home"></i>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>CREATIVE NOMAD VISION QUEST</h1>
+            <div class="subtitle">Satellite the Family • Build the Ecosystem • Live the Vision</div>
+            <div class="inspiration-meter">
+                <div class="inspiration-fill"></div>
+            </div>
+        </header>
+        
+        <div class="mobile-message">
+            <i class="fas fa-mobile-alt"></i> For the best experience, view on desktop with sound on
+        </div>
+        
+        <div class="philosophy-card">
+            <h2 class="card-title"><i class="fas fa-satellite"></i> The Core Philosophy</h2>
+            <p>"I don't reside in my family. I satellite the family." This is the anchor. Not being OF the family home, but orbiting it—being independent, mobile, and free, while maintaining that gravitational connection. This mindset shift enables everything else.</p>
+        </div>
+        
+        <div class="vision-grid">
+            <div class="vision-card active" id="mobile-life">
+                <div class="vision-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <h3>Mobile Multi-City Setup</h3>
+                <p>Winter in Asia • Arizona parking spot (Camry) • Milwaukee (Honda Element/Van) • "Rich on any income" through minimal overhead.</p>
+                <div class="tech-stack">
+                    <span class="tech-chip">Van Life</span>
+                    <span class="tech-chip">Digital Nomad</span>
+                    <span class="tech-chip">Minimalism</span>
+                </div>
+            </div>
+            
+            <div class="vision-card" id="creative-stack">
+                <div class="vision-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <h3>Creative Tech Stack</h3>
+                <p>Win4 (Brain) • SP-404 MKII (Heart) • Travel Guitar • Vocal Processor • Freestyle King (Your Creative OS) • 3JS Shaders + Resolume (Visuals).</p>
+                <div class="tech-stack">
+                    <span class="tech-chip">SP-404</span>
+                    <span class="tech-chip">Freestyle King</span>
+                    <span class="tech-chip">3JS Shaders</span>
+                </div>
+            </div>
+            
+            <div class="vision-card" id="genius-loop">
+                <div class="vision-icon">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <h3>The Genius Loop</h3>
+                <p>Electric Bike + Stream + Vape = Moving creative node. Dance game parties with your music. Three art layers: Jazz Guitarist, Private Freestyle King, Dance Game Architect.</p>
+                <div class="tech-stack">
+                    <span class="tech-chip">Unity</span>
+                    <span class="tech-chip">Live Stream</span>
+                    <span class="tech-chip">Dance Games</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="visualizer-container">
+            <canvas id="visualizer"></canvas>
+            <div class="audio-visualizer" id="audioVisualizer"></div>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" id="inspireBtn">
+                <i class="fas fa-bolt"></i> Boost Inspiration
+            </button>
+            <button class="control-btn secondary" id="visualizeBtn">
+                <i class="fas fa-eye"></i> Activate 3D Visualizer
+            </button>
+            <button class="control-btn" id="soundBtn">
+                <i class="fas fa-volume-up"></i> Enable Soundscape
+            </button>
+        </div>
+        
+        <div class="zodiac-display">
+            <div class="zodiac-sign capricorn pulse">
+                <div class="zodiac-icon">♑</div>
+                <div class="zodiac-name">Capricorn</div>
+                <div>Structure • Discipline</div>
+            </div>
+            <div class="zodiac-sign taurus pulse" style="animation-delay: 1s;">
+                <div class="zodiac-icon">♉</div>
+                <div class="zodiac-name">Taurus</div>
+                <div>Durability • Sensuality</div>
+            </div>
+        </div>
+        
+        <div class="manifestation-area">
+            <div class="manifestation-text" id="manifestationText">"What you want to do is not going to look like anything. It's a completely new presentation layer."</div>
+            <input type="text" class="manifestation-input" id="manifestationInput" placeholder="Type your vision addition here...">
+            <p style="margin-top: 15px; color: rgba(255,255,255,0.5);">Press Enter to manifest into the visualization</p>
+        </div>
+        
+        <div class="philosophy-card">
+            <h2 class="card-title"><i class="fas fa-humility"></i> The Anti-Delusion Protocol</h2>
+            <p>Grounding through humiliation practice: Playing goalie (not just striker) • Cold approaches • Freestyling/Guitar in public. This keeps the vision tethered to reality, builds real skills, and teaches resilience. It's how you earn the right to this unique path.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Creative Nomad Vision Quest • Built with 3JS, Earth & Fire Energy • This isn't delusion. This is a blueprint.</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">Now go lay the foundation. One day, one task, one humbling moment at a time.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Create stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.width = `${Math.random() * 3 + 1}px`;
+            star.style.height = star.style.width;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.animationDelay = `${Math.random() * 5}s`;
+            starsContainer.appendChild(star);
+        }
+        
+        // Vision card interactions
+        const visionCards = document.querySelectorAll('.vision-card');
+        visionCards.forEach(card => {
+            card.addEventListener('click', () => {
+                visionCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                
+                // Update manifestation text based on selected card
+                const title = card.querySelector('h3').textContent;
+                const text = card.querySelector('p').textContent;
+                document.getElementById('manifestationText').textContent = `"${title}: ${text.substring(0, 80)}..."`;
+                
+                // Trigger audio visualizer animation
+                animateAudioBars();
+            });
+        });
+        
+        // Create audio visualizer bars
+        const audioVisualizer = document.getElementById('audioVisualizer');
+        for (let i = 0; i < 40; i++) {
+            const bar = document.createElement('div');
+            bar.classList.add('audio-bar');
+            bar.style.setProperty('--i', i);
+            bar.style.height = `${Math.random() * 60 + 20}px`;
+            audioVisualizer.appendChild(bar);
+        }
+        
+        function animateAudioBars() {
+            const bars = document.querySelectorAll('.audio-bar');
+            bars.forEach(bar => {
+                bar.style.height = `${Math.random() * 60 + 20}px`;
+            });
+        }
+        
+        // Set up 3D visualizer
+        const canvas = document.getElementById('visualizer');
+        let scene, camera, renderer, particles, particleSystem;
+        let visualizerActive = false;
+        
+        function initVisualizer() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.setClearColor(0x000000, 0);
+            
+            // Create particle system
+            const particleCount = 1500;
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            
+            // Color palette from CSS variables
+            const colorPalette = [
+                new THREE.Color(0xFF6B6B), // primary
+                new THREE.Color(0x4ECDC4), // secondary
+                new THREE.Color(0xFFD166), // accent
+                new THREE.Color(0xFF9A76)  // fire
+            ];
+            
+            for (let i = 0; i < particleCount; i++) {
+                // Positions
+                const i3 = i * 3;
+                positions[i3] = (Math.random() - 0.5) * 100;
+                positions[i3 + 1] = (Math.random() - 0.5) * 100;
+                positions[i3 + 2] = (Math.random() - 0.5) * 100;
+                
+                // Colors
+                const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+                colors[i3] = color.r;
+                colors[i3 + 1] = color.g;
+                colors[i3 + 2] = color.b;
+            }
+            
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 1.5,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            particleSystem = new THREE.Points(particles, particleMaterial);
+            scene.add(particleSystem);
+            
+            camera.position.z = 50;
+            
+            // Add ambient light
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            // Add directional light
+            const directionalLight = new THREE.DirectionalLight(0xFFD166, 0.8);
+            directionalLight.position.set(10, 10, 5);
+            scene.add(directionalLight);
+            
+            visualizerActive = true;
+            animate();
+        }
+        
+        function animate() {
+            if (!visualizerActive) return;
+            
+            requestAnimationFrame(animate);
+            
+            if (particleSystem) {
+                particleSystem.rotation.x += 0.001;
+                particleSystem.rotation.y += 0.002;
+                
+                // Pulsing effect
+                const time = Date.now() * 0.001;
+                particleSystem.scale.setScalar(1 + 0.1 * Math.sin(time * 0.5));
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (visualizerActive && camera && renderer) {
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            }
+        });
+        
+        // Button event handlers
+        document.getElementById('inspireBtn').addEventListener('click', () => {
+            animateAudioBars();
+            document.querySelector('.inspiration-fill').style.animation = 'none';
+            setTimeout(() => {
+                document.querySelector('.inspiration-fill').style.animation = 'inspirationFlow 1.5s infinite alternate';
+            }, 10);
+            
+            // Random inspirational message
+            const messages = [
+                "Full of inspiration. I can see the future.",
+                "This is so cheap, bro. You can be rich with any income living like this.",
+                "Just make it freestyle king. Make it easy for you.",
+                "This is Capricorn and Taurus energy. Beautiful earth and fire.",
+                "You're creating a completely new presentation layer.",
+                "The hardest part is the daily discipline. Can you execute?"
+            ];
+            
+            document.getElementById('manifestationText').textContent = `"${messages[Math.floor(Math.random() * messages.length)]}"`;
+        });
+        
+        document.getElementById('visualizeBtn').addEventListener('click', () => {
+            if (!visualizerActive) {
+                initVisualizer();
+                document.getElementById('visualizeBtn').innerHTML = '<i class="fas fa-eye-slash"></i> Deactivate Visualizer';
+            } else {
+                visualizerActive = false;
+                // Clear the canvas
+                const ctx = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                if (ctx) {
+                    ctx.clear(ctx.COLOR_BUFFER_BIT | ctx.DEPTH_BUFFER_BIT);
+                }
+                document.getElementById('visualizeBtn').innerHTML = '<i class="fas fa-eye"></i> Activate 3D Visualizer';
+            }
+        });
+        
+        document.getElementById('soundBtn').addEventListener('click', () => {
+            const btn = document.getElementById('soundBtn');
+            if (btn.innerHTML.includes('Enable')) {
+                btn.innerHTML = '<i class="fas fa-volume-mute"></i> Disable Soundscape';
+                // In a real implementation, this would start audio context and visualization
+                // For CodePen, we'll just enhance the animation
+                setInterval(animateAudioBars, 200);
+            } else {
+                btn.innerHTML = '<i class="fas fa-volume-up"></i> Enable Soundscape';
+            }
+        });
+        
+        // Manifestation input
+        document.getElementById('manifestationInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const input = document.getElementById('manifestationInput');
+                if (input.value.trim() !== '') {
+                    document.getElementById('manifestationText').textContent = `"${input.value}"`;
+                    input.value = '';
+                    
+                    // Add a new particle to the visualizer if active
+                    if (visualizerActive && particleSystem) {
+                        // This would require adding to the particle system geometry
+                        // For simplicity, we'll just trigger a pulse effect
+                        const originalScale = particleSystem.scale.x;
+                        particleSystem.scale.setScalar(originalScale * 1.2);
+                        setTimeout(() => {
+                            particleSystem.scale.setScalar(originalScale);
+                        }, 300);
+                    }
+                }
+            }
+        });
+        
+        // Auto-animate audio bars
+        setInterval(animateAudioBars, 500);
+        
+        // Initialize with one vision card active
+        document.getElementById('mobile-life').click();
+        
+        // Auto-start visualizer on desktop
+        if (window.innerWidth > 768) {
+            setTimeout(() => {
+                initVisualizer();
+                document.getElementById('visualizeBtn').innerHTML = '<i class="fas fa-eye-slash"></i> Deactivate Visualizer';
+            }, 1000);
+        }
+        
+        // Make zodiac signs pulse alternately
+        const zodiacSigns = document.querySelectorAll('.zodiac-sign');
+        zodiacSigns.forEach((sign, index) => {
+            sign.style.animationDelay = `${index * 0.5}s`;
+        });
+    </script>
+</body>
+</html>
