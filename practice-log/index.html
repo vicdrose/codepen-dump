@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Ai slop (very good)</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/LEZLeJX">
+  
+  
+  
+  
+<style>
+body {
+
+  margin: 0;
+
+  background: radial-gradient(circle at center, #0e1117, #050608);
+
+  color: #e6e6eb;
+
+  font-family: monospace;
+
+  overflow: hidden;
+
+}
+
+#world {
+
+  width: 100vw;
+
+  height: 100vh;
+
+  position: relative;
+
+}
+
+#horizon {
+
+  position: absolute;
+
+  bottom: 30%;
+
+  width: 100%;
+
+  height: 2px;
+
+  background: linear-gradient(to right, transparent, #888, transparent);
+
+  opacity: 0.2;
+
+}
+
+#presence {
+
+  position: absolute;
+
+  top: 50%;
+
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+}
+
+.ring {
+
+  width: 120px;
+
+  height: 120px;
+
+  border: 1px solid rgba(255,255,255,0.2);
+
+  border-radius: 50%;
+
+  position: absolute;
+
+  animation: pulse 6s infinite ease-in-out;
+
+}
+
+.ring:nth-child(2) {
+
+  width: 180px;
+
+  height: 180px;
+
+  animation-delay: 1s;
+
+}
+
+.ring:nth-child(3) {
+
+  width: 260px;
+
+  height: 260px;
+
+  animation-delay: 2s;
+
+}
+
+@keyframes pulse {
+
+  0% { opacity: 0.15; }
+
+  50% { opacity: 0.5; }
+
+  100% { opacity: 0.15; }
+
+}
+
+#controls {
+
+  position: absolute;
+
+  bottom: 40px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+}
+
+button {
+
+  background: transparent;
+
+  border: 1px solid #666;
+
+  color: #e6e6eb;
+
+  padding: 10px 16px;
+
+  margin: 0 6px;
+
+  cursor: pointer;
+
+}
+
+button:hover {
+
+  background: rgba(255,255,255,0.05);
+
+}
+
+#log {
+
+  position: absolute;
+
+  top: 40px;
+
+  left: 40px;
+
+  max-width: 260px;
+
+}
+
+#log h2 {
+
+  margin: 0 0 8px 0;
+
+  font-size: 14px;
+
+  opacity: 0.7;
+
+}
+
+#status {
+
+  font-size: 12px;
+
+  line-height: 1.4;
+
+  opacity: 0.8;
+
+}
+</style>
+
+  
+  
+  
+</head>
+
+<body>
+  <!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <title>Practice Engine</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <div id="world">
+
+    <div id="horizon"></div>
+
+    <div id="presence">
+
+      <div class="ring"></div>
+
+      <div class="ring"></div>
+
+      <div class="ring"></div>
+
+    </div>
+
+    <div id="log">
+
+      <h2>Practice Log</h2>
+
+      <p id="status">Nothing happening yet.</p>
+
+    </div>
+
+    <div id="controls">
+
+      <button onclick="practice('music')">Practice Sound</button>
+
+      <button onclick="practice('movement')">Practice Movement</button>
+
+      <button onclick="practice('build')">Practice Building</button>
+
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
+  
+    <script id="rendered-js" >
+let sessions = 0;
+
+let stability = 0;
+
+const status = document.getElementById("status");
+
+const rings = document.querySelectorAll(".ring");
+
+function practice(type) {
+
+  sessions++;
+
+  stability++;
+
+  let message = "";
+
+  switch (type) {
+
+    case "music":
+
+      message = "Sound repeats. The space listens.";
+
+      break;
+
+    case "movement":
+
+      message = "The body remembers what the mind forgets.";
+
+      break;
+
+    case "build":
+
+      message = "Structure forms quietly, piece by piece.";
+
+      break;
+
+  }
+
+  status.innerText = message + `\nSessions completed: ${sessions}`;
+
+  // As stability increases, the world becomes calmer
+
+  rings.forEach((ring, index) => {
+
+    ring.style.animationDuration = `${6 + stability}s`;
+
+    ring.style.borderColor = `rgba(255,255,255,${0.15 + stability * 0.02})`;
+
+  });
+
+  // Rare emergence event
+
+  if (stability % 5 === 0) {
+
+    summonSignal();
+
+  }
+
+}
+
+function summonSignal() {
+
+  const signal = document.createElement("div");
+
+  signal.className = "signal";
+
+  signal.innerText = "Someone notices.";
+
+  document.body.appendChild(signal);
+
+  signal.style.position = "absolute";
+
+  signal.style.top = Math.random() * 60 + "%";
+
+  signal.style.left = Math.random() * 60 + "%";
+
+  signal.style.opacity = 0;
+
+  setTimeout(() => {
+
+    signal.style.opacity = 0.8;
+
+  }, 100);
+
+  setTimeout(() => {
+
+    signal.remove();
+
+  }, 3000);
+
+}
+  </script>
+
+  
+</body>
+
+</html>
