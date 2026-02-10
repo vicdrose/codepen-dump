@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>divination tool (crystals, astrology, ai)</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/emYXVLw">
+  
+  
+  
+  
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(45deg, grey 25%, #93e9be 25%, #93e9be 50%, grey 50%, grey 75%, #93e9be 75%, #93e9be 100%);
+  background-size: 40px 40px;
+}
+
+
+.dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+.dropdown-content.show {
+      display: block;
+    }
+.dropdown-toggle {
+      background-color: #eee;
+      border: none;
+      cursor: pointer;
+      padding: 5px 10px;
+      font-size: 16px;
+    }
+.dropdown-content button {
+      width: 100%;
+      padding: 8px 12px;
+      background: white;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+    }
+.dropdown-content button:hover {
+      background-color: #ddd;
+    }
+</style>
+
+  
+  
+  
+</head>
+
+<body>
+  <!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Crystal & Astrology Randomizer</title>
+</head>
+  
+  <div style="border: 3px solid black; border-radius: 13px; padding: 25px; margin: 80px 150px 0px 150px; text-align: center; background-color: white;">
+
+<p>[ Inspiration ].</p>
+    
+    <button onclick="randomizeAll()">🔮 Randomize Everything</button>
+    <br><br>
+
+<label>crystals</label> 
+<select id="crystalSelect">
+  <option>sunstone</option><option>ametrine</option><option>diamond</option><option>howlite</option><option>kunzite</option><option>larimar</option><option>amethyst</option><option>moonstone</option><option>emerald</option><option>hiddenite</option><option>carnelian</option><option>chrysoprase</option><option>turquoise</option><option>aquamarine</option><option>aragonite</option><option>amber</option><option>chrysocolla</option><option>sapphire</option><option>hematite</option><option>jasper</option><option>labradorite</option><option>tektite</option><option>bloodstone</option><option>pyrite</option><option>rhodonite</option><option>celestite</option><option>aventurine</option><option>vanadinite</option><option>peridot</option><option>sodalite</option><option>shiva lingam</option><option>selenite</option><option>copper</option><option>topaz</option><option>malachite</option><option>fluorite</option><option>smoky quartz</option><option>obsidian</option><option>amazonite</option><option>barite</option><option>rhodochrosite</option><option>agate</option><option>lapis lazuli</option><option>tiger's eye</option><option>serpentine</option><option>moldavite</option><option>ruby</option><option>bismuth</option><option>honey calcite</option><option>libyan gold tektite</option><option>black tourmaline</option><option>opal</option><option>tourmalined quartz</option><option>epidote</option><option>astrophyllite</option><option>orange calcite</option><option>danburite</option><option>quartz</option><option>apophyllite</option><option>lepidolite</option><option>shungite</option><option>meteorite</option><option>kyanite</option><option>azurite</option><option>muscovite</option><option>green calcite</option><option>scolecite</option><option>cavansite</option><option>sugilite</option><option>magnesite</option><option>blue calcite</option><option>garnet</option><option>jet</option><option>tibetan black quartz</option><option>lemurian quartz</option><option>rose quartz</option><option>herkimer diamond</option><option>citrine</option><option>dumortierite</option><option>charoite</option><option>danburite</option><option>apatite</option><option>angelite</option><option>morganite</option><option>red jasper</option><option>ruby fuchsite</option><option>prehnite</option>
+</select> 
+<button onclick="randomizeCrystal()">random</button>
+
+<br><br>
+
+<label>astrology</label>
+<select id="houseSelect">
+  <option>1h</option><option>2h</option><option>3h</option>
+  <option>4h</option><option>5h</option><option>6h</option>
+  <option>7h</option><option>8h</option><option>9h</option>
+  <option>10h</option><option>11h</option><option>12h</option>
+</select>
+
+<select id="signSelect">
+  <option>aries</option><option>taurus</option><option>gemini</option>
+  <option>cancer</option><option>leo</option><option>virgo</option>
+  <option>libra</option><option>scorpio</option><option>saggitarius</option>
+  <option>capricorn</option><option>aquarius</option><option>pisces</option>
+</select>
+
+<select id="planetSelect">
+  <option>sun</option><option>moon</option><option>mercury</option>
+  <option>mars</option><option>venus</option><option>jupiter</option>
+  <option>saturn</option><option>uranus</option><option>neptune</option><option>pluto</option>
+</select>
+
+<button onclick="randomizeAstrology()">random</button>
+<div class="dropdown" style="display:inline-block; position: relative;">
+  <button class="dropdown-toggle" onclick="toggleDropdown()">▼</button>
+  <div id="astrology-dropdown" class="dropdown-content">
+    <button onclick="randomizeHouse()">Random House</button>
+    <button onclick="randomizeSign()">Random Sign</button>
+    <button onclick="randomizePlanet()">Random Planet</button>
+  </div>
+</div>
+
+<br><br>
+<label for="">prompt?</label>
+<input type="text"> 
+<button>ai response</button>
+    <br><br><br>
+
+  </div>
+  
+    <script id="rendered-js" >
+function getRandomOption(select) {
+    const options = select.options;
+    const randomIndex = Math.floor(Math.random() * options.length);
+    select.selectedIndex = randomIndex;
+  }
+
+  function randomizeCrystal() {
+    const crystalSelect = document.getElementById("crystalSelect");
+    getRandomOption(crystalSelect);
+  }
+
+  function randomizeHouse() {
+    getRandomOption(document.getElementById("houseSelect"));
+  }
+
+  function randomizeSign() {
+    getRandomOption(document.getElementById("signSelect"));
+  }
+
+  function randomizePlanet() {
+    getRandomOption(document.getElementById("planetSelect"));
+  }
+
+  function randomizeAstrology() {
+    randomizeHouse();
+    randomizeSign();
+    randomizePlanet();
+  }
+
+  function randomizeAll() {
+    randomizeCrystal();
+    randomizeAstrology();
+  }
+
+  function toggleDropdown() {
+    const dropdown = document.getElementById("astrology-dropdown");
+    dropdown.classList.toggle("show");
+  }
+
+  window.onclick = function(event) {
+    if (!event.target.matches('.dropdown-toggle')) {
+      const dropdowns = document.getElementsByClassName("dropdown-content");
+      for (let i = 0; i < dropdowns.length; i++) {
+        const openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
+  }
+  </script>
+
+  
+</body>
+
+</html>
