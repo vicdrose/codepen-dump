@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Freestyle King Immersive Hub</title>
+
+  <style>
+
+    body {
+
+      margin: 0;
+
+      font-family: Arial, sans-serif;
+
+      background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+
+      color: #fff;
+
+      overflow: hidden;
+
+    }
+
+    .container {
+
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      grid-template-rows: 50% 50%;
+
+      height: 100vh;
+
+      gap: 4px;
+
+    }
+
+    .panel {
+
+      background: rgba(255, 255, 255, 0.05);
+
+      border-radius: 16px;
+
+      padding: 20px;
+
+      backdrop-filter: blur(8px);
+
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: center;
+
+      align-items: center;
+
+      text-align: center;
+
+    }
+
+    h2 {
+
+      margin-bottom: 10px;
+
+      font-size: 1.5rem;
+
+      letter-spacing: 1px;
+
+    }
+
+    button {
+
+      padding: 12px 20px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      margin-top: 15px;
+
+      cursor: pointer;
+
+      background: #ffffff22;
+
+      color: white;
+
+      font-size: 1rem;
+
+      transition: 0.3s;
+
+    }
+
+    button:hover {
+
+      background: #ffffff44;
+
+    }
+
+    #beatVisualizer canvas {
+
+      width: 100%;
+
+      height: 100%;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="panel" id="freestylePanel">
+
+      <h2>🎤 Freestyle Zone</h2>
+
+      <p>Start a randomized prompt to rap over.</p>
+
+      <button onclick="generatePrompt()">Generate Prompt</button>
+
+      <h3 id="promptDisplay"></h3>
+
+    </div>
+
+    <div class="panel" id="astrologyPanel">
+
+      <h2>🔮 Astrology Insight Pulse</h2>
+
+      <p>Your daily Saturn discipline + Scorpio motivation combo.</p>
+
+      <button onclick="astroInsight()">Reveal Insight</button>
+
+      <h3 id="astroDisplay"></h3>
+
+    </div>
+
+    <div class="panel" id="beatVisualizer">
+
+      <h2>🎶 Beat Visualizer</h2>
+
+      <p>Pulse-reactive atmosphere placeholder.</p>
+
+      <canvas id="vizCanvas"></canvas>
+
+    </div>
+
+    <div class="panel" id="ecosystemPanel">
+
+      <h2>🌐 Ecosystem Map</h2>
+
+      <p>Your whole Freestyle King + Virtual Space loop in one click.</p>
+
+      <button onclick="showLoop()">Show Loop Idea</button>
+
+      <h3 id="loopDisplay"></h3>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    const prompts = [
+
+      "Cosmic grind with Saturn discipline",
+
+      "Scorpio-motivated detective bars",
+
+      "Tumblr-aesthetic virtual club energy",
+
+      "Rocket League karma reversal rap",
+
+      "Recruit them from Fortnite freestyle lobbies"
+
+    ];
+
+    const insights = [
+
+      "Saturn says: Repetition builds unshakeable mastery.",
+
+      "Scorpio Mars: Your motivation comes from depth, not hype.",
+
+      "Neptune 5H: Your creativity is a trance-field.",
+
+      "Uranus 5H: Your originality *is* the shockwave.",
+
+      "Your setlist evolves by sheer volume — keep creating."
+
+    ];
+
+    const loopIdeas = [
+
+      "Create → Test Live → Refine → Add to Setlist → Repeat",
+
+      "Stream → Recruit → Build Community → Perform → Repeat",
+
+      "Rap Training → Virtual Space → DJ Set → Content → Repeat"
+
+    ];
+
+    function generatePrompt() {
+
+      document.getElementById('promptDisplay').innerText = prompts[Math.floor(Math.random()*prompts.length)];
+
+    }
+
+    function astroInsight() {
+
+      document.getElementById('astroDisplay').innerText = insights[Math.floor(Math.random()*insights.length)];
+
+    }
+
+    function showLoop() {
+
+      document.getElementById('loopDisplay').innerText = loopIdeas[Math.floor(Math.random()*loopIdeas.length)];
+
+    }
+
+    const canvas = document.getElementById('vizCanvas');
+
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = canvas.offsetWidth;
+
+    canvas.height = canvas.offsetHeight;
+
+    function animate() {
+
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      const time = Date.now() * 0.002;
+
+      const size = 40 + Math.sin(time) * 20;
+
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+
+      ctx.beginPath();
+
+      ctx.arc(canvas.width/2, canvas.height/2, size, 0, Math.PI*2);
+
+      ctx.fill();
+
+      requestAnimationFrame(animate);
+
+    }
+
+    animate();
+
+  </script>
+
+</body>
+
+</html>
+
