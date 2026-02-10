@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Ai slop</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/KwMgqqX">
+  
+  
+  
+  
+<style>
+* {
+
+  box-sizing: border-box;
+
+}
+
+html, body {
+
+  margin: 0;
+
+  font-family: 'Inter', system-ui, sans-serif;
+
+  background: radial-gradient(circle at top, #1b1f2a, #0b0e14);
+
+  color: #eaeaea;
+
+  overflow-x: hidden;
+
+}
+
+#universe {
+
+  width: 100%;
+
+}
+
+/* HERO */
+
+.hero {
+
+  min-height: 100vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  text-align: center;
+
+}
+
+.hero h1 {
+
+  font-size: clamp(3rem, 6vw, 5rem);
+
+  letter-spacing: 0.1em;
+
+}
+
+.hero h2 {
+
+  opacity: 0.8;
+
+}
+
+.subtitle {
+
+  margin-top: 1rem;
+
+  opacity: 0.6;
+
+}
+
+/* CORE */
+
+.core {
+
+  padding: 6rem 2rem;
+
+  display: flex;
+
+  justify-content: center;
+
+}
+
+.sack {
+
+  background: linear-gradient(145deg, #22283a, #141827);
+
+  border-radius: 24px;
+
+  padding: 2.5rem;
+
+  width: min(420px, 90%);
+
+  box-shadow: 0 0 80px rgba(255, 200, 120, 0.08);
+
+}
+
+.sack ul {
+
+  padding-left: 1.2rem;
+
+}
+
+/* GRID */
+
+.grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+
+  gap: 2rem;
+
+  padding: 4rem 2rem;
+
+}
+
+.card {
+
+  background: #141827;
+
+  border-radius: 20px;
+
+  padding: 2rem;
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+.card:hover {
+
+  transform: translateY(-6px);
+
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+
+}
+
+.highlight {
+
+  background: linear-gradient(160deg, #2a2f45, #1c2035);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+}
+
+/* FOUNDATION */
+
+.foundation {
+
+  text-align: center;
+
+  padding: 4rem 2rem;
+
+}
+
+.pill-row {
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 1rem;
+
+  flex-wrap: wrap;
+
+  margin-top: 1.5rem;
+
+}
+
+.pill-row span {
+
+  padding: 0.6rem 1.2rem;
+
+  border-radius: 999px;
+
+  background: #1a1f32;
+
+  font-size: 0.9rem;
+
+}
+
+/* FLOW */
+
+.flow {
+
+  padding: 6rem 2rem;
+
+  text-align: center;
+
+  font-size: 1.1rem;
+
+  opacity: 0.85;
+
+}
+
+/* FOOTER */
+
+.footer {
+
+  padding: 3rem;
+
+  text-align: center;
+
+  opacity: 0.4;
+
+}
+</style>
+
+  
+  
+  
+</head>
+
+<body>
+  <div id="universe">
+
+  <section class="hero">
+
+    <h1>BUILD THE DREAM</h1>
+
+    <h2>Fund the Dream</h2>
+
+    <p class="subtitle">Job First · Art Always</p>
+
+  </section>
+
+  <section class="core">
+
+    <div class="sack">
+
+      <h3>🎒 Santa’s Sack</h3>
+
+      <p>Portable Value Engine</p>
+
+      <ul>
+
+        <li>Freestyle King</li>
+
+        <li>Beats · Visuals · Sets</li>
+
+        <li>Tablet · H8 · Power Bank</li>
+
+      </ul>
+
+    </div>
+
+  </section>
+
+  <section class="grid">
+
+    <div class="card">
+
+      <h4>💼 Tech Job Apps</h4>
+
+      <p>5 per day</p>
+
+      <span>Stability Layer</span>
+
+    </div>
+
+    <div class="card highlight">
+
+      <h4>👑 Freestyle King</h4>
+
+      <p>Creative Engine</p>
+
+      <span>Always On</span>
+
+    </div>
+
+    <div class="card">
+
+      <h4>🏋️ Fitness</h4>
+
+      <p>Burpeethon · Soccer Field</p>
+
+      <span>Energy Regulation</span>
+
+    </div>
+
+  </section>
+
+  <section class="foundation">
+
+    <h3>CORE FOUNDATION</h3>
+
+    <div class="pill-row">
+
+      <span>Uber Airport</span>
+
+      <span>Music Networking</span>
+
+      <span>Lean Living</span>
+
+    </div>
+
+  </section>
+
+  <section class="flow">
+
+    <h3>Decision State</h3>
+
+    <p>
+
+      If no one shows up → Freestyle<br>
+
+      If someone shows up → Guitar<br>
+
+      If tired → Sleep<br>
+
+      If clear → Build
+
+    </p>
+
+  </section>
+
+  <section class="footer">
+
+    <p>Earn · Build · Expand</p>
+
+  </section>
+
+</div>
+  
+    <script id="rendered-js" >
+let phase = 0;
+
+setInterval(() => {
+
+  phase += 0.01;
+
+  const glow = Math.sin(phase) * 20 + 60;
+
+  document.documentElement.style.setProperty(
+
+    '--breath',
+
+    `${glow}px`
+
+  );
+
+}, 50);
+  </script>
+
+  
+</body>
+
+</html>
