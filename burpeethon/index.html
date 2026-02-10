@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>The Burpeathon Loop</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+<style>
+
+  body {
+
+    margin: 0;
+
+    font-family: 'Orbitron', sans-serif;
+
+    background: radial-gradient(circle at top, #0f0c29, #302b63, #24243e);
+
+    color: #fff;
+
+    overflow-x: hidden;
+
+  }
+
+  .container {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    padding: 3rem 1.5rem;
+
+    text-align: center;
+
+  }
+
+  h1 {
+
+    font-size: 2.2rem;
+
+    color: #ff9800;
+
+    margin-bottom: 0.25rem;
+
+    text-transform: uppercase;
+
+  }
+
+  h2 {
+
+    font-size: 1rem;
+
+    color: #ffd699;
+
+    margin-bottom: 3rem;
+
+    letter-spacing: 1px;
+
+  }
+
+  h4 {
+
+    margin-top: 4rem;
+
+    font-size: 1.2rem;
+
+    color: #ffcc80;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1.5px;
+
+  }
+
+  .loop-grid,
+
+  .module-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+    gap: 2.6rem;
+
+    max-width: 1100px;
+
+    width: 100%;
+
+  }
+
+  .card {
+
+    background: rgba(255, 152, 0, 0.08);
+
+    border: 2px solid #ff9800;
+
+    border-radius: 18px;
+
+    padding: 1.6rem;
+
+    transition: all 0.35s ease;
+
+    position: relative;
+
+    cursor: pointer;
+
+  }
+
+  .card:hover {
+
+    transform: translateY(-12px);
+
+    box-shadow: 0 0 30px rgba(255,152,0,0.6);
+
+  }
+
+  .icon {
+
+    font-size: 2.3rem;
+
+    margin-bottom: 1rem;
+
+  }
+
+  .card h3 {
+
+    font-size: 1.25rem;
+
+    margin-bottom: 0.7rem;
+
+    color: #fff;
+
+  }
+
+  .card p {
+
+    font-size: 0.9rem;
+
+    line-height: 1.55;
+
+    color: #ffddb3;
+
+  }
+
+  .split {
+
+    margin-top: 1.1rem;
+
+    padding-top: 1.1rem;
+
+    border-top: 1px dashed rgba(255,152,0,0.5);
+
+  }
+
+  .bg-orbit {
+
+    position: fixed;
+
+    top: -50%;
+
+    left: -50%;
+
+    width: 200%;
+
+    height: 200%;
+
+    background: radial-gradient(circle, rgba(255,152,0,0.18), transparent 70%);
+
+    animation: rotate 90s linear infinite;
+
+    z-index: -1;
+
+  }
+
+  @keyframes rotate {
+
+    from { transform: rotate(0deg); }
+
+    to { transform: rotate(360deg); }
+
+  }
+
+  .footer {
+
+    margin-top: 3.5rem;
+
+    font-size: 0.85rem;
+
+    color: #ffcc80;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="bg-orbit"></div>
+
+<div class="container">
+
+  <h1>The Burpeathon Loop</h1>
+
+  <h2>Memory → Signal → Freedom</h2>
+
+  <!-- CORE LOOP -->
+
+  <div class="loop-grid">
+
+    <!-- CARD 1 -->
+
+    <div class="card">
+
+      <div class="icon">📡🧠</div>
+
+      <h3>Vertical Stream + Tech Memory</h3>
+
+      <p>
+
+        Vertical-first visuals<br>
+
+        Open-source execution • GitHub stars
+
+      </p>
+
+      <div class="split">
+
+        <p>
+
+          Games & virtual spaces as memory<br>
+
+          Public proof of continuity
+
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- CARD 2 -->
+
+    <div class="card">
+
+      <div class="icon">🔥🎤🎸</div>
+
+      <h3>Burpeathon × Freestyle / Instrument Improv</h3>
+
+      <p>
+
+        Cardiovascular ignition → rhythm → expression
+
+      </p>
+
+      <div class="split">
+
+        <p>
+
+          Voice or instrument<br>
+
+          One engine, many outputs
+
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- CARD 3 (EXPANDED MOBILITY) -->
+
+    <div class="card">
+
+      <div class="icon">🚐🏊‍♂️</div>
+
+      <h3>Mobility & Deployment</h3>
+
+      <p>
+
+        Sleeper vehicle for recovery + freestyle practice<br>
+
+        Execute anywhere
+
+      </p>
+
+      <div class="split">
+
+        <p>
+
+          Two gyms minimum<br>
+
+          Swim + lift for nervous system reset
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- EXECUTION MODULES -->
+
+  <h4>Execution Modules</h4>
+
+  <div class="module-grid">
+
+    <div class="card">
+
+      <div class="icon">🌀</div>
+
+      <h3>Blender Reps → Beat Posts</h3>
+
+      <p>
+
+        Daily Blender reps<br>
+
+        Export visuals as beat posts
+
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      <div class="icon">🎥⚡</div>
+
+      <h3>Setlist Multicamera by Location</h3>
+
+      <p>
+
+        Generator / storage unit / Honda Element
+
+      </p>
+
+      <div class="split">
+
+        <p>
+
+          Win4 as control hub<br>
+
+          Location defines the angle
+
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="icon">🎧📦</div>
+
+      <h3>5 Beats / Day — Storage Unit</h3>
+
+      <p>
+
+        Music discovery playback<br>
+
+        Beat iteration & selection
+
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="footer">
+
+    Health first · setlist second · visuals as proof
+
+  </div>
+
+</div>
+
+</body>
+
+</html>
