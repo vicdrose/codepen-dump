@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sunrise Field System</title>
+
+<style>
+html, body {
+  margin:0; padding:0;
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
+  background:#000;
+}
+
+/* ---------------- SCENES ---------------- */
+.scene {
+  position: absolute;
+  inset: 0;
+  display: none;
+  background-size: cover;
+  background-position: center;
+  animation: breathe 12s ease-in-out infinite;
+}
+
+.scene.active { display:block; }
+
+@keyframes breathe {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Soft light overlay */
+.scene::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background: radial-gradient(circle at top, rgba(255,255,255,0.15), transparent 60%);
+  pointer-events:none;
+}
+
+/* Scene label */
+.label {
+  position: absolute;
+  bottom:30px; left:30px;
+  color:white;
+  font-size:22px;
+  letter-spacing:1px;
+  opacity:0.9;
+}
+
+/* Icon nodes */
+.icon {
+  position:absolute;
+  width:56px; height:56px;
+  background:rgba(255,255,255,0.85);
+  border-radius:50%;
+  display:grid; place-items:center;
+  font-size:26px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.35);
+  cursor:pointer;
+  transition: transform 0.2s;
+}
+
+/* Hover scale */
+.icon:hover { transform: scale(1.3); }
+
+/* Tooltip label */
+.icon::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 3px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.icon:hover::after {
+  opacity: 1;
+}
+
+/* ---------------- BUTTON NAV ---------------- */
+.buttons {
+  position:fixed; top:14px; left:50%;
+  transform:translateX(-50%);
+  z-index:10;
+}
+.buttons button {
+  margin:0 4px;
+  padding:8px 12px;
+  border-radius:6px;
+  border:none;
+  background: rgba(255,255,255,0.9);
+  cursor:pointer;
+  font-weight:600;
+}
+.buttons button:hover { background:#ffcc80; }
+
+/* ---------------- SCENE GRADIENTS ---------------- */
+#field { background:linear-gradient(#7ec850,#4caf50); }
+#parking { background:linear-gradient(#666,#333); }
+#coffee { background:linear-gradient(#c97a3a,#8b4513); }
+#gym { background:linear-gradient(#111,#444); }
+#storage { background:linear-gradient(#999,#bbb); }
+#land { background:linear-gradient(#2e8b57,#3cb371); }
+
+/* ---------------- HUD ---------------- */
+#hud {
+  position:fixed; top:14px; right:14px;
+  width:220px; background: rgba(255,255,255,0.88);
+  border-radius:12px; padding:10px; font-size:12px; z-index:20;
+}
+.stat { margin-bottom:6px; }
+.stat span { font-weight:600; }
+.bar {
+  height:8px;
+  background:#ddd;
+  border-radius:6px;
+  overflow:hidden;
+}
+.bar div { height:100%; width:50%; transition: width 0.3s; }
+#energy { background:#66bb6a; }
+#creativity { background:#ab47bc; }
+#mood { background:#ff7043; }
+#cardio { background:#42a5f5; }
+</style>
+</head>
+
+<body>
+
+<!-- ---------------- BUTTON NAV ---------------- -->
+<div class="buttons">
+  <button onclick="go('field')">1 Field</button>
+  <button onclick="go('parking')">2 Parking</button>
+  <button onclick="go('coffee')">3 Coffee</button>
+  <button onclick="go('gym')">4 Gym</button>
+  <button onclick="go('storage')">5 Storage</button>
+  <button onclick="go('land')">6 Own Land</button>
+</div>
+
+<!-- ---------------- HUD ---------------- -->
+<div id="hud">
+  <div class="stat"><span>Energy</span><div class="bar"><div id="energy"></div></div></div>
+  <div class="stat"><span>Creativity</span><div class="bar"><div id="creativity"></div></div></div>
+  <div class="stat"><span>Mood</span><div class="bar"><div id="mood"></div></div></div>
+  <div class="stat"><span>Cardio</span><div class="bar"><div id="cardio"></div></div></div>
+</div>
+
+<!-- ---------------- SCENES ---------------- -->
+<div id="field" class="scene active">
+  <div class="icon" data-label="Running" style="top:45%;left:30%">🏃</div>
+  <div class="icon" data-label="Listening to Music" style="top:55%;left:55%">🎧</div>
+  <div class="icon" data-label="Freestyle Rap" style="top:65%;left:45%">🎤</div>
+  <div class="label">FIELD — Move, breathe, perform</div>
+</div>
+
+<div id="parking" class="scene">
+  <div class="icon" data-label="Drive Vehicle" style="top:50%;left:50%">🚗</div>
+  <div class="icon" data-label="Work on Laptop" style="top:35%;left:60%">💻</div>
+  <div class="label">PARKING — Mobile work mode</div>
+</div>
+
+<div id="coffee" class="scene">
+  <div class="icon" data-label="Coffee Break" style="top:50%;left:50%">☕</div>
+  <div class="icon" data-label="Phone/Tasks" style="top:62%;left:45%">📱</div>
+  <div class="label">COFFEE — Light focus & admin</div>
+</div>
+
+<div id="gym" class="scene">
+  <div class="icon" data-label="Weightlifting" style="top:45%;left:40%">🏋️</div>
+  <div class="icon" data-label="Gymnastics" style="top:60%;left:55%">🤸</div>
+  <div class="label">GYM — Strength & nervous system</div>
+</div>
+
+<div id="storage" class="scene">
+  <div class="icon" data-label="Storage Boxes" style="top:50%;left:50%">📦</div>
+  <div class="icon" data-label="Healthy Snacks" style="top:62%;left:45%">🍎</div>
+  <div class="label">STORAGE — Prep & logistics</div>
+</div>
+
+<div id="land" class="scene">
+  <div class="icon" data-label="Trees & Nature" style="top:50%;left:50%">🌳</div>
+  <div class="icon" data-label="Tent / Camp" style="top:45%;left:60%">⛺</div>
+  <div class="icon" data-label="Workstation" style="top:60%;left:40%">💻</div>
+  <div class="label">OWN LAND — Autonomy & creation</div>
+</div>
+
+<script>
+/* ---------------- PLAYER STATE ---------------- */
+const player = {
+  energy: 60,
+  creativity: 50,
+  mood: 50,
+  cardio: 30
+};
+
+function clamp(v){ return Math.max(0, Math.min(100,v)); }
+
+function updateHUD(){
+  document.getElementById('energy').style.width = player.energy + '%';
+  document.getElementById('creativity').style.width = player.creativity + '%';
+  document.getElementById('mood').style.width = player.mood + '%';
+  document.getElementById('cardio').style.width = player.cardio + '%';
+}
+
+function applyEffect({energy=0,creativity=0,mood=0,cardio=0}){
+  player.energy = clamp(player.energy + energy);
+  player.creativity = clamp(player.creativity + creativity);
+  player.mood = clamp(player.mood + mood);
+  player.cardio = clamp(player.cardio + cardio);
+  updateHUD();
+}
+
+/* ---------------- SCENE SWITCHING ---------------- */
+function go(id){
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+document.addEventListener('keydown', e=>{
+  const map=['field','parking','coffee','gym','storage','land'];
+  if(e.key>='1' && e.key<='6') go(map[e.key-1]);
+});
+
+/* ---------------- ICON INTERACTIONS ---------------- */
+document.querySelectorAll('.icon').forEach(icon=>{
+  icon.addEventListener('click',()=>{
+    const s=icon.textContent;
+    switch(s){
+      case '🏃': applyEffect({cardio:+8, energy:-6, mood:+3}); break;
+      case '🎧': applyEffect({mood:+6, energy:-2}); break;
+      case '🎤': applyEffect({creativity:+10, energy:-5}); break;
+      case '🚗': applyEffect({creativity:+6, energy:-3}); break;
+      case '💻': applyEffect({creativity:+8, energy:-4}); break;
+      case '☕': applyEffect({energy:+6, mood:+4}); break;
+      case '📱': applyEffect({mood:+3, creativity:+2}); break;
+      case '🏋️': applyEffect({cardio:+10, energy:-8}); break;
+      case '🤸': applyEffect({mood:+5, cardio:+4}); break;
+      case '📦': applyEffect({energy:-2, mood:+1}); break;
+      case '🍎': applyEffect({energy:+5}); break;
+      case '🌳': applyEffect({mood:+8}); break;
+      case '⛺': applyEffect({creativity:+5, mood:+4}); break;
+    }
+  });
+});
+
+updateHUD();
+</script>
+</body>
+</html>
