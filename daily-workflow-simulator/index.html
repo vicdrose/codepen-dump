@@ -1,331 +1,22 @@
-<div id="app">
 
-  <!-- Navigation -->
-
-  <div id="nav">
-
-    <div class="nav-dots">
-
-      <div class="nav-dot active" data-scene="1" title="Uber + Job Apps"></div>
-
-      <div class="nav-dot" data-scene="2" title="Fitness"></div>
-
-      <div class="nav-dot" data-scene="3" title="Music Stream"></div>
-
-      <div class="nav-dot" data-scene="4" title="Study Hall"></div>
-
-      <div class="nav-dot" data-scene="5" title="Networking"></div>
-
-      <div class="nav-dot" data-scene="6" title="Night Coding"></div>
-
-    </div>
-
-    <div id="energy-meter">
-
-      <span>Energy:</span>
-
-      <div class="energy-bar">
-
-        <div class="energy-fill" style="width: 80%"></div>
-
-      </div>
-
-      <span id="energy-text">80%</span>
-
-    </div>
-
-  </div>
-
-  <!-- Scene 1: Uber Airport + Music + Job Apps -->
-
-  <div id="scene1" class="scene active">
-
-    <h1 class="scene-title">🚗 Morning Hustle: Travel + Applications</h1>
-
-    <div class="canvas-container">
-
-      <div class="car"></div>
-
-      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-
-        <div class="music-player">
-
-          <button class="play-btn" onclick="toggleMusic(1)">▶</button>
-
-          <div>
-
-            <div style="font-weight: bold;">Discover New Tracks</div>
-
-            <div style="font-size: 0.8rem; opacity: 0.7;">Focus Mode Playlist</div>
-
-          </div>
-
-        </div>
-
-        <div id="job-apps" style="margin-top: 20px;">
-
-          <div class="job-app" onclick="completeJob(this)">
-
-            <strong>Frontend Developer</strong><br>
-
-            <small>Apply to TechCorp</small>
-
-          </div>
-
-          <div class="job-app" onclick="completeJob(this)">
-
-            <strong>Full Stack Engineer</strong><br>
-
-            <small>Apply to StartupXYZ</small>
-
-          </div>
-
-          <div class="job-app" onclick="completeJob(this)">
-
-            <strong>3D Graphics Developer</strong><br>
-
-            <small>Apply to GameStudio</small>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="controls">
-
-      <button class="btn" onclick="nextScene()">Next Scene →</button>
-
-    </div>
-
-  </div>
-
-  <!-- Scene 2: Fitness -->
-
-  <div id="scene2" class="scene">
-
-    <h1 class="scene-title">💪 High-Energy Workout</h1>
-
-    <div class="canvas-container">
-
-      <div class="avatar"></div>
-
-      <div class="rep-counter" id="rep-counter">0</div>
-
-      <div style="text-align: center;">
-
-        <div style="font-size: 1.2rem; margin: 10px;">Current: <span id="exercise-type">Burpees</span></div>
-
-      </div>
-
-    </div>
-
-    <div class="controls">
-
-      <button class="btn" onclick="changeExercise('Burpees')">Burpees</button>
-
-      <button class="btn" onclick="changeExercise('Kettlebell')">Kettlebell</button>
-
-      <button class="btn" onclick="changeExercise('Dumbbell')">Dumbbell</button>
-
-      <button class="btn" onclick="startWorkout()">Start Rep</button>
-
-      <button class="btn active" id="mode-toggle" onclick="toggleMode()">Solo Mode</button>
-
-      <button class="btn" onclick="nextScene()">Next Scene →</button>
-
-    </div>
-
-  </div>
-
-  <!-- Scene 3: Music Stream -->
-
-  <div id="scene3" class="scene">
-
-    <h1 class="scene-title">🎵 Campus Beat Session</h1>
-
-    <div class="canvas-container">
-
-      <div style="padding: 40px; text-align: center;">
-
-        <div class="visualizer" id="visualizer"></div>
-
-        <div style="margin-top: 30px;">
-
-          <button class="play-btn" onclick="toggleMusic(3)">▶</button>
-
-        </div>
-
-        <div style="margin-top: 20px;">
-
-          <label style="display: block; margin: 10px;">
-
-            Subwoofer: <input type="range" min="0" max="100" value="70" onchange="updateSubwoofer(this.value)">
-
-          </label>
-
-          <div style="margin-top: 20px; font-size: 1.2rem;">Audience Vibe: <span id="audience-vibe">🔥 LIT</span></div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="controls">
-
-      <button class="btn" onclick="improvise()">Improvise 🎹</button>
-
-      <button class="btn" onclick="nextScene()">Next Scene →</button>
-
-    </div>
-
-  </div>
-
-  <!-- Scene 4: Study Hall -->
-
-  <div id="scene4" class="scene">
-
-    <h1 class="scene-title">☕ Virtual Study Hall</h1>
-
-    <div class="canvas-container">
-
-      <div style="padding: 20px; overflow-y: auto; height: 100%;">
-
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-
-          <div class="desk" onclick="sitAtDesk(1)">
-
-            <div class="laptop"></div>
-
-            <div style="text-align: center; margin-top: 60px; font-size: 0.8rem;">Desk 1</div>
-
-          </div>
-
-          <div class="desk" onclick="sitAtDesk(2)">
-
-            <div class="laptop"></div>
-
-            <div style="text-align: center; margin-top: 60px; font-size: 0.8rem;">Desk 2</div>
-
-          </div>
-
-          <div class="desk" onclick="sitAtDesk(3)">
-
-            <div class="laptop"></div>
-
-            <div style="text-align: center; margin-top: 60px; font-size: 0.8rem;">Desk 3</div>
-
-          </div>
-
-        </div>
-
-        <div style="margin-top: 30px; text-align: center;">
-
-          <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; display: inline-block;">
-
-            <div>💬 Network Chat</div>
-
-            <div id="chat-messages" style="margin-top: 10px; font-size: 0.9rem;">
-
-              <div>Alex: Working on React project</div>
-
-              <div>Sam: Anyone up for code review?</div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="controls">
-
-      <button class="btn" onclick="sendMessage()">Send Message</button>
-
-      <button class="btn" onclick="nextScene()">Next Scene →</button>
-
-    </div>
-
-  </div>
-
-  <!-- Scene 5: Networking -->
-
-  <div id="scene5" class="scene">
-
-    <h1 class="scene-title">🎉 Social Energy Zone</h1>
-
-    <div class="canvas-container">
-
-      <div class="crowd" id="crowd"></div>
-
-      <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); text-align: center;">
-
-        <div style="font-size: 1.5rem; margin: 10px;">Connections Made: <span id="connections">0</span></div>
-
-        <div class="music-player">
-
-          <button class="play-btn" onclick="toggleMusic(5)">▶</button>
-
-          <div>DJ Set Playing</div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="controls">
-
-      <button class="btn" onclick="mingleCrowd()">Mingle 🤝</button>
-
-      <button class="btn" onclick="danceBurst()">Dance Burst 💃</button>
-
-      <button class="btn" onclick="nextScene()">Next Scene →</button>
-
-    </div>
-
-  </div>
-
-  <!-- Scene 6: Night Coding -->
-
-  <div id="scene6" class="scene">
-
-    <h1 class="scene-title">🌙 Deep Work: Code + Create</h1>
-
-    <div class="canvas-container">
-
-      <div class="code-editor" id="code-editor"></div>
-
-    </div>
-
-    <div class="controls">
-
-      <button class="btn" onclick="toggleWorkspace('Unity')">Unity 🎮</button>
-
-      <button class="btn" onclick="toggleWorkspace('Blender')">Blender 🎨</button>
-
-      <button class="btn" onclick="toggleWorkspace('TouchDesigner')">TouchDesigner ✨</button>
-
-      <button class="btn" onclick="showSummary()">Day Summary 📊</button>
-
-    </div>
-
-  </div>
-
-  <!-- Tooltip -->
-
-  <div class="tooltip" id="tooltip"></div>
-
-</div>
-
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Ai slop claude (incredible)</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/OPXgyva">
+  
+  
+  
+  
 <style>
-  * {
+* {
 
   margin: 0;
 
@@ -1011,8 +702,341 @@ body {
 
 }
 </style>
-<script>
-  // Global State
+
+  
+  
+  
+</head>
+
+<body>
+  <div id="app">
+
+  <!-- Navigation -->
+
+  <div id="nav">
+
+    <div class="nav-dots">
+
+      <div class="nav-dot active" data-scene="1" title="Uber + Job Apps"></div>
+
+      <div class="nav-dot" data-scene="2" title="Fitness"></div>
+
+      <div class="nav-dot" data-scene="3" title="Music Stream"></div>
+
+      <div class="nav-dot" data-scene="4" title="Study Hall"></div>
+
+      <div class="nav-dot" data-scene="5" title="Networking"></div>
+
+      <div class="nav-dot" data-scene="6" title="Night Coding"></div>
+
+    </div>
+
+    <div id="energy-meter">
+
+      <span>Energy:</span>
+
+      <div class="energy-bar">
+
+        <div class="energy-fill" style="width: 80%"></div>
+
+      </div>
+
+      <span id="energy-text">80%</span>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 1: Uber Airport + Music + Job Apps -->
+
+  <div id="scene1" class="scene active">
+
+    <h1 class="scene-title">🚗 Morning Hustle: Travel + Applications</h1>
+
+    <div class="canvas-container">
+
+      <div class="car"></div>
+
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+
+        <div class="music-player">
+
+          <button class="play-btn" onclick="toggleMusic(1)">▶</button>
+
+          <div>
+
+            <div style="font-weight: bold;">Discover New Tracks</div>
+
+            <div style="font-size: 0.8rem; opacity: 0.7;">Focus Mode Playlist</div>
+
+          </div>
+
+        </div>
+
+        <div id="job-apps" style="margin-top: 20px;">
+
+          <div class="job-app" onclick="completeJob(this)">
+
+            <strong>Frontend Developer</strong><br>
+
+            <small>Apply to TechCorp</small>
+
+          </div>
+
+          <div class="job-app" onclick="completeJob(this)">
+
+            <strong>Full Stack Engineer</strong><br>
+
+            <small>Apply to StartupXYZ</small>
+
+          </div>
+
+          <div class="job-app" onclick="completeJob(this)">
+
+            <strong>3D Graphics Developer</strong><br>
+
+            <small>Apply to GameStudio</small>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="nextScene()">Next Scene →</button>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 2: Fitness -->
+
+  <div id="scene2" class="scene">
+
+    <h1 class="scene-title">💪 High-Energy Workout</h1>
+
+    <div class="canvas-container">
+
+      <div class="avatar"></div>
+
+      <div class="rep-counter" id="rep-counter">0</div>
+
+      <div style="text-align: center;">
+
+        <div style="font-size: 1.2rem; margin: 10px;">Current: <span id="exercise-type">Burpees</span></div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="changeExercise('Burpees')">Burpees</button>
+
+      <button class="btn" onclick="changeExercise('Kettlebell')">Kettlebell</button>
+
+      <button class="btn" onclick="changeExercise('Dumbbell')">Dumbbell</button>
+
+      <button class="btn" onclick="startWorkout()">Start Rep</button>
+
+      <button class="btn active" id="mode-toggle" onclick="toggleMode()">Solo Mode</button>
+
+      <button class="btn" onclick="nextScene()">Next Scene →</button>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 3: Music Stream -->
+
+  <div id="scene3" class="scene">
+
+    <h1 class="scene-title">🎵 Campus Beat Session</h1>
+
+    <div class="canvas-container">
+
+      <div style="padding: 40px; text-align: center;">
+
+        <div class="visualizer" id="visualizer"></div>
+
+        <div style="margin-top: 30px;">
+
+          <button class="play-btn" onclick="toggleMusic(3)">▶</button>
+
+        </div>
+
+        <div style="margin-top: 20px;">
+
+          <label style="display: block; margin: 10px;">
+
+            Subwoofer: <input type="range" min="0" max="100" value="70" onchange="updateSubwoofer(this.value)">
+
+          </label>
+
+          <div style="margin-top: 20px; font-size: 1.2rem;">Audience Vibe: <span id="audience-vibe">🔥 LIT</span></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="improvise()">Improvise 🎹</button>
+
+      <button class="btn" onclick="nextScene()">Next Scene →</button>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 4: Study Hall -->
+
+  <div id="scene4" class="scene">
+
+    <h1 class="scene-title">☕ Virtual Study Hall</h1>
+
+    <div class="canvas-container">
+
+      <div style="padding: 20px; overflow-y: auto; height: 100%;">
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+
+          <div class="desk" onclick="sitAtDesk(1)">
+
+            <div class="laptop"></div>
+
+            <div style="text-align: center; margin-top: 60px; font-size: 0.8rem;">Desk 1</div>
+
+          </div>
+
+          <div class="desk" onclick="sitAtDesk(2)">
+
+            <div class="laptop"></div>
+
+            <div style="text-align: center; margin-top: 60px; font-size: 0.8rem;">Desk 2</div>
+
+          </div>
+
+          <div class="desk" onclick="sitAtDesk(3)">
+
+            <div class="laptop"></div>
+
+            <div style="text-align: center; margin-top: 60px; font-size: 0.8rem;">Desk 3</div>
+
+          </div>
+
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+
+          <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; display: inline-block;">
+
+            <div>💬 Network Chat</div>
+
+            <div id="chat-messages" style="margin-top: 10px; font-size: 0.9rem;">
+
+              <div>Alex: Working on React project</div>
+
+              <div>Sam: Anyone up for code review?</div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="sendMessage()">Send Message</button>
+
+      <button class="btn" onclick="nextScene()">Next Scene →</button>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 5: Networking -->
+
+  <div id="scene5" class="scene">
+
+    <h1 class="scene-title">🎉 Social Energy Zone</h1>
+
+    <div class="canvas-container">
+
+      <div class="crowd" id="crowd"></div>
+
+      <div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); text-align: center;">
+
+        <div style="font-size: 1.5rem; margin: 10px;">Connections Made: <span id="connections">0</span></div>
+
+        <div class="music-player">
+
+          <button class="play-btn" onclick="toggleMusic(5)">▶</button>
+
+          <div>DJ Set Playing</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="mingleCrowd()">Mingle 🤝</button>
+
+      <button class="btn" onclick="danceBurst()">Dance Burst 💃</button>
+
+      <button class="btn" onclick="nextScene()">Next Scene →</button>
+
+    </div>
+
+  </div>
+
+  <!-- Scene 6: Night Coding -->
+
+  <div id="scene6" class="scene">
+
+    <h1 class="scene-title">🌙 Deep Work: Code + Create</h1>
+
+    <div class="canvas-container">
+
+      <div class="code-editor" id="code-editor"></div>
+
+    </div>
+
+    <div class="controls">
+
+      <button class="btn" onclick="toggleWorkspace('Unity')">Unity 🎮</button>
+
+      <button class="btn" onclick="toggleWorkspace('Blender')">Blender 🎨</button>
+
+      <button class="btn" onclick="toggleWorkspace('TouchDesigner')">TouchDesigner ✨</button>
+
+      <button class="btn" onclick="showSummary()">Day Summary 📊</button>
+
+    </div>
+
+  </div>
+
+  <!-- Tooltip -->
+
+  <div class="tooltip" id="tooltip"></div>
+
+</div>
+  
+    <script id="rendered-js" >
+// Global State
 let currentScene = 1;
 let energy = 80;
 let reps = 0;
@@ -1375,4 +1399,9 @@ console.log(`
 
 Enjoy your immersive workflow journey!
 `);
-</script>
+  </script>
+
+  
+</body>
+
+</html>
