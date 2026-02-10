@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Ai slop</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/ByzQopo">
+  
+  
+  
+  
+<style>
+* {
+
+  box-sizing: border-box;
+
+}
+
+html, body {
+
+  margin: 0;
+
+  background: radial-gradient(circle at top, #161a26, #0b0e14);
+
+  color: #eaeaea;
+
+  font-family: system-ui, sans-serif;
+
+}
+
+section {
+
+  padding: 5rem 2rem;
+
+  text-align: center;
+
+}
+
+h1, h2 {
+
+  letter-spacing: 0.08em;
+
+}
+
+.dream {
+
+  min-height: 100vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+}
+
+.root .loop {
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 1rem;
+
+  flex-wrap: wrap;
+
+  margin: 2rem 0;
+
+}
+
+.loop span {
+
+  background: #1e2336;
+
+  padding: 0.6rem 1rem;
+
+  border-radius: 999px;
+
+}
+
+.pill-row {
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 1rem;
+
+  flex-wrap: wrap;
+
+  margin-top: 1.5rem;
+
+}
+
+.pill-row span {
+
+  background: #1b2032;
+
+  padding: 0.5rem 1.1rem;
+
+  border-radius: 999px;
+
+}
+
+.cards, .orbit-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+  gap: 2rem;
+
+  margin-top: 2rem;
+
+}
+
+.card, .node {
+
+  background: #141827;
+
+  padding: 2rem;
+
+  border-radius: 20px;
+
+}
+
+.highlight {
+
+  background: linear-gradient(160deg, #2a2f45, #1c2035);
+
+  box-shadow: 0 0 60px rgba(255, 200, 120, 0.08);
+
+}
+
+.rig ul {
+
+  list-style: none;
+
+  padding: 0;
+
+}
+
+.rig li {
+
+  margin: 0.5rem 0;
+
+}
+
+footer {
+
+  padding: 3rem;
+
+  opacity: 0.4;
+
+}
+</style>
+
+  
+  
+  
+</head>
+
+<body>
+  <div id="os">
+
+  <!-- DREAM STATE -->
+
+  <section class="dream">
+
+    <h1>Dream → Wake</h1>
+
+    <p>
+
+      Nothing fancy.<br>
+
+      Just the most basic truth.
+
+    </p>
+
+  </section>
+
+  <!-- ROOT LOOP -->
+
+  <section class="root">
+
+    <h2>🎸 The Root Loop</h2>
+
+    <div class="loop">
+
+      <span>Guitar Scales</span>
+
+      <span>+</span>
+
+      <span>Your Set List</span>
+
+      <span>+</span>
+
+      <span>Guitar for Sale</span>
+
+    </div>
+
+    <p class="meta">
+
+      Built cheap · Sold premium · Played daily
+
+    </p>
+
+  </section>
+
+  <!-- FREESTYLE KING CORE -->
+
+  <section class="king">
+
+    <h2>👑 Freestyle King</h2>
+
+    <div class="pill-row">
+
+      <span>Burpeethon</span>
+
+      <span>Shower Reset</span>
+
+      <span>Depth Mode</span>
+
+    </div>
+
+    <p>
+
+      If no one shows up → Freestyle<br>
+
+      If tired → Sleep<br>
+
+      If clear → Build
+
+    </p>
+
+  </section>
+
+  <!-- STORAGE + OUTPUT -->
+
+  <section class="storage">
+
+    <h2>📦 Daily Output</h2>
+
+    <div class="cards">
+
+      <div class="card highlight">
+
+        <h3>5 Beats / Day</h3>
+
+        <p>Tent Rap Storage</p>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Set Lists</h3>
+
+        <p>BPM-Organized · No Repeats</p>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Visual Loops</h3>
+
+        <p>Blender Backgrounds</p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- SOCIAL ORBITS -->
+
+  <section class="orbit">
+
+    <h2>🛰️ Social Orbits</h2>
+
+    <div class="orbit-grid">
+
+      <div class="node">
+
+        <h4>Music Student Networking</h4>
+
+        <p>Highest Signal Ecosystem</p>
+
+      </div>
+
+      <div class="node">
+
+        <h4>Fitness Camera Social</h4>
+
+        <p>Burpeethon · Basketball · Backwards Training</p>
+
+      </div>
+
+      <div class="node">
+
+        <h4>Uber Airport</h4>
+
+        <p>Money + Location-Based Dating</p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- PORTABLE RIG -->
+
+  <section class="rig">
+
+    <h2>🎒 Portable Freestyle Rig</h2>
+
+    <ul>
+
+      <li>Phone + Tablet</li>
+
+      <li>H8 + Autotune</li>
+
+      <li>Power Bank</li>
+
+      <li>(Optional) Generator + Sub</li>
+
+    </ul>
+
+  </section>
+
+  <!-- NIGHT BUILD -->
+
+  <section class="night">
+
+    <h2>🌙 Night Build</h2>
+
+    <div class="pill-row">
+
+      <span>Blender</span>
+
+      <span>Unity</span>
+
+      <span>Parsec</span>
+
+    </div>
+
+    <p>
+
+      A-Frame & TouchDesigner = optional satellites
+
+    </p>
+
+  </section>
+
+  <!-- EXPANSION -->
+
+  <section class="expansion">
+
+    <h2>🚐 Expansion Layer</h2>
+
+    <p>
+
+      Garage Vans · Mountain Camper · Starlink<br>
+
+      Game Streaming · Japan → Brazil
+
+    </p>
+
+  </section>
+
+  <footer>
+
+    <p>Earn · Play · Build · Sleep</p>
+
+  </footer>
+
+</div>
+  
+    <script id="rendered-js" >
+let t = 0;
+
+setInterval(() => {
+
+  t += 0.01;
+
+  const glow = 40 + Math.sin(t) * 20;
+
+  document.body.style.background =
+
+    `radial-gradient(circle at top,
+
+      rgba(40,45,70,${glow/100}),
+
+      #0b0e14)`;
+
+}, 80);
+  </script>
+
+  
+</body>
+
+</html>
