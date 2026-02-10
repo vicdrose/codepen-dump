@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Priorities Cosmos</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    background: #000;
+  }
+  
+  #canvas {
+    display: block;
+    width: 100%;
+    height: 100vh;
+  }
+  
+  #ui {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    color: #fff;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #00ffff;
+    max-width: 350px;
+    backdrop-filter: blur(10px);
+  }
+  
+  #info {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    color: #fff;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #ff00ff;
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+    display: none;
+  }
+  
+  h2 {
+    color: #00ffff;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  h3 {
+    color: #ff00ff;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  
+  p, li {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #aaa;
+  }
+  
+  ul {
+    margin-left: 15px;
+    margin-top: 5px;
+  }
+  
+  .priority-item {
+    margin: 8px 0;
+    padding: 8px;
+    background: rgba(0, 255, 255, 0.1);
+    border-left: 3px solid #00ffff;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .priority-item:hover {
+    background: rgba(0, 255, 255, 0.2);
+    transform: translateX(5px);
+  }
+  
+  .controls {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #00ffff;
+    font-size: 11px;
+  }
+  
+  #quote {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    z-index: 50;
+    opacity: 0;
+    transition: opacity 1s;
+    pointer-events: none;
+    text-shadow: 0 0 20px #00ffff;
+  }
+  
+  .active {
+    opacity: 1 !important;
+  }
+  
+  .tag {
+    display: inline-block;
+    background: rgba(255, 0, 255, 0.3);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    margin: 2px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="ui">
+  <h2>🌌 Life Priorities Cosmos</h2>
+  <p style="margin-bottom: 15px;">Navigate your priority galaxies. Click planets to explore.</p>
+  
+  <div class="priority-item" data-planet="0">
+    <strong>🎯 Core Foundation</strong>
+    <div class="tag">Job Apps</div>
+    <div class="tag">Vehicle</div>
+  </div>
+  
+  <div class="priority-item" data-planet="1">
+    <strong>💰 Income Diversification</strong>
+    <div class="tag">Vanlife</div>
+    <div class="tag">Date4Location</div>
+  </div>
+  
+  <div class="priority-item" data-planet="2">
+    <strong>🎨 Creative/Technical</strong>
+    <div class="tag">Unity</div>
+    <div class="tag">Three.js</div>
+    <div class="tag">Blender</div>
+  </div>
+  
+  <div class="priority-item" data-planet="3">
+    <strong>🎵 Projects</strong>
+    <div class="tag">Astrobeats</div>
+    <div class="tag">Sleeper Vocals</div>
+  </div>
+  
+  <div class="priority-item" data-planet="4">
+    <strong>🌐 Network</strong>
+    <div class="tag">Music School</div>
+    <div class="tag">DJ Events</div>
+  </div>
+  
+  <div class="controls">
+    <strong>Controls:</strong><br>
+    🖱️ Drag to rotate • Scroll to zoom<br>
+    🖱️ Click planets to explore
+  </div>
+</div>
+
+<div id="info">
+  <h3 id="info-title">Planet Info</h3>
+  <div id="info-content"></div>
+</div>
+
+<div id="quote">Saturn actually rewards itself.</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+// Scene setup
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+
+camera.position.z = 30;
+
+// Lighting
+const ambientLight = new THREE.AmbientLight(0x404040, 2);
+scene.add(ambientLight);
+
+const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+pointLight.position.set(10, 10, 10);
+scene.add(pointLight);
+
+// Starfield
+const starsGeometry = new THREE.BufferGeometry();
+const starsMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 });
+const starsVertices = [];
+
+for (let i = 0; i < 3000; i++) {
+  const x = (Math.random() - 0.5) * 200;
+  const y = (Math.random() - 0.5) * 200;
+  const z = (Math.random() - 0.5) * 200;
+  starsVertices.push(x, y, z);
+}
+
+starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+const stars = new THREE.Points(starsGeometry, starsMaterial);
+scene.add(stars);
+
+// Planet data
+const planetData = [
+  {
+    name: "Core Foundation",
+    color: 0x00ffff,
+    position: { x: 0, y: 0, z: 0 },
+    size: 3,
+    info: `
+      <strong>Immediate Focus:</strong>
+      <ul>
+        <li>Job applications (Priority 1)</li>
+        <li>Vehicle decision: Good/Bad condition</li>
+        <li>Test jobs until you find one you don't want to quit</li>
+        <li>Arizona land ownership for winter anchor</li>
+      </ul>
+    `
+  },
+  {
+    name: "Income Diversification",
+    color: 0xff6600,
+    position: { x: -10, y: 5, z: -5 },
+    size: 2.5,
+    info: `
+      <strong>Tech Job Replacement:</strong>
+      <ul>
+        <li>Date4Location + Vanlife lifestyle</li>
+        <li>Uber/Doordash flexibility</li>
+        <li>WeWork access points</li>
+        <li>Cooking trailer potential (Honda Element)</li>
+        <li>Burpeethon eccentricity</li>
+      </ul>
+    `
+  },
+  {
+    name: "Creative/Technical Build",
+    color: 0xff00ff,
+    position: { x: 10, y: -3, z: -8 },
+    size: 2.8,
+    info: `
+      <strong>High-Value Skills:</strong>
+      <ul>
+        <li>Unity for environmental/interior design</li>
+        <li>Three.js shaders + GLSL</li>
+        <li>Blender output pipeline</li>
+        <li>Music discovery → Unity animation</li>
+      </ul>
+      <strong>Tools:</strong> Figma, MarvelApp, Balsamiq, Canva
+    `
+  },
+  {
+    name: "Revenue Projects",
+    color: 0x00ff00,
+    position: { x: 8, y: 8, z: 5 },
+    size: 2.3,
+    info: `
+      <strong>Monetizable Projects:</strong>
+      <ul>
+        <li>Phone vibe code + Virtual study hall UX</li>
+        <li>Astrobeats (music + visuals)</li>
+        <li>Sleeper vocals - "edible" work</li>
+        <li>Freestyle King (Brazil/Thai markets)</li>
+        <li>Guitar Setlists</li>
+      </ul>
+    `
+  },
+  {
+    name: "Social/Network",
+    color: 0xffff00,
+    position: { x: -8, y: -8, z: 3 },
+    size: 2,
+    info: `
+      <strong>Network Building:</strong>
+      <ul>
+        <li>Music school networking stream</li>
+        <li>DJ bartender events</li>
+        <li>Brackeys/Ducky3D community engagement</li>
+        <li>Shoot collection</li>
+      </ul>
+      <p style="margin-top: 10px;"><em>"Pay attention to self-destructive people that are undercover friends (hecklers)"</em></p>
+    `
+  }
+];
+
+// Create planets
+const planets = [];
+const orbitSpeeds = [0.001, 0.0015, 0.0012, 0.0018, 0.0014];
+
+planetData.forEach((data, index) => {
+  const geometry = new THREE.SphereGeometry(data.size, 32, 32);
+  const material = new THREE.MeshPhongMaterial({ 
+    color: data.color,
+    emissive: data.color,
+    emissiveIntensity: 0.3,
+    shininess: 100
+  });
+  const planet = new THREE.Mesh(geometry, material);
+  planet.position.set(data.position.x, data.position.y, data.position.z);
+  planet.userData = data;
+  
+  // Add glow
+  const glowGeometry = new THREE.SphereGeometry(data.size * 1.2, 32, 32);
+  const glowMaterial = new THREE.MeshBasicMaterial({
+    color: data.color,
+    transparent: true,
+    opacity: 0.2
+  });
+  const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+  planet.add(glow);
+  
+  scene.add(planet);
+  planets.push(planet);
+  
+  // Create orbit path
+  const orbitRadius = Math.sqrt(data.position.x ** 2 + data.position.y ** 2 + data.position.z ** 2);
+  if (orbitRadius > 0) {
+    const curve = new THREE.EllipseCurve(
+      0, 0,
+      orbitRadius, orbitRadius,
+      0, 2 * Math.PI,
+      false,
+      0
+    );
+    const points = curve.getPoints(50);
+    const orbitGeometry = new THREE.BufferGeometry().setFromPoints(points);
+    const orbitMaterial = new THREE.LineBasicMaterial({ 
+      color: data.color, 
+      transparent: true, 
+      opacity: 0.2 
+    });
+    const orbit = new THREE.Line(orbitGeometry, orbitMaterial);
+    orbit.rotation.x = Math.PI / 2;
+    scene.add(orbit);
+  }
+});
+
+// Mouse interaction
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let isDragging = false;
+let previousMousePosition = { x: 0, y: 0 };
+
+window.addEventListener('mousemove', (event) => {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  
+  if (isDragging) {
+    const deltaX = event.clientX - previousMousePosition.x;
+    const deltaY = event.clientY - previousMousePosition.y;
+    
+    scene.rotation.y += deltaX * 0.005;
+    scene.rotation.x += deltaY * 0.005;
+  }
+  
+  previousMousePosition = { x: event.clientX, y: event.clientY };
+});
+
+window.addEventListener('mousedown', () => { isDragging = true; });
+window.addEventListener('mouseup', () => { isDragging = false; });
+
+window.addEventListener('click', (event) => {
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(planets);
+  
+  if (intersects.length > 0) {
+    const clicked = intersects[0].object;
+    showInfo(clicked.userData);
+  }
+});
+
+// Zoom with mouse wheel
+window.addEventListener('wheel', (event) => {
+  camera.position.z += event.deltaY * 0.01;
+  camera.position.z = Math.max(10, Math.min(50, camera.position.z));
+});
+
+// Info panel
+function showInfo(data) {
+  const infoPanel = document.getElementById('info');
+  const infoTitle = document.getElementById('info-title');
+  const infoContent = document.getElementById('info-content');
+  
+  infoTitle.textContent = data.name;
+  infoContent.innerHTML = data.info;
+  infoPanel.style.display = 'block';
+  
+  setTimeout(() => {
+    infoPanel.style.display = 'none';
+  }, 8000);
+}
+
+// UI interaction
+document.querySelectorAll('.priority-item').forEach((item, index) => {
+  item.addEventListener('click', () => {
+    showInfo(planetData[index]);
+    
+    // Animate camera to planet
+    const target = planets[index].position;
+    animateCamera(target);
+  });
+});
+
+function animateCamera(targetPos) {
+  const startPos = camera.position.clone();
+  const endPos = new THREE.Vector3(targetPos.x, targetPos.y, targetPos.z + 15);
+  let progress = 0;
+  
+  function animate() {
+    progress += 0.02;
+    if (progress < 1) {
+      camera.position.lerpVectors(startPos, endPos, progress);
+      camera.lookAt(targetPos);
+      requestAnimationFrame(animate);
+    }
+  }
+  animate();
+}
+
+// Show quote periodically
+let quoteShown = false;
+setTimeout(() => {
+  if (!quoteShown) {
+    const quote = document.getElementById('quote');
+    quote.classList.add('active');
+    setTimeout(() => quote.classList.remove('active'), 3000);
+    quoteShown = true;
+  }
+}, 5000);
+
+// Animation loop
+let time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.01;
+  
+  // Rotate planets
+  planets.forEach((planet, index) => {
+    planet.rotation.y += 0.005;
+    
+    // Orbit around center
+    if (index > 0) {
+      const data = planet.userData;
+      const radius = Math.sqrt(data.position.x ** 2 + data.position.y ** 2);
+      const angle = time * orbitSpeeds[index];
+      planet.position.x = Math.cos(angle) * radius;
+      planet.position.z = Math.sin(angle) * radius;
+    }
+  });
+  
+  // Slowly rotate starfield
+  stars.rotation.y += 0.0001;
+  
+  // Hover effect
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(planets);
+  
+  planets.forEach(planet => {
+    planet.scale.set(1, 1, 1);
+  });
+  
+  if (intersects.length > 0) {
+    intersects[0].object.scale.set(1.1, 1.1, 1.1);
+    document.body.style.cursor = 'pointer';
+  } else {
+    document.body.style.cursor = 'default';
+  }
+  
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// Responsive
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+</body>
+</html>
