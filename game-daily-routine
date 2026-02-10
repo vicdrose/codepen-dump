@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Routine Game</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    .button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+    .button:disabled { background-color: lightgray; cursor: not-allowed; }
+    .activity { margin: 20px 0; font-size: 24px; }
+    .status { font-size: 18px; }
+    .status-item { margin: 10px 0; }
+    .mental-health-flow { color: green; }
+    .mental-health-anxious { color: red; }
+    .mental-health-bored { color: lightgrey; }
+  </style>
+</head>
+<body>
+
+<h1>Daily Routine Game</h1>
+<p class="activity">Current Activity: <span id="activityDisplay">Gym</span></p>
+<div class="status">
+  <p class="status-item">Energy: <span id="energy">100</span></p>
+  <p class="status-item">Mental Health: <span id="mentalHealth" class="mental-health-flow">Flow</span></p>
+  <p class="status-item">Time: <span id="time">8:00 AM</span></p>
+  <p class="status-item">Income: $<span id="income">0</span></p>
+  <p class="status-item">Buzz Meter: <span id="buzz">0</span></p>
+  <p class="status-item">Gas Meter: <span id="gas">40</span>/40</p>
+  <p class="status-item">Caffeine Uses Left: <span id="caffeineLimit">2</span></p>
+  <p class="status-item">Meditation Uses Left: <span id="meditationLimit">2</span></p>
+</div>
+<button class="button" onclick="nextActivity()">Next Activity</button>
+<button class="button" onclick="gigEconomy()">Gig Economy</button>
+<button class="button" onclick="sleep()">Sleep</button>
+<button class="button" id="meditateButton" onclick="meditate()">Meditate</button>
+<button class="button" onclick="liveStream()">Live Stream</button>
+<button class="button" id="caffeineButton" onclick="caffeine()">Caffeine</button>
+<button class="button" onclick="visitGasStation()">Gas Station</button>
+<button class="button" onclick="gaming()">Gaming</button>
+
+<script>
+  const activities = ["Gym", "Library", "College Campus", "Barhop", "WeWork", "Sleep"];
+  const activityHours = {
+    "Gym": [5, 23],
+    "Library": [6, 20],
+    "College Campus": [6, 20],
+    "Barhop": [16, 2],
+    "WeWork": [0, 22],
+    "Sleep": [0, 24]
+  };
+
+  const activitySuggestions = {
+    "Barhop": "Gaming, game dev, or music discovery in public. Meditate in the Honda. Live stream at College.",
+    "College Campus": "Library, gaming, meditation, or live streaming.",
+    "Gym": "Meditation or gig economy.",
+    "WeWork": "Live stream, gig economy, or other productive tasks."
+  };
+
+  let currentActivityIndex = 0;
+  let energy = 100;
+  let mentalHealth = "Flow";
+  let time = 8;
+  let income = 0;
+  let buzz = 0;
+  let gas = 40; // Max gas level
+  let caffeineUses = 2;
+  let meditationUses = 2;
+  let inWeWork = false;
+
+  function nextActivity() {
+    if (gas <= 0) {
+      alert("You're out of gas! You cannot continue. Game Over.");
+      return;
+    }
+
+    currentActivityIndex = (currentActivityIndex + 1) % activities.length;
+    const activity = activities[currentActivityIndex];
+    if (isActivityAvailable(activity)) {
+      document.getElementById("activityDisplay").textContent = activity;
+      if (activity === "WeWork") inWeWork = true;
+      adjustEnergyAndMentalHealth();
+      updateTime(1);
+      buzz += 5;
+      gas--;
+      document.getElementById("buzz").textContent = buzz;
+      document.getElementById("gas").textContent = gas;
+      decayBuzz(1);
+    } else {
+      alertUnavailableActivity(activity);
+    }
+  }
+
+  function isActivityAvailable(activity) {
+    const [start, end] = activityHours[activity];
+    if (activity === "WeWork") {
+      return time < 22 || inWeWork;
+    }
+    if (start <= end) {
+      return time >= start && time < end;
+    } else {
+      return time >= start || time < end;
+    }
+  }
+
+  function alertUnavailableActivity(activity) {
+    const suggestion = activitySuggestions[activity] || "Try another activity!";
+    alert(`${activity} isn't open yet. Recommended: ${suggestion}`);
+  }
+
+  function adjustEnergyAndMentalHealth() {
+    const activity = activities[currentActivityIndex];
+    if (activity === "Gym") {
+      energy = Math.min(energy + 20, 100);
+    } else if (activity === "Sleep") {
+      sleep();
+      return;
+    } else {
+      energy = Math.max(energy - 10, 0);
+    }
+    updateMentalHealth();
+  }
+
+  function updateTime(hours) {
+    time += hours;
+    if (time >= 24) time %= 24;
+    const displayTime = `${(time % 12 || 12)}:00 ${time >= 12 ? 'PM' : 'AM'}`;
+    document.getElementById("time").textContent = displayTime;
+    decayBuzz(hours);
+  }
+
+  function updateMentalHealth() {
+    if (energy > 100) {
+      mentalHealth = "Anxious";
+      document.getElementById("mentalHealth").className = "mental-health-anxious";
+    } else if (energy > 80) {
+      mentalHealth = "Flow";
+      document.getElementById("mentalHealth").className = "mental-health-flow";
+    } else if (energy > 50) {
+      mentalHealth = "Bored";
+      document.getElementById("mentalHealth").className = "mental-health-bored";
+    } else {
+      mentalHealth = "Anxious";
+      document.getElementById("mentalHealth").className = "mental-health-anxious";
+    }
+    document.getElementById("mentalHealth").textContent = mentalHealth;
+    document.getElementById("energy").textContent = energy;
+  }
+
+  function visitGasStation() {
+    if (gas >= 40) {
+      alert("Your gas tank is already full!");
+      return;
+    }
+    const gasNeeded = 40 - gas;
+    const cost = Math.ceil(gasNeeded / 10);
+    if (income >= cost) {
+      gas = 40;
+      income -= cost;
+      document.getElementById("gas").textContent = gas;
+      document.getElementById("income").textContent = income;
+      alert(`You refilled your gas tank for $${cost}.`);
+    } else {
+      alert("You don't have enough money to refill your gas tank!");
+    }
+  }
+
+  function gigEconomy() {
+    if (gas < 2) {
+      alert("You don't have enough gas to do Gig Economy! Visit the gas station.");
+      return;
+    }
+    if (energy >= 35) {
+      income += 15;
+      energy -= 35;
+      gas -= 2; // Reduce gas by 2 for each Gig Economy action
+      buzz += 2;
+      document.getElementById("income").textContent = income;
+      document.getElementById("buzz").textContent = buzz;
+      document.getElementById("energy").textContent = energy;
+      document.getElementById("gas").textContent = gas;
+      updateTime(2); // Take 2 hours for Gig Economy
+      updateMentalHealth();
+    } else {
+      alert("Not enough energy to do Gig Economy!");
+    }
+  }
+
+  function sleep() {
+    const hoursNeeded = Math.ceil((100 - energy) / 10);
+    energy = 100;
+    caffeineUses = 2;
+    meditationUses = 2;
+    inWeWork = false;
+    document.getElementById("caffeineLimit").textContent = caffeineUses;
+    document.getElementById("meditationLimit").textContent = meditationUses;
+    enableButtons();
+    updateTime(hoursNeeded);
+    document.getElementById("energy").textContent = energy;
+    updateMentalHealth();
+  }
+
+  function gaming() {
+    if (energy >= 0) {
+      buzz += 40;
+      if (buzz > 100) buzz = 100;
+      document.getElementById("buzz").textContent = buzz;
+      updateTime(1); // Gaming takes 1 hour
+      if (buzz > 50) {
+        alert("You had a great gaming session with random interactions!");
+      } else {
+        alert("Gaming session resulted in some fun interactions.");
+      }
+    } else {
+      alert("Not enough energy to game!");
+    }
+  }
+
+  function liveStream() {
+    if (energy >= 35) {
+      energy -= 35;
+      buzz += 10;
+      if (buzz > 100) buzz = 100;
+      document.getElementById("buzz").textContent = buzz;
+      updateTime(2);
+      document.getElementById("energy").textContent = energy;
+      updateMentalHealth();
+    } else {
+      alert("Not enough energy for live stream!");
+    }
+  }
+
+  function caffeine() {
+    if (caffeineUses > 0) {
+      energy += 70;
+      if (energy > 100) {
+        energy = 100;
+        mentalHealth = "Anxious";
+        document.getElementById("mentalHealth").className = "mental-health-anxious";
+      }
+      caffeineUses--;
+      document.getElementById("caffeineLimit").textContent = caffeineUses;
+      document.getElementById("energy").textContent = energy;
+      updateMentalHealth();
+    } else {
+      alert("You cannot use caffeine anymore. Rest and sleep.");
+    }
+  }
+
+  function meditate() {
+    if (meditationUses > 0) {
+      energy = Math.min(energy + 40, 100);
+      meditationUses--;
+      document.getElementById("meditationLimit").textContent = meditationUses;
+      document.getElementById("energy").textContent = energy;
+      updateMentalHealth();
+      updateTime(1); // Meditation takes 1 hour
+    } else {
+      alert("You cannot meditate anymore. Rest and sleep.");
+    }
+  }
+
+  function decayBuzz(hours) {
+    buzz = Math.max(buzz - hours, 0);
+    document.getElementById("buzz").textContent = buzz;
+  }
+
+  function enableButtons() {
+    document.getElementById("caffeineButton").disabled = caffeineUses === 0;
+    document.getElementById("meditateButton").disabled = meditationUses === 0;
+  }
+
+  enableButtons(); // Disable caffeine and meditate buttons based on initial values
+
+</script>
+</body>
+</html>
