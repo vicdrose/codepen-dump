@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Untitled</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/OPXJZWR">
+  
+  
+  
+  
+<style>
+body {
+
+  margin: 0;
+
+  background: radial-gradient(circle at center, #0b1020, #02040a);
+
+  font-family: 'Orbitron', system-ui, sans-serif;
+
+  color: #ffd966;
+
+}
+
+#system {
+
+  position: relative;
+
+  width: 100vw;
+
+  height: 100vh;
+
+}
+
+.node {
+
+  position: absolute;
+
+  padding: 14px 18px;
+
+  border-radius: 14px;
+
+  background: rgba(255, 217, 102, 0.08);
+
+  border: 1px solid rgba(255, 217, 102, 0.4);
+
+  box-shadow: 0 0 18px rgba(255, 217, 102, 0.25);
+
+  cursor: pointer;
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+}
+
+.node:hover {
+
+  transform: scale(1.08);
+
+  box-shadow: 0 0 28px rgba(255, 217, 102, 0.7);
+
+}
+
+.core {
+
+  top: 45%;
+
+  left: 45%;
+
+  font-size: 18px;
+
+  animation: pulse 3s infinite;
+
+}
+
+.music { top: 20%; left: 50%; }
+
+.visuals { top: 30%; left: 70%; }
+
+.movement { top: 60%; left: 65%; }
+
+.trailer { top: 75%; left: 45%; }
+
+.airport { top: 55%; left: 20%; }
+
+.storage { top: 30%; left: 20%; }
+
+#infoBox {
+
+  position: absolute;
+
+  bottom: 30px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  padding: 12px 20px;
+
+  background: rgba(0,0,0,0.6);
+
+  border: 1px solid rgba(255,217,102,0.4);
+
+  border-radius: 12px;
+
+  font-size: 14px;
+
+}
+
+@keyframes pulse {
+
+  0% { box-shadow: 0 0 18px rgba(255,217,102,0.4); }
+
+  50% { box-shadow: 0 0 34px rgba(255,217,102,0.9); }
+
+  100% { box-shadow: 0 0 18px rgba(255,217,102,0.4); }
+
+}
+</style>
+
+  
+  
+  
+</head>
+
+<body>
+  <div id="system">
+  <div class="node core" data-info="Your spine. Everything returns here.">
+    SET LIST<br><span>Spine</span>
+  </div>
+
+  <div class="node music" data-info="Controlled chaos. Emotional fuel.">
+    Music Discovery
+  </div>
+
+  <div class="node visuals" data-info="Energy recycling into form.">
+    Visual Creation
+  </div>
+
+  <div class="node movement" data-info="Nervous system reset.">
+    Movement<br><span>Burpees / Treadmill</span>
+  </div>
+
+  <div class="node trailer" data-info="Base layer. Power, Wi-Fi, safety.">
+    Cooking Trailer
+  </div>
+
+  <div class="node airport" data-info="Income + network expansion.">
+    Airport Car
+  </div>
+
+  <div class="node storage" data-info="Archive. Repair. Recharge.">
+    Storage Unit
+  </div>
+
+  <div id="infoBox">Hover a node</div>
+</div>
+  
+    <script id="rendered-js" >
+const nodes = document.querySelectorAll('.node');
+
+const infoBox = document.getElementById('infoBox');
+
+nodes.forEach(node => {
+
+  node.addEventListener('mouseenter', () => {
+
+    infoBox.textContent = node.dataset.info;
+
+  });
+
+  node.addEventListener('mouseleave', () => {
+
+    infoBox.textContent = 'Hover a node';
+
+  });
+
+  node.addEventListener('click', () => {
+
+    nodes.forEach(n => n.classList.remove('active'));
+
+    node.classList.add('active');
+
+    infoBox.textContent = "ACTIVE: " + node.dataset.info;
+
+  });
+
+});
+  </script>
+
+  
+</body>
+
+</html>
