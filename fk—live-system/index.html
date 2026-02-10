@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Freestyle King — Live System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  --bg: #0b0e14;
+  --panel: #141a26;
+  --accent: #e6c77a;
+  --accent2: #7aa2f7;
+  --muted: #8b93a7;
+  --good: #7ee787;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: radial-gradient(circle at top, #141a26, #0b0e14);
+  color: #e6e9f0;
+}
+
+header {
+  padding: 28px;
+  border-bottom: 1px solid #1f2535;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+}
+
+header p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  padding: 24px;
+}
+
+.card {
+  background: linear-gradient(180deg, #161c2d, #101524);
+  border: 1px solid #202845;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+.card h2 {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  padding: 6px 0;
+  border-bottom: 1px dashed #242c44;
+  font-size: 0.95rem;
+}
+
+.list li:last-child { border-bottom: none; }
+
+.tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #1f263d;
+  color: var(--accent2);
+  font-size: 0.75rem;
+  margin-right: 6px;
+}
+
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.node {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #1a2136;
+  border: 1px solid #2a3355;
+  font-size: 0.85rem;
+}
+
+.node.primary {
+  background: linear-gradient(135deg, #2a355a, #1a2136);
+  color: var(--good);
+  border-color: #3b4a7a;
+}
+
+footer {
+  padding: 18px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  border-top: 1px solid #1f2535;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>FREESTYLE KING — LIVE SYSTEM</h1>
+  <p>Visual improvisation · Guitar VJ · Adult-first operating loop</p>
+</header>
+
+<section class="grid">
+
+  <div class="card">
+    <h2>🎯 Adult Priorities (Non-Negotiable)</h2>
+    <ul class="list">
+      <li>Apply to jobs (social + visible)</li>
+      <li>Cardio = abs (treadmill, soccer, basketball)</li>
+      <li>Consistency > intensity</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🎛️ Live Performance Stack</h2>
+    <ul class="list">
+      <li><span class="tag">Core</span> Ableton + Resolume</li>
+      <li><span class="tag">Visuals</span> Projector + SD loops</li>
+      <li><span class="tag">Hub</span> Cube Baby (guitar + BT)</li>
+      <li><span class="tag">Power</span> Power bank → Generator</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🧠 Energy & Focus Stack</h2>
+    <ul class="list">
+      <li>Vitamin B + Fish Oil</li>
+      <li>Vitamin D3 + Egg yolk (lecithin)</li>
+      <li>Lion’s Mane (light)</li>
+      <li>L-Theanine (rare, intentional)</li>
+      <li>Turmeric tea = tempo control</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🦵 Mobility & Fitness Unlocks</h2>
+    <ul class="list">
+      <li>Halo hinge</li>
+      <li>Side-lying bow & arrow</li>
+      <li>Hula hoop (hip unlock)</li>
+      <li>Kettlebell → basement duty</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🚐 Environment Ladder</h2>
+    <div class="flow">
+      <div class="node">Bedroom Yoga</div>
+      <div class="node">Garage Van</div>
+      <div class="node primary">Freestyle King</div>
+      <div class="node">College Stages</div>
+      <div class="node">Madison / Pasadena</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🧩 Identity Mode</h2>
+    <ul class="list">
+      <li>Laker Steve Nash energy</li>
+      <li>Guitar VJ setlists</li>
+      <li>Freestyle King = throne move</li>
+      <li>Transparency sets the stage</li>
+    </ul>
+  </div>
+
+</section>
+
+<footer>
+  Live visuals first. Freestyle King when the room is ready.
+</footer>
+
+</body>
+</html>
