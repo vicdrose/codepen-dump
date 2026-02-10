@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Play Blueprint</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #1e1e2f, #2c2c3e);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #ffcc33;
+  }
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem;
+  }
+  .card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #ffcc33;
+    border-radius: 15px;
+    width: 250px;
+    padding: 1rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ffcc33;
+  }
+  .card h3 {
+    margin-top: 0;
+    color: #ffcc33;
+  }
+  .card p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  #timeline {
+    position: relative;
+    margin: 2rem auto;
+    width: 90%;
+    max-width: 900px;
+    height: 200px;
+    background: #1e1e2f;
+    border: 2px solid #ffcc33;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  .time-block {
+    position: absolute;
+    bottom: 0;
+    width: 16.6%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 0.8rem;
+    transition: height 0.5s;
+  }
+  .time-block span {
+    margin-bottom: 0.5rem;
+    color: #ffcc33;
+  }
+  .time-block div {
+    width: 80%;
+    background: #ffcc33;
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body>
+
+<header>Power Play Blueprint</header>
+
+<div class="container">
+  <div class="card">
+    <h3>Sunrise Cardio</h3>
+    <p>Soccer field, basketball, boxing, burpees. Build strength, momentum, and flow.</p>
+  </div>
+  <div class="card">
+    <h3>Set List Sessions</h3>
+    <p>Pre/post cardio. Freestyle King for mastery, Transparency Visuals for clarity.</p>
+  </div>
+  <div class="card">
+    <h3>Music Discovery</h3>
+    <p>Wireless tablet during cardio or treadmill. Unlock beats, inspiration, and new ideas.</p>
+  </div>
+  <div class="card">
+    <h3>Networking</h3>
+    <p>Talk to everyone, filter for yes-people. Build your high-energy, high-potential circle.</p>
+  </div>
+  <div class="card">
+    <h3>Base & Vehicle</h3>
+    <p>Honda Element / camper + paid parking + Starlink + DIY trailer = mobile HQ for freedom.</p>
+  </div>
+  <div class="card">
+    <h3>Land / Field</h3>
+    <p>Signature space for outdoor freestyling, work, music, and high-vibe social hub.</p>
+  </div>
+</div>
+
+<div id="timeline">
+  <div class="time-block" style="left:0%">
+    <span>Sunrise</span>
+    <div style="height:80%"></div>
+  </div>
+  <div class="time-block" style="left:16.6%">
+    <span>Pre-Cardio</span>
+    <div style="height:50%"></div>
+  </div>
+  <div class="time-block" style="left:33.2%">
+    <span>Cardio / Music</span>
+    <div style="height:90%"></div>
+  </div>
+  <div class="time-block" style="left:49.8%">
+    <span>Networking</span>
+    <div style="height:70%"></div>
+  </div>
+  <div class="time-block" style="left:66.4%">
+    <span>Tech Work</span>
+    <div style="height:60%"></div>
+  </div>
+  <div class="time-block" style="left:83%">
+    <span>Evening Flow</span>
+    <div style="height:50%"></div>
+  </div>
+</div>
+
+<script>
+  // Optional: Dynamic timeline animation
+  const blocks = document.querySelectorAll('.time-block div');
+  blocks.forEach((block, i) => {
+    setTimeout(() => {
+      block.style.height = (Math.random() * 40 + 50) + '%';
+    }, i * 200);
+  });
+</script>
+
+</body>
+</html>
