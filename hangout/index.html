@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Networked A-Frame — Stable Audio Setup</title>
+
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+
+  <!-- Socket.IO -->
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+  <!-- Networked-Aframe -->
+  <script src="https://unpkg.com/networked-aframe@^0.11.0/dist/networked-aframe.min.js"></script>
+
+  <!-- Extras -->
+  <script src="https://unpkg.com/aframe-randomizer-components@^3.0.1/dist/aframe-randomizer-components.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
+
+  <script>
+    // Ensure avatar schema exists before NAF initializes
+    NAF.schemas.getComponentsOriginal = NAF.schemas.getComponents;
+    NAF.schemas.getComponents = (template) => {
+      if (!NAF.schemas.hasTemplate('#avatar-template')) {
+        NAF.schemas.add({
+          template: '#avatar-template',
+          components: [
+            'position',
+            'rotation',
+            { selector: '.head', component: 'material', property: 'color' }
+          ]
+        });
+      }
+      return NAF.schemas.getComponentsOriginal(template);
+    };
+  </script>
+
+  <style>
+    body { margin: 0; }
+    .actions {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+    }
+    .button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<a-scene
+  physics="gravity: 0"
+  networked-scene="
+    room: basic-audio;
+    debug: true;
+    adapter: socketio;
+    serverURL: https://naf-socket-server.onrender.com;
+    audio: false;
+  ">
+
+  <!-- Background music (manual start after click) -->
+  <a-sound
+    id="bg-music"
+    src="https://victordrose.com/hangout/assets/Wax%20Doctor%20-%20Offshore%20Drift.mp3"
+    loop="true"
+    position="0 0 -88">
+  </a-sound>
+
+  <!-- Scene -->
+  <a-entity position="-25 0 -60">
+    <a-octahedron color="#FF926B" radius="8"></a-octahedron>
+  </a-entity>
+
+  <a-entity position="0 0 40">
+    <a-box repeat="400 400"
+           src="https://victordrose.com/hangout/assets/grass.jpg"
+           depth="600" height="1" width="600">
+    </a-box>
+  </a-entity>
+
+  <a-sky src="#sky"></a-sky>
+
+  <a-entity position="0 .5 -55">
+    <a-entity gltf-model="url(https://victordrose.com/hangout/assets/Luxury_House.glb)"></a-entity>
+  </a-entity>
+
+  <a-entity position="-13 1 -50">
+    <a-entity gltf-model="url(https://victordrose.com/3dModels/video_game.glb)"></a-entity>
+  </a-entity>
+
+  <!-- Assets -->
+  <a-assets>
+    <img id="sky" src="https://victordrose.com/hangout/assets/sunset.jpg" />
+
+    <template id="avatar-template">
+      <a-entity class="avatar">
+        <a-sphere class="head" scale="0.45 0.5 0.4"></a-sphere>
+        <a-entity position="0 0.05 0">
+          <a-sphere color="#efefef" position="0.16 0.1 -0.35" scale="0.12 0.12 0.12">
+            <a-sphere color="#000" position="0 0 -1" scale="0.2 0.2 0.2"></a-sphere>
+          </a-sphere>
+          <a-sphere color="#efefef" position="-0.16 0.1 -0.35" scale="0.12 0.12 0.12">
+            <a-sphere color="#000" position="0 0 -1" scale="0.2 0.2 0.2"></a-sphere>
+          </a-sphere>
+        </a-entity>
+      </a-entity>
+    </template>
+  </a-assets>
+
+  <!-- Player -->
+  <a-entity id="rig">
+    <a-entity
+      id="player"
+      networked="template:#avatar-template; attachTemplateToLocal:false;"
+      camera
+      position="0 1.6 0"
+      wasd-controls
+      look-controls>
+      <a-sphere class="head" visible="false" random-color></a-sphere>
+    </a-entity>
+  </a-entity>
+
+  <a-entity light="type:ambient; intensity:0.5"></a-entity>
+
+  <a-entity
+    websurface="url:https://freestylekingapp.com/mobile; width:4; height:2;"
+    position="15.25 1.5 -4">
+  </a-entity>
+
+</a-scene>
+
+<div class="actions">
+  <button id="mic-btn" class="button">Enable Mic</button>
+</div>
+
+<script>
+  // Resume AudioContext + start background music on first click
+  document.addEventListener('click', () => {
+    const scene = document.querySelector('a-scene');
+    const ctx = scene.audioListener?.context;
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+
+    const bg = document.querySelector('#bg-music');
+    if (bg) bg.components.sound.playSound();
+
+    console.log('🔊 Audio unlocked');
+  }, { once: true });
+
+  // Mic toggle (modern API)
+  let micStream = null;
+  let micEnabled = false;
+  const micBtn = document.getElementById('mic-btn');
+
+  async function toggleMic() {
+    if (!micEnabled) {
+      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      NAF.connection.adapter.setLocalMediaStream(micStream);
+      micEnabled = true;
+      micBtn.textContent = 'Mute Mic';
+      console.log('🎙️ Mic enabled');
+    } else {
+      micStream.getTracks().forEach(t => t.stop());
+      micStream = null;
+      micEnabled = false;
+      micBtn.textContent = 'Enable Mic';
+      console.log('🔇 Mic muted');
+    }
+  }
+
+  document.addEventListener('connected', () => {
+    console.log('✅ Connected to NAF server');
+    micBtn.addEventListener('click', toggleMic);
+  });
+</script>
+
+</body>
+</html>
