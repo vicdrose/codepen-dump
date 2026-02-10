@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Experiment 2</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/NPGQzWq">
+  
+  
+  
+  
+<style>
+.boldWord {
+  display: inline-block;
+  font-weight: normal;
+  color: #fff; /* starting color */
+  transition: font-weight 0.5s ease, transform 0.3s ease, color 0.5s ease;
+}
+
+.boldWord.active {
+  font-weight: bold;
+  animation: pulseColorSize 0.6s ease forwards;
+}
+
+@keyframes pulseColorSize {
+  0% { color: #fff; transform: scale(1); }
+  50% { color: #0ff; transform: scale(1.12); } /* chosen blue */
+  100% { color: #fff; transform: scale(1.05); }
+}
+</style>
+
+  
+  
+  
+</head>
+
+<body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interactive Life Ecosystem</title>
+<style>
+  body {
+    font-family: sans-serif;
+    background: #111;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+    position: relative;
+    min-height: 100vh;
+  }
+  .map {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+  }
+  .node {
+    position: relative;
+    background: #222;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+    padding: 5px;
+  }
+  .node:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 30px #0ff;
+  }
+  .label {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+  }
+  .modal {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.95);
+    padding: 20px 30px;
+    border-radius: 15px;
+    max-width: 600px;
+    text-align: center;
+    font-size: 1rem;
+    color: #0ff;
+    box-shadow: 0 0 40px #0ff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .boldWord {
+    display: inline-block;
+    font-weight: normal;
+    transition: font-weight 0.5s ease, transform 0.3s ease;
+  }
+  .boldWord.active {
+    font-weight: bold;
+    animation: pulseSize 0.4s ease forwards;
+  }
+  @keyframes pulseSize {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+    100% { transform: scale(1.05); }
+  }
+</style>
+</head>
+<body>
+<div class="map">
+  <div class="node" data-story="Your <span class='boldWord'>van</span> is your core hub. Maintaining it creates <span class='boldWord'>freedom</span> and expands your options.">Van</div>
+  <div class="label">Van</div>
+
+  <div class="node" data-story="Your <span class='boldWord'>bike</span> lets you access nearby <span class='boldWord'>opportunities</span> efficiently. Small steps compound into big progress.">Bike</div>
+  <div class="label">Bike</div>
+
+  <div class="node" data-story="Creative <span class='boldWord'>hubs</span> multiply your focus. The people and <span class='boldWord'>environment</span> amplify your impact.">WeWork</div>
+  <div class="label">WeWork</div>
+
+  <div class="node" data-story="Your <span class='boldWord'>tech projects</span> act as a beacon. Consistently building skills attracts <span class='boldWord'>opportunities</span>.">Tech Job</div>
+  <div class="label">Tech Job</div>
+
+  <div class="node" data-story="The <span class='boldWord'>storage unit</span> preserves your resources. Organization here supports <span class='boldWord'>efficiency</span> and readiness.">Storage</div>
+  <div class="label">Storage</div>
+
+  <div class="node" data-story="Part-time roles <span class='boldWord'>train discipline</span> and provide <span class='boldWord'>backup income</span>. Use them strategically to expand options.">Part-time Jobs</div>
+  <div class="label">Part-time Jobs</div>
+
+  <div class="node" data-story="<span class='boldWord'>Airport Uber</span> and <span class='boldWord'>DoorDash</span> maximize mobility and flexible earning. Layer them with other resources for stability.">Side Gigs</div>
+  <div class="label">Side Gigs</div>
+
+  <div class="node" data-story="Your <span class='boldWord'>tablet</span> and <span class='boldWord'>Win4</span> hold your creative projects and community. Keeping them ready fuels growth.">Digital Tools</div>
+  <div class="label">Digital Tools</div>
+
+  <div class="node" data-story="Coffee shops and <span class='boldWord'>gyms</span> create an ideal environment for <span class='boldWord'>focus</span> and productivity. They are your daily catalysts.">Community Spots</div>
+  <div class="label">Community Spots</div>
+
+  <div class="node" data-story="Airbnb or roommate experiences expand <span class='boldWord'>social awareness</span> and local <span class='boldWord'>networking</span>. Even temporary arrangements can teach lessons.">Short-term Housing</div>
+  <div class="label">Short-term Housing</div>
+
+  <div class="node" data-story="Your <span class='boldWord'>passport</span> is a gateway to international opportunities. Travel transforms perspective and unlocks <span class='boldWord'>hidden resources</span>.">Passport</div>
+  <div class="label">Passport</div>
+
+  <div class="node" data-story="Contentment and <span class='boldWord'>gratitude</span> are the ultimate cheats. They amplify the effect of all other nodes and keep <span class='boldWord'>motivation</span> high.">Mindset</div>
+  <div class="label">Mindset</div>
+</div>
+
+<div class="modal" id="modal"></div>
+
+<script>
+  const nodes = document.querySelectorAll('.node');
+  const modal = document.getElementById('modal');
+
+  nodes.forEach(node => {
+    node.addEventListener('mouseenter', () => {
+      modal.innerHTML = node.getAttribute('data-story');
+      modal.classList.add('active');
+
+      const boldWords = modal.querySelectorAll('.boldWord');
+      boldWords.forEach(word => {
+        word.classList.remove('active');
+        void word.offsetWidth; // force reflow
+        word.classList.add('active');
+      });
+    });
+
+    node.addEventListener('mouseleave', () => {
+      modal.classList.remove('active');
+    });
+  });
+</script>
+</body>
+</html>
+  
+    <script id="rendered-js" >
+boldWords.forEach(word => {
+  word.classList.remove('active');
+  void word.offsetWidth; // force reflow
+  word.classList.add('active');
+});
+  </script>
+
+  
+</body>
+
+</html>
