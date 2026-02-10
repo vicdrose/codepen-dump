@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Ai slop (inevitable loop)</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/emzRmYg">
+  
+  
+  
+  
+<style>
+body {
+
+  background: radial-gradient(circle at top, #0f2027, #000);
+
+  font-family: system-ui, sans-serif;
+
+  color: #e8f1ff;
+
+  margin: 0;
+
+  padding: 0;
+
+}
+
+.app {
+
+  max-width: 900px;
+
+  margin: auto;
+
+  padding: 30px;
+
+}
+
+h1 {
+
+  font-size: 2.4rem;
+
+  margin-bottom: 5px;
+
+}
+
+.subtitle {
+
+  opacity: 0.7;
+
+  margin-bottom: 25px;
+
+}
+
+.nav {
+
+  display: flex;
+
+  gap: 10px;
+
+  margin-bottom: 20px;
+
+  flex-wrap: wrap;
+
+}
+
+button {
+
+  background: #1e90ff;
+
+  border: none;
+
+  padding: 10px 16px;
+
+  border-radius: 6px;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+}
+
+button:hover {
+
+  background: #63b3ff;
+
+}
+
+.section {
+
+  display: none;
+
+  background: rgba(255,255,255,0.05);
+
+  border-radius: 12px;
+
+  padding: 20px;
+
+}
+
+.section.active {
+
+  display: block;
+
+}
+
+ul {
+
+  line-height: 1.8;
+
+}
+
+.note {
+
+  margin-top: 10px;
+
+  font-style: italic;
+
+  opacity: 0.8;
+
+}
+
+footer {
+
+  margin-top: 30px;
+
+  opacity: 0.5;
+
+  font-size: 0.9rem;
+
+}
+</style>
+
+  
+  
+  
+</head>
+
+<body>
+  <div class="app">
+
+  <h1>🔥 The Inevitable Loop</h1>
+
+  <p class="subtitle">Motion → Music → Fitness → Code → Network</p>
+
+  <div class="nav">
+
+    <button onclick="showSection('setlist')">🎸 Set List</button>
+
+    <button onclick="showSection('fitness')">🏃 Fitness</button>
+
+    <button onclick="showSection('coding')">💻 Coding</button>
+
+    <button onclick="showSection('network')">🌐 Network</button>
+
+  </div>
+
+  <div class="section active" id="setlist">
+
+    <h2>🎸 Set List First</h2>
+
+    <ul>
+
+      <li>Resolume + Guitar Solo</li>
+
+      <li>Garage / Tent Freestyle King</li>
+
+      <li>Autotune H8 + Travel Guitar</li>
+
+      <li>5 Beats a Day → Music Videos</li>
+
+    </ul>
+
+  </div>
+
+  <div class="section" id="fitness">
+
+    <h2>🏃 Burpeethon Stack</h2>
+
+    <ul>
+
+      <li>Burpees + Kettlebell Squats</li>
+
+      <li>10lb Weights + Soccer Ball</li>
+
+      <li>Backward Treadmill</li>
+
+      <li>Optional: RDLs, Calf Raises, Shrugs</li>
+
+    </ul>
+
+    <p class="note">0 people = Freestyle King<br>1+ people = Fitness Class</p>
+
+  </div>
+
+  <div class="section" id="coding">
+
+    <h2>💻 Virtual Study Hall</h2>
+
+    <ul>
+
+      <li>Figma → Game UI</li>
+
+      <li>Unity / A-Frame / Three.js</li>
+
+      <li>SQL / Net / Blender / Canva</li>
+
+      <li>Overnight Coding Streams</li>
+
+    </ul>
+
+  </div>
+
+  <div class="section" id="network">
+
+    <h2>🌐 Motion Networking</h2>
+
+    <ul>
+
+      <li>College Music Programs</li>
+
+      <li>Happy Hour → DJs → Concerts</li>
+
+      <li>Vape Sharing Filter</li>
+
+      <li>Uber Airport = Vehicle Maintenance</li>
+
+    </ul>
+
+  </div>
+
+  <footer>
+
+    <p>⚙️ Built for repetition, not perfection.</p>
+
+  </footer>
+
+</div>
+  
+    <script id="rendered-js" >
+function showSection(id) {
+
+  document.querySelectorAll('.section').forEach(section => {
+
+    section.classList.remove('active');
+
+  });
+
+  document.getElementById(id).classList.add('active');
+
+}
+  </script>
+
+  
+</body>
+
+</html>
