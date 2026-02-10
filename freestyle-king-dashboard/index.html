@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Freestyle King Dashboard</title>
+
+<style>
+
+  body {
+
+    font-family: 'Arial', sans-serif;
+
+    margin: 0;
+
+    background: #111;
+
+    color: #eee;
+
+  }
+
+  header {
+
+    text-align: center;
+
+    padding: 1rem;
+
+    background: #222;
+
+    font-size: 1.5rem;
+
+    letter-spacing: 1px;
+
+  }
+
+  .container {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+    gap: 1rem;
+
+    padding: 1rem;
+
+  }
+
+  .module {
+
+    background: #1c1c1c;
+
+    border: 2px solid #444;
+
+    border-radius: 12px;
+
+    padding: 1rem;
+
+    cursor: pointer;
+
+    transition: transform 0.2s, box-shadow 0.2s;
+
+  }
+
+  .module:hover {
+
+    transform: translateY(-5px);
+
+    box-shadow: 0 5px 15px #ff9800aa;
+
+  }
+
+  .module h2 {
+
+    margin-top: 0;
+
+    color: #ff9800;
+
+  }
+
+  .module p {
+
+    font-size: 0.9rem;
+
+    line-height: 1.3rem;
+
+  }
+
+  .active-content {
+
+    margin-top: 0.5rem;
+
+    padding: 0.5rem;
+
+    background: #222;
+
+    border-radius: 8px;
+
+    display: none;
+
+    font-size: 0.85rem;
+
+    color: #ccc;
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<header>🎤 Freestyle King Dashboard</header>
+
+<div class="container">
+
+  <div class="module" onclick="toggleContent(this)">
+
+    <h2>🚗 Vehicle Setup</h2>
+
+    <p>Honda Element primary, car camper backup, van optional</p>
+
+    <div class="active-content">
+
+      Nap spots, paid parking, mobile HQ strategy
+
+    </div>
+
+  </div>
+
+  
+
+  <div class="module" onclick="toggleContent(this)">
+
+    <h2>🏃 Cardio + Music Discovery</h2>
+
+    <p>5 beats/day, treadmill/bike/lunges</p>
+
+    <div class="active-content">
+
+      Cardio primes creativity; music discovery fuels freestyle engine
+
+    </div>
+
+  </div>
+
+  <div class="module" onclick="toggleContent(this)">
+
+    <h2>🎹 Freestyle King Training</h2>
+
+    <p>Rap practice + fitness</p>
+
+    <div class="active-content">
+
+      Split day: cardio → freestyle → transparency visuals
+
+    </div>
+
+  </div>
+
+  <div class="module" onclick="toggleContent(this)">
+
+    <h2>💻 Tech Stack</h2>
+
+    <p>Resolume + Beats laptop, secondary mobile devices</p>
+
+    <div class="active-content">
+
+      HDMI splitters, GPD14 / GP14, Artist 13, Blender for visuals
+
+    </div>
+
+  </div>
+
+  <div class="module" onclick="toggleContent(this)">
+
+    <h2>📹 Streams & Marketing</h2>
+
+    <p>Garage/basement streaming, transparency interactive, astrology + treadmill + gaming</p>
+
+    <div class="active-content">
+
+      Paid marketing, social leverage, build notoriety
+
+    </div>
+
+  </div>
+
+  <div class="module" onclick="toggleContent(this)">
+
+    <h2>🐾 Lifestyle Enhancers</h2>
+
+    <p>Lizard/cat companions, disciplined cannabis for creative focus</p>
+
+    <div class="active-content">
+
+      Nighttime anchor & social leverage
+
+    </div>
+
+  </div>
+
+  <div class="module" onclick="toggleContent(this)">
+
+    <h2>💰 Income Stratification</h2>
+
+    <p>&lt;40k: gigg, 40-80k: van+storage, 80k+: global basement passport</p>
+
+    <div class="active-content">
+
+      Flexible income + lifestyle expansion
+
+    </div>
+
+  </div>
+
+  <div class="module" onclick="toggleContent(this)">
+
+    <h2>🎧 Creative Output Loop</h2>
+
+    <p>Cardio → beats → visuals → remix → storage unit sessions</p>
+
+    <div class="active-content">
+
+      Monthly freestyle King beat tape & transparency product
+
+    </div>
+
+  </div>
+
+  <div class="module" onclick="toggleContent(this)">
+
+    <h2>🌍 Social & Expansion</h2>
+
+    <p>Network + notoriety in cities/countries, camera person collaborations</p>
+
+    <div class="active-content">
+
+      Land acquisition = ultimate creative HQ
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+function toggleContent(module) {
+
+  const content = module.querySelector('.active-content');
+
+  content.style.display = content.style.display === 'block' ? 'none' : 'block';
+
+}
+
+</script>
+
+</body>
+
+</html>
