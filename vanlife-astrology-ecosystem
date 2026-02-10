@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Van Ecosystem Game Manual</title>
+
+<style>
+
+  body {
+
+    background: #111;
+
+    color: #fff;
+
+    font-family: Arial, sans-serif;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    padding: 20px;
+
+  }
+
+  h1 {
+
+    text-align: center;
+
+    margin-bottom: 40px;
+
+  }
+
+  .node {
+
+    position: relative;
+
+    background: #333;
+
+    border: 2px solid #fff;
+
+    border-radius: 50%;
+
+    width: 100px;
+
+    height: 100px;
+
+    margin: 25px 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    cursor: pointer;
+
+    transition: transform 0.2s;
+
+  }
+
+  .node:hover {
+
+    transform: scale(1.1);
+
+  }
+
+  .node-name {
+
+    margin-top: 8px;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    color: #fff;
+
+  }
+
+  .tooltip {
+
+    position: absolute;
+
+    top: -90px;
+
+    left: 120px;
+
+    background: rgba(0,0,0,0.95);
+
+    border: 1px solid #fff;
+
+    padding: 10px;
+
+    border-radius: 5px;
+
+    display: none;
+
+    width: 280px;
+
+    font-size: 12px;
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Van Ecosystem Game Manual</h1>
+
+<!-- Van -->
+
+<div class="node" id="vanNode">Van
+
+  <div class="tooltip">
+
+    <strong>Planets:</strong> Mercury, Venus (Aquarius), Uranus<br>
+
+    <strong>Advice:</strong><br>
+
+    1. Innovate within your van ecosystem; use technology creatively to expand your freedom.<br>
+
+    2. Leverage unconventional connections and insights; your network and ideas flow better in this environment.
+
+  </div>
+
+</div>
+
+<div class="node-name">Van</div>
+
+<!-- Bike -->
+
+<div class="node" id="bikeNode">Bike
+
+  <div class="tooltip">
+
+    <strong>Planets:</strong> 2H Pallas in Virgo<br>
+
+    <strong>Advice:</strong><br>
+
+    1. Efficiently plan your routes to maximize productivity and ROI.<br>
+
+    2. Treat mobility as a resource; every trip is an opportunity to execute and gather data.
+
+  </div>
+
+</div>
+
+<div class="node-name">Bike</div>
+
+<!-- WeWork -->
+
+<div class="node" id="weworkNode">WeWork
+
+  <div class="tooltip">
+
+    <strong>Planets:</strong> 11H Gemini<br>
+
+    <strong>Advice:</strong><br>
+
+    1. Focus on work and creative output in a distraction-free environment.<br>
+
+    2. Use communal energy to accelerate networking and skill growth.
+
+  </div>
+
+</div>
+
+<div class="node-name">WeWork</div>
+
+<!-- Tech Job -->
+
+<div class="node" id="techJobNode">Tech Job
+
+  <div class="tooltip">
+
+    <strong>Planets:</strong> 1H Mercury in Leo conjunct Mars in Virgo<br>
+
+    <strong>Advice:</strong><br>
+
+    1. Consistently deliver value; treat your work as a relationship.<br>
+
+    2. Build visibility and reputation by leveraging modern tech trends.
+
+  </div>
+
+</div>
+
+<div class="node-name">Tech Job</div>
+
+<!-- Gym -->
+
+<div class="node" id="gymNode">Gym
+
+  <div class="tooltip">
+
+    <strong>Planets:</strong> 6H Leo Mars with Sunstone<br>
+
+    <strong>Advice:</strong><br>
+
+    1. Maintain physical health as a foundation for productivity.<br>
+
+    2. Channel energy through disciplined routines to enhance focus and confidence.
+
+  </div>
+
+</div>
+
+<div class="node-name">Gym</div>
+
+<!-- Coffee Shop -->
+
+<div class="node" id="coffeeNode">Coffee Shop
+
+  <div class="tooltip">
+
+    <strong>Planets:</strong> 5H Vertex, 7H Aries Venus Turquoise<br>
+
+    <strong>Advice:</strong><br>
+
+    1. Use public spaces to stimulate creativity and observation.<br>
+
+    2. Balance focus and social immersion; energy from environment fuels execution.
+
+  </div>
+
+</div>
+
+<div class="node-name">Coffee Shop</div>
+
+<!-- Storage Unit -->
+
+<div class="node" id="storageNode">Storage
+
+  <div class="tooltip">
+
+    <strong>Planets:</strong> 3H Ceres in Libra<br>
+
+    <strong>Advice:</strong><br>
+
+    1. Organize your resources efficiently to unlock hidden opportunities.<br>
+
+    2. Maintain order; a well-managed inventory reduces friction and stress.
+
+  </div>
+
+</div>
+
+<div class="node-name">Storage Unit</div>
+
+<!-- Airport Uber -->
+
+<div class="node" id="airportNode">Airport Uber
+
+  <div class="tooltip">
+
+    <strong>Planets:</strong> 5H Capricorn conjunct Juno, Lillith, Neptune, Uranus<br>
+
+    <strong>Advice:</strong><br>
+
+    1. Leverage side-hustles as flexible backups to increase security.<br>
+
+    2. Maximize ROI with calculated, efficient work outside primary nodes.
+
+  </div>
+
+</div>
+
+<div class="node-name">Airport Uber</div>
+
+<!-- DoorDash -->
+
+<div class="node" id="doordashNode">DoorDash
+
+  <div class="tooltip">
+
+    <strong>Planets:</strong> 5H Sagittarius Mars + Hematite<br>
+
+    <strong>Advice:</strong><br>
+
+    1. Use accessible side gigs to sustain mobility and freedom.<br>
+
+    2. Treat small, repetitive actions as a training ground for consistency.
+
+  </div>
+
+</div>
+
+<div class="node-name">DoorDash</div>
+
+<!-- Airbnb / College -->
+
+<div class="node" id="airbnbNode">Airbnb / College
+
+  <div class="tooltip">
+
+    <strong>Planets:</strong> 12H Chiron, 3H Pluto trine 12H Chiron<br>
+
+    <strong>Advice:</strong><br>
+
+    1. Temporary living situations teach adaptability and resourcefulness.<br>
+
+    2. Use change as leverage to explore new social and creative networks.
+
+  </div>
+
+</div>
+
+<div class="node-name">Airbnb / College</div>
+
+<script>
+
+  const nodes = document.querySelectorAll('.node');
+
+  nodes.forEach(node => {
+
+    node.addEventListener('mouseenter', () => {
+
+      node.querySelector('.tooltip').style.display = 'block';
+
+    });
+
+    node.addEventListener('mouseleave', () => {
+
+      node.querySelector('.tooltip').style.display = 'none';
+
+    });
+
+  });
+
+</script>
+
+</body>
+
+</html>
