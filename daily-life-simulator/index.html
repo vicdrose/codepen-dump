@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Daily Life Simulator</title>
+
+<style>
+
+  body {
+
+    font-family: Arial, sans-serif;
+
+    background: #1a1a2e;
+
+    color: #e0e0e0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    padding: 20px;
+
+  }
+
+  h1 { color: #ff6f61; }
+
+  .button {
+
+    padding: 15px 25px;
+
+    margin: 10px;
+
+    font-size: 18px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+  }
+
+  .uber { background-color: #0f3460; color: #ffffff; }
+
+  .burpee { background-color: #162447; color: #e94560; }
+
+  .network { background-color: #1f4287; color: #ffffff; }
+
+  .caffeine { background-color: #fcca46; color: #1b1b2f; }
+
+  .night { background-color: #0b0c10; color: #66fcf1; }
+
+  .button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .stats { margin-top: 20px; width: 90%; max-width: 600px; background: #0b0c10; padding: 15px; border-radius: 12px; }
+
+  .stat { margin: 5px 0; }
+
+  .button-row { display: flex; gap: 10px; justify-content: center; flex-wrap: nowrap; }
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🚀 Life Simulator</h1>
+
+<p>Time: <span id="timeDisplay">7:00 AM</span> | Energy: <span id="energyDisplay">100</span>%</p>
+
+<!-- Main Buttons -->
+
+<div class="button-row">
+
+  <button class="button uber" onclick="performUberDoorDash()">🚗 Uber / DoorDash</button>
+
+  <button class="button burpee" onclick="performBurpeeThon()">💪 Burpee-thon</button>
+
+</div>
+
+<div class="button-row">
+
+  <button class="button network" onclick="performNetworking()">🤝 Networking Node</button>
+
+  <button class="button caffeine" onclick="drinkCaffeine()">☕ Caffeine</button>
+
+</div>
+
+<div class="button-row">
+
+  <button class="button night" onclick="nightOutcome()">🌙 Night Outcome</button>
+
+</div>
+
+<!-- Stats -->
+
+<div class="stats">
+
+  <div class="stat">Job Applications: <span id="jobApps">0</span></div>
+
+  <div class="stat">Songs Discovered: <span id="songs">0</span></div>
+
+  <div class="stat">Social Media Connections: <span id="socials">0</span></div>
+
+  <div class="stat">Videos Posted: <span id="videos">0</span></div>
+
+</div>
+
+<script>
+
+let energy = 100;
+
+let hour = 7; // Start at 7 AM
+
+let am = true;
+
+let jobApps = 0;
+
+let songs = 0;
+
+let socials = 0;
+
+let videos = 0;
+
+function updateDisplay() {
+
+  let displayHour = hour % 12 || 12;
+
+  let period = am ? "AM" : "PM";
+
+  document.getElementById("timeDisplay").innerText = `${displayHour}:00 ${period}`;
+
+  document.getElementById("energyDisplay").innerText = energy;
+
+  document.getElementById("jobApps").innerText = jobApps;
+
+  document.getElementById("songs").innerText = songs;
+
+  document.getElementById("socials").innerText = socials;
+
+  document.getElementById("videos").innerText = videos;
+
+  // Disable buttons if energy is 0 (except night)
+
+  const buttons = document.querySelectorAll('.button');
+
+  buttons.forEach(btn => btn.disabled = (energy <= 0 && !btn.classList.contains('night')));
+
+}
+
+function advanceTime(hours) {
+
+  hour += hours;
+
+  while (hour > 12) {
+
+    hour -= 12;
+
+    am = !am;
+
+  }
+
+}
+
+// Uber / DoorDash
+
+function performUberDoorDash() {
+
+  if (energy <= 0) return;
+
+  jobApps += 1;
+
+  songs += 2;
+
+  socials += Math.random() < 0.2 ? 1 : 0;
+
+  videos += Math.random() < 0.1 ? 1 : 0;
+
+  energy -= 10;
+
+  advanceTime(1);
+
+  updateDisplay();
+
+}
+
+// Burpee-thon
+
+function performBurpeeThon() {
+
+  if (energy <= 0) return;
+
+  energy -= 20;
+
+  videos += 1;
+
+  advanceTime(1);
+
+  updateDisplay();
+
+}
+
+// Networking Node
+
+function performNetworking() {
+
+  if (energy <= 0) return;
+
+  jobApps += Math.random() < 0.5 ? 1 : 0;
+
+  socials += 1;
+
+  songs += 1;
+
+  energy -= 15;
+
+  advanceTime(1);
+
+  updateDisplay();
+
+}
+
+// Caffeine
+
+function drinkCaffeine() {
+
+  if (energy <= 0) return;
+
+  energy += 25;
+
+  if (energy > 100) energy = 100;
+
+  updateDisplay();
+
+}
+
+// Night Outcome
+
+function nightOutcome() {
+
+  if (energy > 70) {
+
+    alert("💥 Too much energy! Running on treadmill to get tired...");
+
+    energy -= 30;
+
+    advanceTime(1);
+
+    updateDisplay();
+
+    return;
+
+  }
+
+  energy = 100; // Sleep restores to 100%
+
+  advanceTime(6); // Sleep 6 hours
+
+  updateDisplay();
+
+}
+
+updateDisplay();
+
+</script>
+
+</body>
+
+</html>
