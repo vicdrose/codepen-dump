@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crystal + Astrology Insight Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: repeating-linear-gradient(135deg, #e0f7f1, #e0f7f1 20px, white 20px, white 40px);
+      padding: 2rem;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .select-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    select, button, textarea {
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .random-group {
+      position: relative;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 110%;
+      left: 0;
+      background-color: white;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 0.5rem;
+      z-index: 10;
+    }
+
+    .random-group:hover .dropdown {
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      margin-top: 1rem;
+    }
+
+    #response {
+      background-color: #f1fff9;
+      border-left: 4px solid #20c997;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌿 Crystal + Astrology Insight</h1>
+
+  <div class="select-row">
+    <select id="crystal">
+      <option>Amethyst</option>
+      <option>Rose Quartz</option>
+      <option>Larimar</option>
+      <option>Citrine</option>
+    </select>
+
+    <select id="house">
+      <option>1st House</option>
+      <option>5th House</option>
+      <option>8th House</option>
+      <option>12th House</option>
+    </select>
+
+    <select id="zodiac">
+      <option>Aries</option>
+      <option>Leo</option>
+      <option>Scorpio</option>
+      <option>Pisces</option>
+    </select>
+
+    <select id="planet">
+      <option>Mars</option>
+      <option>Venus</option>
+      <option>Pluto</option>
+      <option>Neptune</option>
+    </select>
+  </div>
+
+  <div class="select-row">
+    <button onclick="randomizeAll()">🔀 Randomize All</button>
+
+    <div class="random-group">
+      <button>🎲 Random Astrology ▼</button>
+      <div class="dropdown">
+        <button onclick="randomizeOne('house')">Random House</button><br>
+        <button onclick="randomizeOne('zodiac')">Random Zodiac</button><br>
+        <button onclick="randomizeOne('planet')">Random Planet</button>
+      </div>
+    </div>
+  </div>
+
+  <textarea id="promptInput" placeholder="Optional: Add your own prompt..."></textarea>
+  <button onclick="generateInsight()">✨ Get Insight</button>
+
+  <div id="response"></div>
+
+  <script>
+    const options = {
+      crystal: ["Amethyst", "Rose Quartz", "Larimar", "Citrine"],
+      house: ["1st House", "5th House", "8th House", "12th House"],
+      zodiac: ["Aries", "Leo", "Scorpio", "Pisces"],
+      planet: ["Mars", "Venus", "Pluto", "Neptune"]
+    };
+
+    function randomizeOne(id) {
+      const select = document.getElementById(id);
+      const items = options[id];
+      select.selectedIndex = Math.floor(Math.random() * items.length);
+    }
+
+    function randomizeAll() {
+      ["crystal", "house", "zodiac", "planet"].forEach(randomizeOne);
+    }
+
+    function generateInsight() {
+      const crystal = document.getElementById("crystal").value;
+      const house = document.getElementById("house").value;
+      const zodiac = document.getElementById("zodiac").value;
+      const planet = document.getElementById("planet").value;
+      const prompt = document.getElementById("promptInput").value;
+
+      const fullPrompt = `What does it mean when ${crystal} is paired with ${house}, ${zodiac}, and ${planet}? ${prompt}`;
+      
+      const mockResponse = `
+        🔮 Insight:
+        Your current alignment suggests a time of transformation and spiritual focus. 
+        ${crystal} encourages you to embrace inner healing, while ${planet} in ${zodiac} within the ${house} emphasizes emotional or creative renewal. 
+        Reflect on your deeper needs and take action that honors your authentic path.
+      `;
+
+      document.getElementById("response").innerText = mockResponse.trim();
+    }
+  </script>
+</body>
+</html>
