@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interactive Life Ecosystem</title>
+<style>
+  body {
+    font-family: sans-serif;
+    background: #111;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+    position: relative;
+    min-height: 100vh;
+  }
+  .map {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    align-items: center;
+  }
+  .node {
+    position: relative;
+    background: #222;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .node:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 30px #0ff;
+  }
+  .label {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+  }
+  .modal {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.95);
+    padding: 20px 30px;
+    border-radius: 15px;
+    max-width: 600px;
+    text-align: center;
+    font-size: 1rem;
+    color: #0ff;
+    box-shadow: 0 0 40px #0ff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+</style>
+</head>
+<body>
+<div class="map">
+  <div class="node" data-story="Your van is your core hub. Maintaining it creates freedom and expands your options.">Van</div>
+  <div class="label">Van</div>
+
+  <div class="node" data-story="Your bike lets you access nearby opportunities efficiently. Small steps compound into big progress.">Bike</div>
+  <div class="label">Bike</div>
+
+  <div class="node" data-story="Creative hubs multiply your focus. The people and environment amplify your impact.">WeWork</div>
+  <div class="label">WeWork</div>
+
+  <div class="node" data-story="Routine and fitness strengthen your mind and body. Discipline now unlocks later freedom.">Gym</div>
+  <div class="label">Gym</div>
+
+  <div class="node" data-story="Coffee shops are ideal for reflection, learning, and observing trends. Quiet observation turns into opportunity.">Coffee Shop</div>
+  <div class="label">Coffee Shop</div>
+
+  <div class="node" data-story="Side gigs provide financial security and hidden lessons. Flexibility here creates room for creative exploration.">Side Gig</div>
+  <div class="label">Side Gig</div>
+
+  <div class="node" data-story="Organized storage unlocks freedom in your travels. Managing your resources gives you an edge.">Storage</div>
+  <div class="label">Storage</div>
+
+  <div class="node" data-story="Temporary spaces teach adaptability. Each new environment reveals networks and opportunities.">Temporary Space</div>
+  <div class="label">Temporary Space</div>
+
+  <div class="node" data-story="Your tech work and coding projects are invisible networking tools. They attract the ecosystem you want to be part of.">Tech Job / AI GitHub</div>
+  <div class="label">Tech Job / AI GitHub</div>
+
+  <div class="node" data-story="Airport Uber and DoorDash are reliable backup systems. They keep your ecosystem running when other nodes fluctuate.">Airport Uber / DoorDash</div>
+  <div class="label">Airport Uber / DoorDash</div>
+
+  <div class="node" data-story="A second car or rental expands mobility and opportunities. Redundancy builds resilience.">Uber Rental / Car Backup</div>
+  <div class="label">Uber Rental / Car Backup</div>
+
+  <div class="node" data-story="Your bedroom at your family’s house is a high-ROI node. Cost efficiency and multiple resources converge here.">Family House</div>
+  <div class="label">Family House</div>
+</div>
+
+<div class="modal" id="modal"></div>
+
+<script>
+  const nodes = document.querySelectorAll('.node');
+  const modal = document.getElementById('modal');
+
+  nodes.forEach(node => {
+    node.addEventListener('mouseenter', () => {
+      modal.textContent = node.getAttribute('data-story');
+      modal.classList.add('active');
+    });
+    node.addEventListener('mouseleave', () => {
+      modal.classList.remove('active');
+    });
+  });
+</script>
+</body>
+</html>
