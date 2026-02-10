@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Life Loop Simulator</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body {
+
+  margin: 0; font-family: 'Inter', sans-serif; background: #0b0d17; color: #fff;
+
+  overflow-x: hidden; overflow-y: scroll;
+
+}
+
+h1,h2 { font-family: 'Playfair Display', serif; color: #ffb86b; }
+
+.container { max-width: 1200px; margin: auto; padding: 2rem; }
+
+.card-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem; }
+
+.card { background: rgba(255,255,255,0.05); border-radius: 15px; padding:1rem; transition:0.3s; }
+
+.card:hover { transform: translateY(-5px); box-shadow:0 0 30px rgba(255,184,107,0.2); }
+
+.loop { text-align:center; font-size:3rem; color:#ffb86b; animation: spin 20s linear infinite; margin:3rem 0; }
+
+@keyframes spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+footer { text-align:center; margin:4rem 0; font-family:'Playfair Display', serif; color:#ff6b3d; }
+
+canvas { position: fixed; inset:0; z-index:-1; }
+
+</style>
+
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="container">
+
+  <h1>Life Loop Simulator</h1>
+
+  <p>Interactive visualization of your winter/summer life, tech jobs, Freestyle King AI DJ, vertical streams, fitness, and infrastructure plays.</p>
+
+  <h2>Creative Skills</h2>
+
+  <div class="card-grid">
+
+    <div class="card">🎨 Blender 3D - Visuals, shaders, lighting</div>
+
+    <div class="card">🗣️ Languages - Japanese & Brazilian rap practice</div>
+
+    <div class="card">🎤 Freestyle King - AI rapping robot & vertical streams</div>
+
+    <div class="card">💻 Net Coding - WebSockets, SQL, JSON chunks</div>
+
+  </div>
+
+  <div class="loop">⟳</div>
+
+  <h2>Infrastructure & Lifestyle</h2>
+
+  <div class="card-grid">
+
+    <div class="card">🚐 Arizona Night Vehicle - Honda Element base</div>
+
+    <div class="card">🏋️ Fitness - Burpeathon, gym, pool, boxing</div>
+
+    <div class="card">⚡ Tech Job - Uber airport, vertical stream revenue</div>
+
+    <div class="card">🥘 Passport Kitchen & Storage Unit - creative HQ</div>
+
+  </div>
+
+  <div class="loop">⟳</div>
+
+  <h2>Networking & Teammates</h2>
+
+  <div class="card-grid">
+
+    <div class="card">🤝 Pair Programming & AI beat sets</div>
+
+    <div class="card">⚽ Soccer Field - social networking</div>
+
+    <div class="card">🎮 Gaming & streaming - audience growth</div>
+
+    <div class="card">📸 Vape Sharing - camera & production collabs</div>
+
+  </div>
+
+</div>
+
+<footer>Optimize income, output, and safety. Let risk = reward wisely.</footer>
+
+<script>
+
+// Starfield background
+
+const canvas = document.getElementById("stars");
+
+const ctx = canvas.getContext("2d");
+
+let w = canvas.width = window.innerWidth;
+
+let h = canvas.height = window.innerHeight;
+
+window.addEventListener('resize',()=>{ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; });
+
+const stars = Array.from({length:200},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+0.2,s:Math.random()*0.3+0.05}));
+
+function animate(){
+
+  ctx.clearRect(0,0,w,h);
+
+  ctx.fillStyle="#fff";
+
+  stars.forEach(s=>{
+
+    s.y+=s.s;
+
+    if(s.y>h) s.y=0;
+
+    ctx.globalAlpha=Math.random();
+
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+
+  });
+
+  requestAnimationFrame(animate);
+
+}
+
+animate();
+
+</script>
+
+</body>
+
+</html>
