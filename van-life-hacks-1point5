@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Zodiac Ecosystem Wheel</title>
+
+  <style>
+
+    body {
+
+      background: #0d0d0d;
+
+      color: white;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      height: 100vh;
+
+      margin: 0;
+
+      font-family: sans-serif;
+
+    }
+
+    .wheel {
+
+      position: relative;
+
+      width: 600px;
+
+      height: 600px;
+
+      border-radius: 50%;
+
+      border: 2px solid white;
+
+    }
+
+    .sign {
+
+      position: absolute;
+
+      width: 100%;
+
+      height: 100%;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      transform-origin: center;
+
+    }
+
+    .sign-label {
+
+      position: absolute;
+
+      top: 5%;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      font-size: 14px;
+
+      text-transform: uppercase;
+
+      font-weight: bold;
+
+    }
+
+    .node-line {
+
+      position: absolute;
+
+      width: 200px;
+
+      height: 1px;
+
+      background: white;
+
+      transform-origin: left center;
+
+    }
+
+    .node {
+
+      position: absolute;
+
+      width: 16px;
+
+      height: 16px;
+
+      background: white;
+
+      border-radius: 50%;
+
+      transform: translate(-50%, -50%);
+
+    }
+
+    .node-label {
+
+      font-size: 12px;
+
+      position: absolute;
+
+      top: 20px;
+
+      left: -20px;
+
+      width: 60px;
+
+      text-align: center;
+
+    }
+
+    .line-label {
+
+      position: absolute;
+
+      top: -18px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      font-size: 12px;
+
+      color: cyan;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="wheel" id="wheel">
+
+    <div class="sign-label">Zodiac Wheel</div>
+
+  </div>
+
+  <script>
+
+    const signs = [
+
+      "Aries","Taurus","Gemini","Cancer","Leo","Virgo",
+
+      "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"
+
+    ];
+
+    
+
+    const nodes = [
+
+      { sign: "Aries", left: "Venus", right: "Mars", label: "Van" },
+
+      { sign: "Taurus", left: "Moon", right: "Saturn", label: "Tech Job" },
+
+      { sign: "Gemini", left: "Mercury", right: "Jupiter", label: "WeWork" },
+
+      { sign: "Cancer", left: "Ceres", right: "Chiron", label: "Library" },
+
+      { sign: "Leo", left: "Sun", right: "Mars", label: "Gym" },
+
+      { sign: "Virgo", left: "Pallas", right: "Mercury", label: "Storage" },
+
+      { sign: "Libra", left: "Ceres", right: "Venus", label: "Coffeeshop" },
+
+      { sign: "Sagittarius", left: "Fortune", right: "Vertex", label: "Airport Uber" },
+
+      { sign: "Capricorn", left: "Uranus", right: "Neptune", label: "DJ Sets" },
+
+      { sign: "Aquarius", left: "Venus", right: "North Node", label: "GitHub" },
+
+      { sign: "Pisces", left: "Lilith", right: "Neptune", label: "Freestyle King" }
+
+    ];
+
+    const wheel = document.getElementById("wheel");
+
+    const radius = 280; // distance of sign sectors
+
+    signs.forEach((sign, i) => {
+
+      const angle = (i / 12) * 360;
+
+      const signDiv = document.createElement("div");
+
+      signDiv.className = "sign";
+
+      signDiv.style.transform = `rotate(${angle}deg)`;
+
+      const label = document.createElement("div");
+
+      label.className = "sign-label";
+
+      label.innerText = sign;
+
+      signDiv.appendChild(label);
+
+      wheel.appendChild(signDiv);
+
+    });
+
+    nodes.forEach((node, i) => {
+
+      const signIndex = signs.indexOf(node.sign);
+
+      const angle = (signIndex / 12) * 360;
+
+      const line = document.createElement("div");
+
+      line.className = "node-line";
+
+      line.style.transform = `rotate(${angle}deg)`;
+
+      line.style.top = "50%";
+
+      line.style.left = "50%";
+
+      const label = document.createElement("div");
+
+      label.className = "line-label";
+
+      label.innerText = node.label;
+
+      line.appendChild(label);
+
+      const leftNode = document.createElement("div");
+
+      leftNode.className = "node";
+
+      leftNode.style.left = "0px";
+
+      const leftLabel = document.createElement("div");
+
+      leftLabel.className = "node-label";
+
+      leftLabel.innerText = node.left;
+
+      leftNode.appendChild(leftLabel);
+
+      const rightNode = document.createElement("div");
+
+      rightNode.className = "node";
+
+      rightNode.style.left = "200px";
+
+      const rightLabel = document.createElement("div");
+
+      rightLabel.className = "node-label";
+
+      rightLabel.innerText = node.right;
+
+      rightNode.appendChild(rightLabel);
+
+      line.appendChild(leftNode);
+
+      line.appendChild(rightNode);
+
+      wheel.appendChild(line);
+
+    });
+
+  </script>
+
+</body>
+
+</html>
