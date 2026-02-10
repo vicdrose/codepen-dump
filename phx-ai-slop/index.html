@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Ai slop</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/XJKNYVj">
+  
+  
+  
+  
+<style>
+* {
+
+  box-sizing: border-box;
+
+  font-family: "Orbitron", system-ui, sans-serif;
+
+}
+
+body {
+
+  margin: 0;
+
+  color: #f5f5f5;
+
+  background: #06080f;
+
+  overflow-x: hidden;
+
+}
+
+.background {
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+
+    radial-gradient(circle at bottom, #ff9a3c33, transparent 60%),
+
+    linear-gradient(#02040a, #0b1020);
+
+  z-index: -1;
+
+}
+
+header {
+
+  text-align: center;
+
+  padding: 2rem 1rem;
+
+}
+
+header h1 {
+
+  letter-spacing: 3px;
+
+  color: #ffb86b;
+
+}
+
+header p {
+
+  opacity: 0.7;
+
+}
+
+.grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+  gap: 1.5rem;
+
+  padding: 2rem;
+
+}
+
+.panel {
+
+  background: linear-gradient(145deg, #0e1428, #080c1a);
+
+  border: 1px solid #ffb86b55;
+
+  border-radius: 14px;
+
+  padding: 1.2rem;
+
+  box-shadow: 0 0 25px #ff9a3c22;
+
+  position: relative;
+
+  transition: transform 0.3s, box-shadow 0.3s;
+
+}
+
+.panel:hover {
+
+  transform: translateY(-6px);
+
+  box-shadow: 0 0 40px #ff9a3c66;
+
+}
+
+.panel h2 {
+
+  margin-top: 0;
+
+  color: #ffb86b;
+
+}
+
+.panel ul {
+
+  padding-left: 1.2rem;
+
+}
+
+.panel li {
+
+  margin: 0.4rem 0;
+
+}
+
+.live {
+
+  color: #ff3b3b;
+
+  font-weight: bold;
+
+}
+
+.gear span {
+
+  display: inline-block;
+
+  margin-right: 0.6rem;
+
+}
+
+.icons {
+
+  font-size: 1.6rem;
+
+  letter-spacing: 0.4rem;
+
+}
+
+.actions {
+
+  display: flex;
+
+  gap: 0.6rem;
+
+}
+
+button {
+
+  background: transparent;
+
+  border: 1px solid #ffb86b;
+
+  color: #ffb86b;
+
+  padding: 0.4rem 0.8rem;
+
+  cursor: pointer;
+
+  border-radius: 6px;
+
+}
+
+button.primary {
+
+  background: #ff9a3c;
+
+  color: #000;
+
+}
+
+.quest {
+
+  margin-top: 0.8rem;
+
+  font-style: italic;
+
+  color: #ffd39b;
+
+}
+</style>
+
+  
+  
+  
+</head>
+
+<body>
+  <!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <title>Arizona Creative Lifestyle</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<header>
+
+  <h1>ARIZONA CREATIVE LIFESTYLE</h1>
+
+  <p>Day 35 · Phoenix, AZ</p>
+
+</header>
+
+<main class="grid">
+
+  <section class="panel fitness">
+
+    <h2>Fitness Protocol</h2>
+
+    <ul>
+
+      <li>🔥 Burpeathon Streak: <span>35</span></li>
+
+      <li>🦵 Reverse Lunges</li>
+
+      <li>🏃 Backwards Run</li>
+
+      <li>🫖 Turmeric + L-Theanine</li>
+
+    </ul>
+
+  </section>
+
+  <section class="panel music">
+
+    <h2>Music Operations</h2>
+
+    <p class="live">● LIVE</p>
+
+    <div class="gear">
+
+      <span>🎛 Beat Console</span>
+
+      <span>🎸 Guitar</span>
+
+      <span>🎹 Pads</span>
+
+    </div>
+
+    <button>Launch Stream</button>
+
+  </section>
+
+  <section class="panel gamedev">
+
+    <h2>Gamedev Console</h2>
+
+    <ul>
+
+      <li>📁 Scenes</li>
+
+      <li>📜 Scripts</li>
+
+      <li>🧩 Assets</li>
+
+    </ul>
+
+    <div class="actions">
+
+      <button>Edit Docs</button>
+
+      <button class="primary">Playtest</button>
+
+    </div>
+
+  </section>
+
+  <section class="panel mobility">
+
+    <h2>Mobility Hub</h2>
+
+    <ul>
+
+      <li>🚐 Honda Element</li>
+
+      <li>🅿️ Paid Parking</li>
+
+      <li>📦 Storage Unit</li>
+
+    </ul>
+
+  </section>
+
+  <section class="panel routine">
+
+    <h2>Daily Routine</h2>
+
+    <div class="icons">
+
+      ☕ 🏋️ 🎵 💻 🚐 🌵
+
+    </div>
+
+  </section>
+
+  <section class="panel anchors">
+
+    <h2>Anchors & Trails</h2>
+
+    <ul>
+
+      <li>📍 Tim’s Place</li>
+
+      <li>📍 Los Angeles</li>
+
+      <li>📍 Desert Base</li>
+
+    </ul>
+
+    <p class="quest">Next Quest: Visit Jordana</p>
+
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
+  
+    <script id="rendered-js" >
+document.querySelectorAll(".panel").forEach(panel => {
+
+  panel.addEventListener("mouseenter", () => {
+
+    panel.style.borderColor = "#ffd39b";
+
+  });
+
+  panel.addEventListener("mouseleave", () => {
+
+    panel.style.borderColor = "#ffb86b55";
+
+  });
+
+});
+
+// Placeholder for future systems:
+
+// - live stats
+
+// - music triggers
+
+// - day counter
+
+// - quest progression
+
+console.log("Arizona Creative Lifestyle OS online 🌵");
+  </script>
+
+  
+</body>
+
+</html>
