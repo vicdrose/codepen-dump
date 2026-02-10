@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Roi</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/xbZKOyb">
+  
+  
+  
+  
+<style>
+body {
+
+  font-family: 'Arial', sans-serif;
+
+  background: linear-gradient(135deg, #1a1a2e, #162447);
+
+  color: #fff;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  height: 100vh;
+
+}
+
+#roadmap-container {
+
+  width: 90%;
+
+  max-width: 900px;
+
+  text-align: center;
+
+}
+
+#nodes {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+
+  margin: 30px 0;
+
+}
+
+.node {
+
+  position: relative;
+
+  background: #162447;
+
+  padding: 15px 20px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition: transform 0.2s;
+
+}
+
+.node:hover {
+
+  transform: scale(1.05);
+
+}
+
+.modal {
+
+  position: fixed;
+
+  bottom: 50%;
+
+  left: 50%;
+
+  transform: translate(-50%, 50%);
+
+  background: rgba(22,36,71,0.95);
+
+  padding: 20px;
+
+  border-radius: 12px;
+
+  max-width: 300px;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition: opacity 0.3s;
+
+}
+
+.modal.active {
+
+  opacity: 1;
+
+  pointer-events: auto;
+
+}
+
+#navigation {
+
+  margin-top: 20px;
+
+}
+
+button {
+
+  padding: 10px 15px;
+
+  margin: 0 10px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #e94560;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  transition: background 0.2s;
+
+}
+
+button:hover {
+
+  background: #d63a55;
+
+}
+</style>
+
+  
+  
+  
+</head>
+
+<body>
+  <div id="roadmap-container">
+
+  <h1>Project Roadmap</h1>
+
+  <div id="nodes"></div>
+
+  <div id="project-info" class="modal"></div>
+
+  <div id="navigation">
+
+    <button id="prev-page">Previous</button>
+
+    <button id="next-page">Next</button>
+
+  </div>
+
+</div>
+  
+    <script id="rendered-js" >
+const nodesData = [
+
+  { name: "AI GitHub Projects", roi: 1, description: "Build visible projects using latest tech. Prioritize deployable and employable skills." },
+
+  { name: "Van Life Optimization", roi: 2, description: "Maximize productivity from your van setup: bike, storage, Wework proximity." },
+
+  { name: "LinkedIn Art & Public Code", roi: 3, description: "Share projects and art to build visibility and network passively." },
+
+  { name: "Part-time Jobs + Uber/Doordash", roi: 4, description: "Maintain stable income while keeping flexibility for high-ROI projects." },
+
+  { name: "Creative Music/DJ Sets", roi: 5, description: "Use music and performance as a creative outlet; supports content creation and brand." },
+
+  { name: "Fitness & Meditation", roi: 6, description: "Energy management for sustained high performance across projects." }
+
+];
+
+let currentPage = 0;
+
+const nodesPerPage = 3;
+
+function renderNodes() {
+
+  const nodesContainer = document.getElementById('nodes');
+
+  nodesContainer.innerHTML = '';
+
+  const start = currentPage * nodesPerPage;
+
+  const end = start + nodesPerPage;
+
+  const pageNodes = nodesData.slice(start, end);
+
+  pageNodes.forEach((node, index) => {
+
+    const nodeDiv = document.createElement('div');
+
+    nodeDiv.className = 'node';
+
+    nodeDiv.innerHTML = `<strong>${node.name}</strong> (ROI: ${node.roi})`;
+
+    nodeDiv.addEventListener('mouseenter', () => showModal(node.description));
+
+    nodeDiv.addEventListener('mouseleave', hideModal);
+
+    nodesContainer.appendChild(nodeDiv);
+
+  });
+
+}
+
+function showModal(text) {
+
+  const modal = document.getElementById('project-info');
+
+  modal.textContent = text;
+
+  modal.classList.add('active');
+
+}
+
+function hideModal() {
+
+  const modal = document.getElementById('project-info');
+
+  modal.classList.remove('active');
+
+}
+
+document.getElementById('prev-page').addEventListener('click', () => {
+
+  if(currentPage > 0) currentPage--;
+
+  renderNodes();
+
+});
+
+document.getElementById('next-page').addEventListener('click', () => {
+
+  if((currentPage + 1) * nodesPerPage < nodesData.length) currentPage++;
+
+  renderNodes();
+
+});
+
+// Initial render
+
+renderNodes();
+  </script>
+
+  
+</body>
+
+</html>
