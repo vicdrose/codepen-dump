@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Victor's Phased Lifestyle System</title>
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #121212;
+  color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+.system-container {
+  max-width: 1000px;
+  width: 100%;
+  text-align: center;
+}
+h1 { margin-bottom: 15px; font-weight: 600; color: #ffd700; }
+.phase-btn {
+  margin: 0 5px 15px 5px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #444;
+  color: #ffd700;
+  font-weight: 600;
+  cursor: pointer;
+}
+.phase-btn.active { background: #ffd700; color: #121212; }
+.engines {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+.engine {
+  background: #1e1e1e;
+  border-radius: 15px;
+  padding: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transition: transform 0.2s;
+}
+.engine:hover { transform: translateY(-5px); }
+button.action-btn {
+  padding: 10px 15px;
+  margin-top: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #ffd700;
+  color: #121212;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button.action-btn:hover { background: #ffea00; }
+.feedback {
+  background: #1a1a1a;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  font-size: 1.05em;
+}
+.engine h2 { margin-bottom: 8px; color: #ffcc33; }
+.engine p { margin-top: 6px; font-size: 0.95em; }
+</style>
+</head>
+<body>
+<div class="system-container">
+<h1>Victor's Phased Lifestyle System</h1>
+
+<div>
+  <button class="phase-btn active" onclick="setPhase(0)">Uber / DoorDash</button>
+  <button class="phase-btn" onclick="setPhase(1)">Fitness Sandwich</button>
+  <button class="phase-btn" onclick="setPhase(2)">DJ/Bartender Networking</button>
+  <button class="phase-btn" onclick="setPhase(3)">Music School / Event Networking</button>
+  <button class="phase-btn" onclick="setPhase(4)">Creative / TikTok</button>
+</div>
+
+<div class="engines">
+<div class="engine" id="job"><h2>📄 Job Applications</h2><button class="action-btn" onclick="activate('job')">Apply</button><p>Applications: <span id="job-count">0</span></p></div>
+<div class="engine" id="money"><h2>💵 Uber / DoorDash Earnings</h2><button class="action-btn" onclick="activate('money')">Drive</button><p>$<span id="money-count">0</span></p></div>
+<div class="engine" id="energy"><h2>⚡ Energy / Fitness</h2><button class="action-btn" onclick="activate('energy')">Burpee-Thon / Sandwich / Bike</button><p>Energy: <span id="energy-count">50</span>%</p></div>
+<div class="engine" id="network"><h2>🤝 Networking</h2><button class="action-btn" onclick="activate('network')">DJ / Music School / Event</button><p>Connections: <span id="network-count">0</span></p></div>
+<div class="engine" id="creative"><h2>🎵 TikTok / Astro Beats / Visuals</h2><button class="action-btn" onclick="activate('creative')">Create</button><p>Content Points: <span id="creative-count">0</span></p></div>
+</div>
+
+<div class="feedback"><p id="feedback-text">Phase 1: Uber / DoorDash. Focus on Job Applications & Money.</p></div>
+</div>
+
+<script>
+let phase = 0; // 0=Uber,1=Fitness,2=DJ,3=MusicSchool,4=Creative
+let state = { job:0, money:0, energy:50, network:0, creative:0 };
+
+function setPhase(newPhase){
+  phase = newPhase;
+  document.querySelectorAll('.phase-btn').forEach(btn=>btn.classList.remove('active'));
+  document.querySelector(`.phase-btn:nth-child(${newPhase+1})`).classList.add('active');
+
+  const phaseNames = [
+    "Uber / DoorDash. Focus on Job Applications & Money.",
+    "Fitness Sandwich: Burpee-Thon + Optional Bike/Gym/Shower.",
+    "DJ/Bartender Networking: Connections & Social Leverage.",
+    "Music School / Event Networking: Build Creative & Professional Network.",
+    "Creative Phase: TikTok / Astro Beats / Visuals Content."
+  ];
+
+  document.getElementById('feedback-text').innerText = `Phase ${newPhase+1}: ${phaseNames[newPhase]}`;
+}
+
+function activate(engine){
+  // enforce dependencies
+  if(phase===1 && engine==='network'){
+    document.getElementById('feedback-text').innerText = "Energy prep phase first! Finish Fitness Sandwich before Networking.";
+    return;
+  }
+  if(phase===0 && engine==='network'){
+    document.getElementById('feedback-text').innerText = "Complete Uber / DoorDash phase before Networking.";
+    return;
+  }
+  if(phase===4 && state.energy<30){
+    document.getElementById('feedback-text').innerText = "Low energy! Boost Energy before Creative content.";
+    return;
+  }
+
+  // weighted effects per engine
+  if(engine==='job'){ state.job+=10; state.money+=2; state.network+=1; }
+  if(engine==='money'){ state.money+=10; state.job+=2; state.energy-=5; if(state.energy<0) state.energy=0; }
+  if(engine==='energy'){ state.energy+=20; if(state.energy>100) state.energy=100; state.creative+=2; }
+  if(engine==='network'){ state.network+=10; state.job+=1; state.creative+=2; state.energy-=10; if(state.energy<0) state.energy=0; }
+  if(engine==='creative'){ state.creative+=10; state.network+=2; state.job+=1; state.energy-=15; if(state.energy<0) state.energy=0; }
+
+  // update display
+  for(let key in state){
+    document.getElementById(`${key}-count`).innerText = state[key];
+  }
+
+  document.getElementById('feedback-text').innerText = `Activated ${engine}. Current Phase: ${phase+1}. Energy: ${state.energy}%.`;
+}
+</script>
+</body>
+</html>
