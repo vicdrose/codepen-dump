@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sunrise Field System — Full Update</title>
+<style>
+html, body {
+  margin:0; padding:0;
+  font-family: system-ui, sans-serif;
+  overflow: hidden;
+  background:#000;
+}
+
+/* ---------------- SCENES ---------------- */
+.scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  transition: opacity 1s ease, transform 1s ease;
+  transform: translateX(50px);
+}
+
+.scene.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+
+.scene::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background: radial-gradient(circle at top, rgba(255,255,255,0.15), transparent 60%);
+  pointer-events:none;
+}
+
+.label {
+  position: absolute;
+  bottom:30px; left:30px;
+  color:white;
+  font-size:22px;
+  letter-spacing:1px;
+  opacity:0.9;
+}
+
+/* Icon nodes */
+.icon {
+  position:absolute;
+  width:56px; height:56px;
+  background:rgba(255,255,255,0.85);
+  border-radius:50%;
+  display:grid; place-items:center;
+  font-size:26px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.35);
+  cursor:pointer;
+  transition: opacity 1s ease, transform 0.2s;
+  opacity:0;
+}
+.scene.active .icon { opacity:1; }
+.icon:hover { transform: scale(1.3); }
+
+/* ---------------- BUTTON NAV ---------------- */
+.buttons {
+  position:fixed; top:14px; left:50%;
+  transform:translateX(-50%);
+  z-index:10;
+}
+.buttons button {
+  margin:0 4px;
+  padding:8px 12px;
+  border-radius:6px;
+  border:none;
+  background: rgba(255,255,255,0.9);
+  cursor:pointer;
+  font-weight:600;
+}
+.buttons button:hover { background:#ffcc80; }
+
+/* ---------------- SCENE GRADIENTS ---------------- */
+#field { background:linear-gradient(#7ec850,#4caf50); }
+#parking { background:linear-gradient(#666,#333); }
+#coffee { background:linear-gradient(#c97a3a,#8b4513); }
+#gym { background:linear-gradient(#111,#444); }
+#storage { background:linear-gradient(#999,#bbb); }
+#land { background:linear-gradient(#2e8b57,#3cb371); }
+#networking { background:linear-gradient(#ff9800,#ffb74d); }
+
+/* ---------------- HUD ---------------- */
+#hud {
+  position:fixed; top:14px; right:14px;
+  width:220px; background: rgba(255,255,255,0.88);
+  border-radius:12px; padding:10px; font-size:12px; z-index:20;
+}
+.stat { margin-bottom:6px; }
+.stat span { font-weight:600; }
+.bar {
+  height:8px;
+  background:#ddd;
+  border-radius:6px;
+  overflow:hidden;
+}
+.bar div { height:100%; width:50%; transition: width 0.3s; }
+#energy { background:#66bb6a; }
+#creativity { background:#ab47bc; }
+#mood { background:#ff7043; }
+#cardio { background:#42a5f5; }
+#time-display {
+  margin-top:4px;
+  font-weight:600;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ---------------- BUTTON NAV ---------------- -->
+<div class="buttons">
+  <button onclick="travelTo('field')">1 Field</button>
+  <button onclick="travelTo('parking')">2 Parking</button>
+  <button onclick="travelTo('coffee')">3 Coffee</button>
+  <button onclick="travelTo('gym')">4 Gym</button>
+  <button onclick="travelTo('storage')">5 Storage</button>
+  <button onclick="travelTo('land')">6 Own Land</button>
+  <button onclick="travelTo('networking')">7 Networking</button>
+</div>
+
+<!-- ---------------- HUD ---------------- -->
+<div id="hud">
+  <div class="stat"><span>Energy</span><div class="bar"><div id="energy"></div></div></div>
+  <div class="stat"><span>Creativity</span><div class="bar"><div id="creativity"></div></div></div>
+  <div class="stat"><span>Mood</span><div class="bar"><div id="mood"></div></div></div>
+  <div class="stat"><span>Cardio</span><div class="bar"><div id="cardio"></div></div></div>
+  <div id="time-display">Time: 08:00</div>
+</div>
+
+<!-- ---------------- SCENES ---------------- -->
+<div id="field" class="scene active">
+  <div class="icon" style="top:45%;left:30%">🏃</div>
+  <div class="icon" style="top:55%;left:55%">🎧</div>
+  <div class="icon" style="top:65%;left:45%">🎤</div>
+  <div class="label">FIELD — Move, breathe, perform</div>
+</div>
+
+<div id="parking" class="scene">
+  <div class="icon" style="top:50%;left:50%">🚗</div>
+  <div class="icon" style="top:35%;left:60%">💻</div>
+  <div class="label">PARKING — Mobile work mode</div>
+</div>
+
+<div id="coffee" class="scene">
+  <div class="icon" style="top:50%;left:50%">☕</div>
+  <div class="icon" style="top:62%;left:45%">📱</div>
+  <div class="label">COFFEE — Light focus & admin</div>
+</div>
+
+<div id="gym" class="scene">
+  <div class="icon" style="top:45%;left:40%">🏋️</div>
+  <div class="icon" style="top:60%;left:55%">🤸</div>
+  <div class="label">GYM — Strength & nervous system</div>
+</div>
+
+<div id="storage" class="scene">
+  <div class="icon" style="top:50%;left:50%">📦</div>
+  <div class="icon" style="top:62%;left:45%">🍎</div>
+  <div class="label">STORAGE — Prep & logistics</div>
+</div>
+
+<div id="land" class="scene">
+  <div class="icon" style="top:50%;left:50%">🌳</div>
+  <div class="icon" style="top:45%;left:60%">⛺</div>
+  <div class="icon" style="top:60%;left:40%">💻</div>
+  <div class="label">OWN LAND — Autonomy & creation</div>
+</div>
+
+<div id="networking" class="scene">
+  <div class="icon" style="top:50%;left:50%">🤝</div>
+  <div class="icon" style="top:55%;left:45%">📇</div>
+  <div class="label">NETWORKING — Social connections</div>
+</div>
+
+<script>
+/* ---------------- PLAYER STATE ---------------- */
+const player = { energy: 60, creativity: 50, mood: 50, cardio: 30 };
+let timeMinutes = 8*60; // 08:00 start
+
+function clamp(v){ return Math.max(0, Math.min(100,v)); }
+
+function updateHUD(){
+  // wrap time to 24h
+  timeMinutes = timeMinutes % 1440;
+  document.getElementById('energy').style.width = player.energy+'%';
+  document.getElementById('creativity').style.width = player.creativity+'%';
+  document.getElementById('mood').style.width = player.mood+'%';
+  document.getElementById('cardio').style.width = player.cardio+'%';
+  const hh=Math.floor(timeMinutes/60).toString().padStart(2,'0');
+  const mm=(timeMinutes%60).toString().padStart(2,'0');
+  document.getElementById('time-display').textContent=`Time: ${hh}:${mm}`;
+}
+
+/* ---------------- SCENE SWITCHING ---------------- */
+function travelTo(id){
+  // Calculate travel time based on current time
+  let travel=30; // default 30min
+  const hour = Math.floor(timeMinutes/60);
+  if(hour>=16 && hour<19) travel=90;
+  else if((hour>=11 && hour<16)||(hour>=19 && hour<21)) travel=60;
+
+  timeMinutes += travel; // advance time
+  updateHUD();
+
+  // switch scene
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+
+  // optional: add effect of "traveling" energy reduction
+  player.energy = clamp(player.energy - 5);
+  checkSleep();
+}
+
+/* ---------------- ICON INTERACTIONS ---------------- */
+document.querySelectorAll('.icon').forEach(icon=>{
+  icon.addEventListener('click',()=>{
+    const s=icon.textContent;
+    let duration=15; // default 15 min
+    switch(s){
+      case '🏃': applyActivity({cardio:+8, energy:-6, mood:+3},30); break;
+      case '🎧': applyActivity({mood:+6, energy:-2},30); break;
+      case '🎤': applyActivity({creativity:+10, energy:-5},60); break;
+      case '🚗': applyActivity({creativity:+6, energy:-3},45); break;
+      case '💻': applyActivity({creativity:+8, energy:-4},60); break;
+      case '☕': applyActivity({energy:+6, mood:+4},30); break;
+      case '📱': applyActivity({mood:+3, creativity:+2},15); break;
+      case '🏋️': applyActivity({cardio:+10, energy:-8},60); break;
+      case '🤸': applyActivity({mood:+5, cardio:+4},45); break;
+      case '📦': applyActivity({energy:-2, mood:+1},30); break;
+      case '🍎': applyActivity({energy:+5},15); break;
+      case '🌳': applyActivity({mood:+8},60); break;
+      case '⛺': applyActivity({creativity:+5, mood:+4},60); break;
+      case '🤝': applyActivity({mood:+6, creativity:+4},90); break;
+      case '📇': applyActivity({creativity:+5, mood:+2},60); break;
+    }
+  });
+});
+
+function applyActivity(statsChange,duration){
+  // update stats
+  player.energy = clamp(player.energy + (statsChange.energy||0));
+  player.creativity = clamp(player.creativity + (statsChange.creativity||0));
+  player.mood = clamp(player.mood + (statsChange.mood||0));
+  player.cardio = clamp(player.cardio + (statsChange.cardio||0));
+
+  // advance time
+  timeMinutes += duration;
+  updateHUD();
+
+  checkSleep();
+}
+
+/* ---------------- FORCED SLEEP ---------------- */
+function checkSleep(){
+  if(player.energy<=0){
+    // sleep 4 seconds animation
+    player.energy=100;
+    player.creativity=0;
+    player.mood=0;
+    player.cardio=0;
+    updateHUD();
+    alert("Forced sleep: All stats reset except energy. Advancing 4 seconds...");
+  }
+}
+
+updateHUD();
+</script>
+</body>
+</html>
