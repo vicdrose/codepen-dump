@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <title>Dream → Discipline → Legacy</title>
+
+  <style>
+
+    html, body {
+
+      margin: 0;
+
+      padding: 0;
+
+      background: radial-gradient(circle at top, #05060d, #000);
+
+      color: #d8d8ff;
+
+      font-family: "Inter", system-ui, sans-serif;
+
+      overflow: hidden;
+
+      height: 100%;
+
+    }
+
+    canvas {
+
+      position: absolute;
+
+      inset: 0;
+
+    }
+
+    .ui {
+
+      position: absolute;
+
+      bottom: 20px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 10px;
+
+      justify-content: center;
+
+      max-width: 95%;
+
+    }
+
+    button {
+
+      background: rgba(255,255,255,0.04);
+
+      border: 1px solid rgba(255,255,255,0.12);
+
+      color: #fff;
+
+      padding: 12px 18px;
+
+      border-radius: 12px;
+
+      font-size: 14px;
+
+      cursor: pointer;
+
+      transition: 0.3s;
+
+      backdrop-filter: blur(6px);
+
+    }
+
+    button:hover {
+
+      background: rgba(120,160,255,0.18);
+
+      transform: translateY(-2px);
+
+      box-shadow: 0 6px 18px rgba(100,150,255,0.35);
+
+    }
+
+    .mantra {
+
+      position: absolute;
+
+      top: 18px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      text-align: center;
+
+      font-size: 14px;
+
+      letter-spacing: 0.15em;
+
+      text-transform: uppercase;
+
+      opacity: 0.7;
+
+    }
+
+    .log {
+
+      position: absolute;
+
+      top: 60px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      text-align: center;
+
+      font-size: 13px;
+
+      max-width: 85%;
+
+      line-height: 1.6;
+
+      opacity: 0.85;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <canvas id="c"></canvas>
+
+  <div class="mantra">Dream → Discipline → Legacy</div>
+
+  <div class="log" id="log">Press a button to activate a ritual.</div>
+
+  <div class="ui">
+
+    <button onclick="invoke('dream')">Enter Dream</button>
+
+    <button onclick="invoke('discipline')">Engage Discipline</button>
+
+    <button onclick="invoke('work')">Sweat Mode</button>
+
+    <button onclick="invoke('build')">Build Legacy</button>
+
+    <button onclick="invoke('reset')">Reset</button>
+
+  </div>
+
+  <script>
+
+    const canvas = document.getElementById("c");
+
+    const ctx = canvas.getContext("2d");
+
+    const log = document.getElementById("log");
+
+    let w, h;
+
+    let particles = [];
+
+    let mode = "idle";
+
+    const messages = {
+
+      dream: "You are standing inside imagination. Let it move through you.",
+
+      discipline: "Structure stabilizes the vision. Motion becomes ritual.",
+
+      work: "Repetition carves identity. Exhaustion reveals clarity.",
+
+      build: "Time compresses. What you build now becomes memory.",
+
+      reset: "Return to stillness. Prepare again."
+
+    };
+
+    function resize() {
+
+      w = canvas.width = window.innerWidth;
+
+      h = canvas.height = window.innerHeight;
+
+    }
+
+    window.addEventListener("resize", resize);
+
+    resize();
+
+    class Particle {
+
+      constructor() {
+
+        this.reset();
+
+      }
+
+      reset() {
+
+        this.x = Math.random() * w;
+
+        this.y = Math.random() * h;
+
+        this.vx = (Math.random() - 0.5) * 0.6;
+
+        this.vy = (Math.random() - 0.5) * 0.6;
+
+        this.size = Math.random() * 2 + 0.5;
+
+        this.life = Math.random() * 200 + 200;
+
+      }
+
+      update() {
+
+        this.life--;
+
+        this.x += this.vx;
+
+        this.y += this.vy;
+
+        if (this.life <= 0) this.reset();
+
+      }
+
+      draw() {
+
+        ctx.beginPath();
+
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+
+        ctx.fillStyle = "rgba(150,170,255,0.8)";
+
+        ctx.fill();
+
+      }
+
+    }
+
+    for (let i = 0; i < 300; i++) particles.push(new Particle());
+
+    function invoke(m) {
+
+      mode = m;
+
+      log.innerText = messages[m];
+
+    }
+
+    function animate() {
+
+      ctx.fillStyle = "rgba(0,0,0,0.2)";
+
+      ctx.fillRect(0, 0, w, h);
+
+      let speed = 1;
+
+      let spread = 0.6;
+
+      if (mode === "dream") {
+
+        speed = 0.6;
+
+        spread = 0.3;
+
+      }
+
+      if (mode === "discipline") {
+
+        speed = 1.5;
+
+        spread = 0.8;
+
+      }
+
+      if (mode === "work") {
+
+        speed = 3.5;
+
+        spread = 1.6;
+
+      }
+
+      if (mode === "build") {
+
+        speed = 2;
+
+        spread = 1;
+
+      }
+
+      particles.forEach(p => {
+
+        p.vx += (Math.random() - 0.5) * spread * 0.05;
+
+        p.vy += (Math.random() - 0.5) * spread * 0.05;
+
+        p.vx *= 0.99;
+
+        p.vy *= 0.99;
+
+        p.x += p.vx * speed;
+
+        p.y += p.vy * speed;
+
+        if (p.x < 0 || p.x > w || p.y < 0 || p.y > h) p.reset();
+
+        p.draw();
+
+      });
+
+      requestAnimationFrame(animate);
+
+    }
+
+    animate();
+
+  </script>
+
+</body>
+
+</html>
