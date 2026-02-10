@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8" />
+
+<title>The Becoming Loop</title>
+
+<style>
+
+  body {
+
+    margin: 0;
+
+    font-family: system-ui, sans-serif;
+
+    background: radial-gradient(circle at top, #111 0%, #000 70%);
+
+    color: #eaeaea;
+
+  }
+
+  .app {
+
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 20px;
+
+  }
+
+  h1 {
+
+    text-align: center;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 10px;
+
+  }
+
+  .subtitle {
+
+    text-align: center;
+
+    opacity: 0.7;
+
+    margin-bottom: 30px;
+
+  }
+
+  .grid {
+
+    display: grid;
+
+    grid-template-columns: 2fr 1fr;
+
+    gap: 20px;
+
+  }
+
+  .panel {
+
+    background: rgba(255,255,255,0.05);
+
+    border-radius: 16px;
+
+    padding: 16px;
+
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+
+  }
+
+  .stats div {
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+  }
+
+  .bar {
+
+    height: 10px;
+
+    background: rgba(255,255,255,0.1);
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    margin-top: 4px;
+
+  }
+
+  .bar span {
+
+    display: block;
+
+    height: 100%;
+
+    background: linear-gradient(90deg, #00ffd5, #7f5cff);
+
+    width: 0%;
+
+    transition: width 0.3s ease;
+
+  }
+
+  .actions button {
+
+    width: 100%;
+
+    margin-bottom: 10px;
+
+    padding: 10px;
+
+    background: #111;
+
+    color: #fff;
+
+    border: 1px solid rgba(255,255,255,0.2);
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+
+  }
+
+  .actions button:hover {
+
+    background: #1c1c1c;
+
+    transform: translateY(-1px);
+
+  }
+
+  .log {
+
+    height: 260px;
+
+    overflow-y: auto;
+
+    font-size: 13px;
+
+    opacity: 0.85;
+
+  }
+
+  .log p {
+
+    margin: 6px 0;
+
+  }
+
+  .day {
+
+    text-align: center;
+
+    font-size: 18px;
+
+    margin-bottom: 10px;
+
+    opacity: 0.9;
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+  <h1>THE BECOMING LOOP</h1>
+
+  <div class="subtitle">A ritualized life simulator — no endgame, only momentum</div>
+
+  <div class="day">Day <span id="day">1</span></div>
+
+  <div class="grid">
+
+    <div class="panel">
+
+      <h3>Daily Actions</h3>
+
+      <div class="actions">
+
+        <button onclick="act('visual')">🎨 Create Visual (Blender / Unity)</button>
+
+        <button onclick="act('music')">🎸 Build Setlist / Astro Beat</button>
+
+        <button onclick="act('fitness')">🏋️ Fitness & Regulation</button>
+
+        <button onclick="act('network')">🍻 Network (DJ / Bartender / Event)</button>
+
+        <button onclick="act('income')">🚗 Income Run (Uber / DoorDash)</button>
+
+        <button onclick="endDay()">🌙 End Day</button>
+
+      </div>
+
+    </div>
+
+    <div class="panel">
+
+      <h3>State</h3>
+
+      <div class="stats">
+
+        <div>Momentum
+
+          <div class="bar"><span id="momentum"></span></div>
+
+        </div>
+
+        <div>Creative Proof
+
+          <div class="bar"><span id="creative"></span></div>
+
+        </div>
+
+        <div>Network Gravity
+
+          <div class="bar"><span id="network"></span></div>
+
+        </div>
+
+        <div>Stability
+
+          <div class="bar"><span id="stability"></span></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="panel" style="margin-top:20px;">
+
+    <h3>Timeline</h3>
+
+    <div class="log" id="log"></div>
+
+  </div>
+
+</div>
+
+<script>
+
+let state = {
+
+  day: 1,
+
+  momentum: 10,
+
+  creative: 0,
+
+  network: 0,
+
+  stability: 20
+
+};
+
+function clamp(val) {
+
+  return Math.max(0, Math.min(100, val));
+
+}
+
+function updateUI() {
+
+  document.getElementById('day').textContent = state.day;
+
+  document.getElementById('momentum').style.width = state.momentum + '%';
+
+  document.getElementById('creative').style.width = state.creative + '%';
+
+  document.getElementById('network').style.width = state.network + '%';
+
+  document.getElementById('stability').style.width = state.stability + '%';
+
+}
+
+function log(text) {
+
+  const el = document.createElement('p');
+
+  el.textContent = text;
+
+  document.getElementById('log').prepend(el);
+
+}
+
+function act(type) {
+
+  if (type === 'visual') {
+
+    state.creative += 6;
+
+    state.momentum += 4;
+
+    log('🎨 You shaped a world. Proof accumulates.');
+
+  }
+
+  if (type === 'music') {
+
+    state.creative += 4;
+
+    state.momentum += 3;
+
+    log('🎸 Sound becomes ritual.');
+
+  }
+
+  if (type === 'fitness') {
+
+    state.momentum += 5;
+
+    state.stability += 4;
+
+    log('🏋️ Nervous system regulated.');
+
+  }
+
+  if (type === 'network') {
+
+    state.network += 6;
+
+    state.momentum += 2;
+
+    log('🍻 Familiar faces recognize you.');
+
+  }
+
+  if (type === 'income') {
+
+    state.stability += 6;
+
+    log('🚗 Money converts chaos into time.');
+
+  }
+
+  normalize();
+
+  updateUI();
+
+}
+
+function normalize() {
+
+  state.momentum = clamp(state.momentum);
+
+  state.creative = clamp(state.creative);
+
+  state.network = clamp(state.network);
+
+  state.stability = clamp(state.stability);
+
+}
+
+function endDay() {
+
+  state.day += 1;
+
+  state.momentum -= 5;
+
+  if (state.creative > 50 && state.network > 40) {
+
+    log('✨ Opportunity emerges from compounding visibility.');
+
+    state.stability += 5;
+
+  }
+
+  if (state.stability < 20) {
+
+    log('⚠️ Instability detected. Art becomes harder.');
+
+    state.momentum -= 5;
+
+  }
+
+  normalize();
+
+  updateUI();
+
+  log('🌙 Day ends. Becoming continues.');
+
+}
+
+updateUI();
+
+log('Game initialized. Begin the ritual.');
+
+</script>
+
+</body>
+
+</html>
