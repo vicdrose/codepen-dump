@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Extreme Motion Life Stack</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  --bg: #0e0f13;
+  --card: #161821;
+  --accent: #7df9ff;
+  --accent2: #c77dff;
+  --text: #e6e6eb;
+  --muted: #8b8f9c;
+}
+
+* { box-sizing: border-box; font-family: Inter, system-ui, sans-serif; }
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #1a1c27, var(--bg));
+  color: var(--text);
+  padding: 24px;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: linear-gradient(180deg, #1b1e2b, var(--card));
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.4);
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px rgba(0,0,0,.6);
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  margin: 0 0 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge {
+  font-size: .7rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  color: #000;
+}
+
+.content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s ease;
+}
+
+.card.active .content {
+  max-height: 500px;
+}
+
+ul {
+  padding-left: 16px;
+  margin: 12px 0 0;
+}
+
+li {
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+
+.footer {
+  margin-top: 32px;
+  text-align: center;
+  color: var(--muted);
+  font-size: .85rem;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Extreme Motion Life Stack</h1>
+<div class="subtitle">
+Mobility • Fitness • Music • Game Dev • Autonomy
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <h2>1. Uber Airport <span class="badge">Baseline</span></h2>
+    <div class="content">
+      <ul>
+        <li>Primary income without commitment</li>
+        <li>Concert adjacency & networking</li>
+        <li>Mobile studio time</li>
+        <li>Freedom to say no to bad jobs</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. Transparency Stream <span class="badge">Creative</span></h2>
+    <div class="content">
+      <ul>
+        <li>College campus Wi-Fi & projectors</li>
+        <li>Guitar + VJ sets</li>
+        <li>Music school networking</li>
+        <li>Public process as content</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3. Freestyle King <span class="badge">Physical</span></h2>
+    <div class="content">
+      <ul>
+        <li>Burpee-thon & bodyweight circuits</li>
+        <li>Soccer field / canopy base</li>
+        <li>Music + movement synergy</li>
+        <li>Natural energy replacement for caffeine</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>4. Gym Stack <span class="badge">Recovery</span></h2>
+    <div class="content">
+      <ul>
+        <li>Planet Fitness / Crunch / College</li>
+        <li>Kettlebell, iron gym, light weights</li>
+        <li>Basketball & swimming access</li>
+        <li>Maintenance, not exhaustion</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>5. Virtual Study Hall <span class="badge">Build</span></h2>
+    <div class="content">
+      <ul>
+        <li>Figma → Canva → Blender</li>
+        <li>Three.js & Unity pipeline</li>
+        <li>Music → remakes → dance game</li>
+        <li>Tone.js visual automation</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>6. Social Farm <span class="badge">Network</span></h2>
+    <div class="content">
+      <ul>
+        <li>Happy hour & vape sharing</li>
+        <li>Low-stakes cold approach</li>
+        <li>Community → Discord → fans</li>
+        <li>Date-for-location leverage</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>7. Night Options <span class="badge">Flex</span></h2>
+    <div class="content">
+      <ul>
+        <li>Night job or DoorDash</li>
+        <li>Bar DJ sets</li>
+        <li>Treadmill + R&B DJ flow</li>
+        <li>Private creative sessions</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+Extreme Motion replaces caffeine. Motion becomes marketing.
+</div>
+
+<script>
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('click', () => {
+    card.classList.toggle('active');
+  });
+});
+</script>
+
+</body>
+</html>
