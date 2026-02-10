@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>360° Astrology Life Map</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: radial-gradient(circle at center, #0a0a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Arial', sans-serif;
+            color: white;
+            overflow-x: auto;
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+        }
+        
+        #astroChart {
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(138, 43, 226, 0.3);
+            background: radial-gradient(circle at center, rgba(25, 25, 112, 0.1) 0%, rgba(72, 61, 139, 0.05) 100%);
+        }
+        
+        .zodiac-segment {
+            stroke: rgba(255, 215, 0, 0.4);
+            stroke-width: 1;
+            fill: none;
+        }
+        
+        .zodiac-label {
+            fill: #ffd700;
+            font-size: 14px;
+            font-weight: bold;
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+        
+        .van-node {
+            fill: #ff6b35;
+            stroke: #ff4500;
+            stroke-width: 3;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.8));
+        }
+        
+        .planet-node {
+            stroke-width: 2;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .planet-node:hover {
+            stroke-width: 3;
+            filter: drop-shadow(0 0 20px currentColor);
+            transform: scale(1.2);
+        }
+        
+        .connection-line {
+            stroke-width: 2;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .connection-line:hover {
+            stroke-width: 4;
+            opacity: 1;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+        
+        .planet-label {
+            fill: #ffd700;
+            font-size: 9px;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        
+        .activity-label {
+            fill: white;
+            font-size: 10px;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            font-weight: bold;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 50, 0.95);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            pointer-events: none;
+            border: 1px solid #ffd700;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            background: linear-gradient(45deg, #ffd700, #ff6b35, #8a2be2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+        
+        .legend {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 50, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ffd700;
+            font-size: 12px;
+            max-width: 200px;
+        }
+        
+        .legend h3 {
+            margin: 0 0 10px 0;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">360° Astrology Life Map</h1>
+    
+    <div class="legend">
+        <h3>ROI Influence</h3>
+        <div>Closer to center = Higher ROI</div>
+        <div style="margin-top: 10px;">
+            <span style="color: #ff6b35;">●</span> Van (Center)<br>
+            <span style="color: #ffd700;">●</span> Planets (sized by frequency)<br>
+            <div style="margin-top: 5px; font-size: 10px;">
+                Activities are labeled on connection lines
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <svg id="astroChart" width="800" height="800" viewBox="0 0 800 800">
+            <!-- Background circles for reference -->
+            <circle cx="400" cy="400" r="350" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <circle cx="400" cy="400" r="280" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <circle cx="400" cy="400" r="200" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <circle cx="400" cy="400" r="120" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        </svg>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+    
+    <script>
+        const svg = document.getElementById('astroChart');
+        const tooltip = document.getElementById('tooltip');
+        const centerX = 400, centerY = 400;
+        
+        // Zodiac signs starting with Leo on the far left (180°), going counterclockwise
+        const zodiacSigns = [
+            'Leo', 'Cancer', 'Gemini', 'Taurus', 'Aries', 'Pisces',
+            'Aquarius', 'Capricorn', 'Sagittarius', 'Scorpio', 'Libra', 'Virgo'
+        ];
+        
+        // Activity data with planetary connections
+        const activities = [
+            { name: 'Van Maintenance', planets: ['Mars in Virgo', 'Saturn in Aquarius'], color: '#ff6b35' },
+            { name: 'WeWork', planets: ['Mercury in Leo', 'Uranus in Capricorn'], color: '#4CAF50' },
+            { name: 'Tech Job', planets: ['Mercury in Leo', 'Vesta in Gemini'], color: '#4CAF50' },
+            { name: 'Library', planets: ['Mercury in Leo', 'Vesta in Gemini'], color: '#2196F3' },
+            { name: 'Gym', planets: ['Mars in Virgo', 'Saturn in Aquarius'], color: '#4CAF50' },
+            { name: 'Coffeeshop', planets: ['Venus in Virgo', 'Venus in Aquarius'], color: '#2196F3' },
+            { name: 'DoorDash', planets: ['Mars in Virgo', 'Mercury in Leo'], color: '#2196F3' },
+            { name: 'Uber/Airport', planets: ['Mars in Virgo', 'Mercury in Leo'], color: '#4CAF50' },
+            { name: 'Storage Unit', planets: ['Saturn in Aquarius', 'Vesta in Gemini'], color: '#9C27B0' },
+            { name: 'Airbnb', planets: ['Moon in Sagittarius', 'Chiron in Cancer'], color: '#9C27B0' },
+            { name: 'Music/DJ', planets: ['Neptune in Capricorn', 'Venus in Aquarius'], color: '#2196F3' },
+            { name: 'AI/GitHub', planets: ['Mercury in Leo', 'Uranus in Capricorn'], color: '#4CAF50' },
+            // New activities with Jupiter and Pluto
+            { name: 'Van Travel/Adventure', planets: ['Jupiter in Leo', 'Mars in Virgo'], color: '#FF9800' },
+            { name: 'Business Expansion', planets: ['Jupiter in Leo', 'Pluto in Scorpio'], color: '#FF5722' },
+            { name: 'Deep Learning/Research', planets: ['Pluto in Scorpio', 'Vesta in Gemini'], color: '#8BC34A' },
+            { name: 'Transformation Projects', planets: ['Pluto in Scorpio', 'Saturn in Aquarius'], color: '#E91E63' },
+            { name: 'Philosophy/Big Picture', planets: ['Jupiter in Leo', 'Neptune in Capricorn'], color: '#673AB7' }
+        ];
+        
+        // Calculate planet frequencies and create planet objects
+        const planetFreq = {};
+        activities.forEach(activity => {
+            activity.planets.forEach(planet => {
+                planetFreq[planet] = (planetFreq[planet] || 0) + 1;
+            });
+        });
+        
+        // Create planet objects with positions
+        const planets = Object.keys(planetFreq).map(planet => {
+            const freq = planetFreq[planet];
+            return { name: planet, frequency: freq };
+        });
+        
+        // Get zodiac position for a planet (within correct sign, distance based on frequency)
+        function getPlanetPosition(planetName) {
+            const signMap = {
+                'Mars in Virgo': 'Virgo',
+                'Saturn in Aquarius': 'Aquarius',
+                'Mercury in Leo': 'Leo',
+                'Uranus in Capricorn': 'Capricorn',
+                'Vesta in Gemini': 'Gemini',
+                'Venus in Virgo': 'Virgo',
+                'Venus in Aquarius': 'Aquarius',
+                'Moon in Sagittarius': 'Sagittarius',
+                'Chiron in Cancer': 'Cancer',
+                'Neptune in Capricorn': 'Capricorn',
+                'Jupiter in Leo': 'Leo',
+                'Pluto in Scorpio': 'Scorpio'
+            };
+            
+            const sign = signMap[planetName];
+            const signIndex = zodiacSigns.indexOf(sign);
+            
+            // Base angle for the sign (center of 30° segment)
+            const baseAngle = (signIndex * 30) + 105; // 105 = 90 + 15 (center of segment)
+            
+            // Distance based on frequency (higher frequency = closer to center)
+            const planet = planets.find(p => p.name === planetName);
+            const maxFreq = Math.max(...planets.map(p => p.frequency));
+            const minDistance = 120;
+            const maxDistance = 300;
+            const distance = maxDistance - ((planet.frequency / maxFreq) * (maxDistance - minDistance));
+            
+            // Add small random offset within the sign to avoid overlap
+            const offsetAngle = (Math.random() - 0.5) * 20; // ±10 degrees within sign
+            const angle = baseAngle + offsetAngle;
+            
+            return { angle, distance };
+        }
+        
+        // Draw zodiac circle segments
+        function drawZodiacWheel() {
+            const radius = 350;
+            
+            for (let i = 0; i < 12; i++) {
+                const angle1 = (i * 30) + 90; // Start from Leo at 180° (left)
+                const angle2 = angle1 + 30;
+                
+                const x1 = centerX + radius * Math.cos(angle1 * Math.PI / 180);
+                const y1 = centerY + radius * Math.sin(angle1 * Math.PI / 180);
+                
+                // Draw segment line
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', centerX);
+                line.setAttribute('y1', centerY);
+                line.setAttribute('x2', x1);
+                line.setAttribute('y2', y1);
+                line.setAttribute('class', 'zodiac-segment');
+                svg.appendChild(line);
+                
+                // Add zodiac sign label
+                const labelAngle = angle1 + 15;
+                const labelRadius = 320;
+                const labelX = centerX + labelRadius * Math.cos(labelAngle * Math.PI / 180);
+                const labelY = centerY + labelRadius * Math.sin(labelAngle * Math.PI / 180);
+                
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', labelX);
+                label.setAttribute('y', labelY);
+                label.setAttribute('class', 'zodiac-label');
+                label.textContent = zodiacSigns[i];
+                svg.appendChild(label);
+            }
+        }
+        
+        // Store planet positions for connection drawing
+        const planetPositions = {};
+        
+        // Draw planet nodes
+        function drawPlanets() {
+            planets.forEach(planet => {
+                const pos = getPlanetPosition(planet.name);
+                const x = centerX + pos.distance * Math.cos(pos.angle * Math.PI / 180);
+                const y = centerY + pos.distance * Math.sin(pos.angle * Math.PI / 180);
+                
+                // Store position for later use
+                planetPositions[planet.name] = { x, y };
+                
+                // Planet node (size based on frequency)
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', x);
+                circle.setAttribute('cy', y);
+                circle.setAttribute('r', 8 + planet.frequency * 2);
+                circle.setAttribute('fill', '#ffd700');
+                circle.setAttribute('stroke', '#ffdf00');
+                circle.setAttribute('class', 'planet-node');
+                
+                // Add hover events
+                circle.addEventListener('mouseenter', (e) => showTooltip(e, `${planet.name}\nFrequency: ${planet.frequency}\nDistance from center: ${Math.round(pos.distance)}px`));
+                circle.addEventListener('mouseleave', hideTooltip);
+                
+                svg.appendChild(circle);
+                
+                // Planet label
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', x);
+                label.setAttribute('y', y + 25);
+                label.setAttribute('class', 'planet-label');
+                label.textContent = planet.name.split(' ')[0]; // Just planet name
+                svg.appendChild(label);
+            });
+        }
+        
+        // Draw connections between planets with activity labels
+        function drawConnections() {
+            const drawnConnections = new Set();
+            
+            activities.forEach(activity => {
+                const planet1 = activity.planets[0];
+                const planet2 = activity.planets[1];
+                
+                // Create unique connection key
+                const connectionKey = [planet1, planet2].sort().join('|');
+                
+                if (!drawnConnections.has(connectionKey) && planetPositions[planet1] && planetPositions[planet2]) {
+                    drawnConnections.add(connectionKey);
+                    
+                    const pos1 = planetPositions[planet1];
+                    const pos2 = planetPositions[planet2];
+                    
+                    // Draw connection line
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', pos1.x);
+                    line.setAttribute('y1', pos1.y);
+                    line.setAttribute('x2', pos2.x);
+                    line.setAttribute('y2', pos2.y);
+                    line.setAttribute('stroke', activity.color);
+                    line.setAttribute('class', 'connection-line');
+                    
+                    // Add hover events to lines
+                    line.addEventListener('mouseenter', (e) => showTooltip(e, `${activity.name}\n${planet1} ↔ ${planet2}`));
+                    line.addEventListener('mouseleave', hideTooltip);
+                    
+                    svg.appendChild(line);
+                    
+                    // Add activity label at midpoint of line
+                    const midX = (pos1.x + pos2.x) / 2;
+                    const midY = (pos1.y + pos2.y) / 2;
+                    
+                    // Calculate angle for text rotation
+                    const angle = Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x) * 180 / Math.PI;
+                    const textAngle = angle > 90 || angle < -90 ? angle + 180 : angle;
+                    
+                    const activityLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    activityLabel.setAttribute('x', midX);
+                    activityLabel.setAttribute('y', midY - 3);
+                    activityLabel.setAttribute('class', 'activity-label');
+                    activityLabel.setAttribute('transform', `rotate(${textAngle} ${midX} ${midY})`);
+                    activityLabel.textContent = activity.name;
+                    
+                    svg.appendChild(activityLabel);
+                }
+            });
+            
+            // Draw lines from planets to van for any single-planet activities or emphasis
+            planets.forEach(planet => {
+                const pos = planetPositions[planet.name];
+                const vanLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                vanLine.setAttribute('x1', pos.x);
+                vanLine.setAttribute('y1', pos.y);
+                vanLine.setAttribute('x2', centerX);
+                vanLine.setAttribute('y2', centerY);
+                vanLine.setAttribute('stroke', 'rgba(255, 215, 0, 0.2)');
+                vanLine.setAttribute('stroke-width', '1');
+                svg.appendChild(vanLine);
+            });
+        }
+        
+        // Draw van in center
+        function drawVan() {
+            const van = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            van.setAttribute('cx', centerX);
+            van.setAttribute('cy', centerY);
+            van.setAttribute('r', 15);
+            van.setAttribute('class', 'van-node');
+            van.addEventListener('mouseenter', (e) => showTooltip(e, 'Van - Central Hub\nAll planetary energies flow through here'));
+            van.addEventListener('mouseleave', hideTooltip);
+            svg.appendChild(van);
+            
+            // Van label
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', centerX);
+            label.setAttribute('y', centerY + 5);
+            label.setAttribute('class', 'planet-label');
+            label.setAttribute('style', 'font-size: 12px; font-weight: bold; fill: white;');
+            label.textContent = 'VAN';
+            svg.appendChild(label);
+        }
+        
+        // Tooltip functions
+        function showTooltip(event, text) {
+            tooltip.style.opacity = '1';
+            tooltip.innerHTML = text.replace(/\n/g, '<br>');
+            
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.top = (event.clientY - 10) + 'px';
+        }
+        
+        function hideTooltip() {
+            tooltip.style.opacity = '0';
+        }
+        
+        // Initialize visualization
+        drawZodiacWheel();
+        drawPlanets();
+        drawConnections();
+        drawVan();
+        
+        // Add smooth animations on load
+        setTimeout(() => {
+            svg.style.opacity = '1';
+            svg.style.transform = 'scale(1)';
+            svg.style.transition = 'all 1s ease-in-out';
+        }, 100);
+    </script>
+</body>
+</html>
