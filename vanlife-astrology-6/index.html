@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Astrology ROI Wheel</title>
+
+  <style>
+
+    body {
+
+      background: black;
+
+      color: white;
+
+      font-family: sans-serif;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      height: 100vh;
+
+    }
+
+    svg {
+
+      overflow: visible;
+
+    }
+
+    .sign {
+
+      fill: white;
+
+      font-size: 12px;
+
+      text-anchor: middle;
+
+    }
+
+    .node-label {
+
+      fill: cyan;
+
+      font-size: 12px;
+
+      text-anchor: middle;
+
+    }
+
+    line {
+
+      stroke: cyan;
+
+      stroke-width: 1;
+
+      opacity: 0.6;
+
+    }
+
+    circle {
+
+      fill: transparent;
+
+      stroke: gray;
+
+      stroke-width: 1;
+
+    }
+
+    .tooltip {
+
+      position: absolute;
+
+      background: #222;
+
+      color: #fff;
+
+      padding: 4px 8px;
+
+      font-size: 12px;
+
+      border-radius: 4px;
+
+      display: none;
+
+      pointer-events: none;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <svg id="wheel" width="600" height="600"></svg>
+
+  <script>
+
+    const svg = document.getElementById("wheel");
+
+    const tooltip = document.getElementById("tooltip");
+
+    const cx = 300, cy = 300, radius = 250;
+
+    const signs = [
+
+      "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn",
+
+      "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer"
+
+    ];
+
+    const nodes = [
+
+      { sign: "Aries", left: "Venus", right: "Mars", label: "Van" },
+
+      { sign: "Taurus", left: "Moon", right: "Saturn", label: "Tech Job" },
+
+      { sign: "Gemini", left: "Mercury", right: "Jupiter", label: "WeWork" },
+
+      { sign: "Cancer", left: "Ceres", right: "Chiron", label: "Library" },
+
+      { sign: "Leo", left: "Sun", right: "Mars", label: "Gym" },
+
+      { sign: "Virgo", left: "Pallas", right: "Mercury", label: "Storage" },
+
+      { sign: "Libra", left: "Ceres", right: "Venus", label: "Coffeeshop" },
+
+      { sign: "Sagittarius", left: "Fortune", right: "Vertex", label: "Airport Uber" },
+
+      { sign: "Capricorn", left: "Uranus", right: "Neptune", label: "DJ Sets" },
+
+      { sign: "Aquarius", left: "Venus", right: "North Node", label: "GitHub" },
+
+      { sign: "Pisces", left: "Lilith", right: "Neptune", label: "Freestyle King" }
+
+    ];
+
+    // Draw outer circle
+
+    const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+
+    circle.setAttribute("cx",cx);
+
+    circle.setAttribute("cy",cy);
+
+    circle.setAttribute("r",radius);
+
+    svg.appendChild(circle);
+
+    // Place signs evenly every 30 degrees, counterclockwise starting with Leo on left
+
+    signs.forEach((sign, i) => {
+
+      const angle = Math.PI - i * (Math.PI/6); // 30° in radians
+
+      const x = cx + Math.cos(angle) * (radius + 20);
+
+      const y = cy - Math.sin(angle) * (radius + 20);
+
+      const text = document.createElementNS("http://www.w3.org/2000/svg","text");
+
+      text.setAttribute("x",x);
+
+      text.setAttribute("y",y);
+
+      text.textContent = sign;
+
+      text.classList.add("sign");
+
+      svg.appendChild(text);
+
+    });
+
+    // Map signs to coordinates for connection lines
+
+    function getSignCoord(sign) {
+
+      const index = signs.indexOf(sign);
+
+      if(index === -1) return {x:cx,y:cy};
+
+      const angle = Math.PI - index * (Math.PI/6);
+
+      return {
+
+        x: cx + Math.cos(angle) * radius,
+
+        y: cy - Math.sin(angle) * radius
+
+      };
+
+    }
+
+    // Draw activity connections
+
+    nodes.forEach(node => {
+
+      const left = getSignCoord(node.sign);
+
+      const right = getSignCoord(node.sign);
+
+      // just connect label to its sign for now
+
+      const lx = left.x, ly = left.y;
+
+      const midx = (lx + cx)/2;
+
+      const midy = (ly + cy)/2;
+
+      const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+
+      line.setAttribute("x1",lx);
+
+      line.setAttribute("y1",ly);
+
+      line.setAttribute("x2",cx);
+
+      line.setAttribute("y2",cy);
+
+      svg.appendChild(line);
+
+      const label = document.createElementNS("http://www.w3.org/2000/svg","text");
+
+      label.setAttribute("x",midx);
+
+      label.setAttribute("y",midy);
+
+      label.textContent = node.label;
+
+      label.classList.add("node-label");
+
+      label.addEventListener("mousemove", e => {
+
+        tooltip.style.display = "block";
+
+        tooltip.style.left = e.pageX + 10 + "px";
+
+        tooltip.style.top = e.pageY + "px";
+
+        tooltip.textContent = `${node.label}: ${node.left}, ${node.right}`;
+
+      });
+
+      label.addEventListener("mouseleave", () => {
+
+        tooltip.style.display = "none";
+
+      });
+
+      svg.appendChild(label);
+
+    });
+
+  </script>
+
+</body>
+
+</html>
