@@ -1,0 +1,373 @@
+<!--
+
+IMMERSIVE CREATIVE CODEPEN
+
+Title: Mobile Creative Engine – Living System
+
+Drop this into CodePen (HTML panel). JS + CSS included.
+
+Uses Three.js + A-Frame-style spatial logic without external build tools.
+
+-->
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <title>Mobile Creative Engine</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+
+    html, body {
+
+      margin: 0;
+
+      padding: 0;
+
+      overflow: hidden;
+
+      background: radial-gradient(circle at center, #1a0f2e, #000);
+
+      font-family: "Inter", system-ui, sans-serif;
+
+      color: #fff;
+
+    }
+
+    #ui {
+
+      position: fixed;
+
+      bottom: 20px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      display: flex;
+
+      gap: 12px;
+
+      z-index: 10;
+
+    }
+
+    .btn {
+
+      padding: 10px 14px;
+
+      border-radius: 12px;
+
+      background: rgba(255, 170, 0, 0.15);
+
+      border: 1px solid rgba(255, 200, 100, 0.4);
+
+      color: #ffd28a;
+
+      cursor: pointer;
+
+      backdrop-filter: blur(10px);
+
+      transition: all 0.2s ease;
+
+    }
+
+    .btn:hover {
+
+      background: rgba(255, 200, 100, 0.35);
+
+      color: #000;
+
+    }
+
+    .label {
+
+      position: absolute;
+
+      color: #ffd28a;
+
+      font-size: 14px;
+
+      pointer-events: none;
+
+      text-shadow: 0 0 12px rgba(255, 170, 0, 0.8);
+
+      transform: translate(-50%, -50%);
+
+      white-space: nowrap;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div id="ui">
+
+  <div class="btn" onclick="focusNode('engine')">ENGINE</div>
+
+  <div class="btn" onclick="focusNode('asia')">WINTER ASIA</div>
+
+  <div class="btn" onclick="focusNode('arizona')">SUMMER AZ</div>
+
+  <div class="btn" onclick="focusNode('freestyle')">FREESTYLE KING</div>
+
+  <div class="btn" onclick="toggleOrbit()">ORBIT</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+
+<script>
+
+/* =========================
+
+   CORE SCENE
+
+========================= */
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+camera.position.set(0, 6, 18);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+renderer.setPixelRatio(window.devicePixelRatio);
+
+document.body.appendChild(renderer.domElement);
+
+/* =========================
+
+   LIGHTING
+
+========================= */
+
+scene.add(new THREE.AmbientLight(0xffbb66, 0.4));
+
+const glowLight = new THREE.PointLight(0xffaa33, 2, 100);
+
+glowLight.position.set(0, 0, 0);
+
+scene.add(glowLight);
+
+/* =========================
+
+   STARFIELD
+
+========================= */
+
+const stars = new THREE.BufferGeometry();
+
+const starCount = 2000;
+
+const starPositions = [];
+
+for (let i = 0; i < starCount; i++) {
+
+  starPositions.push(
+
+    (Math.random() - 0.5) * 400,
+
+    (Math.random() - 0.5) * 400,
+
+    (Math.random() - 0.5) * 400
+
+  );
+
+}
+
+stars.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
+
+const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7 });
+
+scene.add(new THREE.Points(stars, starMaterial));
+
+/* =========================
+
+   NODE SYSTEM
+
+========================= */
+
+const nodes = {};
+
+const labels = [];
+
+function createNode(name, color, position, scale = 1.6) {
+
+  const geo = new THREE.SphereGeometry(scale, 32, 32);
+
+  const mat = new THREE.MeshStandardMaterial({
+
+    color,
+
+    emissive: color,
+
+    emissiveIntensity: 0.4,
+
+    roughness: 0.2,
+
+    metalness: 0.6
+
+  });
+
+  const mesh = new THREE.Mesh(geo, mat);
+
+  mesh.position.copy(position);
+
+  scene.add(mesh);
+
+  const label = document.createElement("div");
+
+  label.className = "label";
+
+  label.innerText = name;
+
+  document.body.appendChild(label);
+
+  nodes[name.toLowerCase()] = { mesh, label };
+
+  labels.push({ mesh, label });
+
+  return mesh;
+
+}
+
+/* =========================
+
+   STRUCTURE
+
+========================= */
+
+createNode("MOBILE CREATIVE ENGINE", 0xffaa33, new THREE.Vector3(0, 0, 0), 2.6);
+
+createNode("WINTER ASIA", 0x66ccff, new THREE.Vector3(-7, 3, -6));
+
+createNode("SUMMER ARIZONA", 0xff8844, new THREE.Vector3(7, 3, -6));
+
+createNode("FREESTYLE KING", 0xff55ff, new THREE.Vector3(-6, -3, -4));
+
+createNode("NET / AI", 0x55ffaa, new THREE.Vector3(6, -3, -4));
+
+createNode("BLENDER", 0x8888ff, new THREE.Vector3(0, 4.5, -8));
+
+createNode("FITNESS", 0xff4444, new THREE.Vector3(0, -5, -6));
+
+/* =========================
+
+   CAMERA CONTROL
+
+========================= */
+
+let orbit = true;
+
+let t = 0;
+
+function toggleOrbit() {
+
+  orbit = !orbit;
+
+}
+
+function focusNode(name) {
+
+  const node = nodes[name];
+
+  if (!node) return;
+
+  camera.position.lerp(
+
+    node.mesh.position.clone().add(new THREE.Vector3(0, 2, 6)),
+
+    0.4
+
+  );
+
+  camera.lookAt(node.mesh.position);
+
+}
+
+/* =========================
+
+   ANIMATION LOOP
+
+========================= */
+
+function animate() {
+
+  requestAnimationFrame(animate);
+
+  t += 0.003;
+
+  if (orbit) {
+
+    camera.position.x = Math.sin(t) * 18;
+
+    camera.position.z = Math.cos(t) * 18;
+
+    camera.lookAt(0, 0, 0);
+
+  }
+
+  // Pulsing energy
+
+  Object.values(nodes).forEach(n => {
+
+    n.mesh.scale.setScalar(1 + Math.sin(t * 4 + n.mesh.position.x) * 0.05);
+
+  });
+
+  // Label positioning
+
+  labels.forEach(({ mesh, label }) => {
+
+    const pos = mesh.position.clone().project(camera);
+
+    const x = (pos.x * 0.5 + 0.5) * window.innerWidth;
+
+    const y = (-pos.y * 0.5 + 0.5) * window.innerHeight;
+
+    label.style.left = `${x}px`;
+
+    label.style.top = `${y}px`;
+
+  });
+
+  renderer.render(scene, camera);
+
+}
+
+animate();
+
+/* =========================
+
+   RESIZE
+
+========================= */
+
+window.addEventListener("resize", () => {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+});
+
+</script>
+
+</body>
+
+</html>
