@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Astrology Vertical Nodes</title>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <style>
+
+    body {
+
+      background: #0d0d0d;
+
+      color: #e0e0e0;
+
+      font-family: sans-serif;
+
+      display: flex;
+
+      justify-content: center;
+
+      padding: 40px;
+
+    }
+
+    svg {
+
+      background: #111;
+
+      border-radius: 12px;
+
+      box-shadow: 0 0 15px rgba(0,0,0,0.6);
+
+    }
+
+    text {
+
+      fill: #ccc;
+
+      font-size: 14px;
+
+    }
+
+    .sign-label {
+
+      font-size: 18px;
+
+      font-weight: bold;
+
+      fill: #66ccff;
+
+    }
+
+    .planet-label {
+
+      font-size: 12px;
+
+      fill: #aaa;
+
+    }
+
+    .node-name {
+
+      font-size: 12px;
+
+      fill: #fff;
+
+    }
+
+    circle {
+
+      fill: #222;
+
+      stroke: #66ccff;
+
+      stroke-width: 2;
+
+    }
+
+    line {
+
+      stroke: #66ccff;
+
+      stroke-width: 2;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <svg id="chart" width="500" height="2200"></svg>
+
+  <script>
+
+    // Example data using real node names and planets from your ecosystem/game manual
+
+    const data = [
+
+      { sign: "Aries", nodes: [{name: "Van Health", planet: "7H Aries Venus Turquoise"}, {name: "Bike", planet: "Mars in Virgo"}], linkName: "Van-Bike Connection" },
+
+      { sign: "Taurus", nodes: [{name: "Storage Unit", planet: "2H Pallas in Virgo"}, {name: "Gym", planet: "6H Leo Mars Sunstone"}], linkName: "Storage-Gym Flow" },
+
+      { sign: "Gemini", nodes: [{name: "Coffee Shop", planet: "11H Gemini"}, {name: "Library", planet: "Mercury in Leo"}], linkName: "Library-Coffee Path" },
+
+      { sign: "Cancer", nodes: [{name: "Tech Job", planet: "Mercury + Jupiter in Leo"}, {name: "AI GitHub", planet: "AI Resource"}], linkName: "Tech-AI Loop" },
+
+      { sign: "Leo", nodes: [{name: "Airport Uber", planet: "5H Capricorn + Juno/Lilith/Neptune/Uranus"}, {name: "Doordash", planet: "Sagittarius Mars Hematite"}], linkName: "Transport Flow" },
+
+      { sign: "Virgo", nodes: [{name: "WeWork", planet: "Venus Aquarius"}, {name: "College Campus", planet: "Moon/Creativity"}], linkName: "Creative Hub" },
+
+      { sign: "Libra", nodes: [{name: "Meditation", planet: "3H Ceres Libra"}, {name: "Contentment/Gratitude", planet: "North Node/IC"}], linkName: "Inner Work" },
+
+      { sign: "Scorpio", nodes: [{name: "Airbnb/Roommate", planet: "12H Chiron"}, {name: "Concerts/Scenery", planet: "Sagittarius Mars"}], linkName: "Experience Nodes" },
+
+      { sign: "Sagittarius", nodes: [{name: "DJ Sets", planet: "Mars + Hematite"}, {name: "Music Discovery", planet: "Venus/Creativity"}], linkName: "Creative Expression" },
+
+      { sign: "Capricorn", nodes: [{name: "Starlink", planet: "Tech Connectivity"}, {name: "Powerbank", planet: "Resource Management"}], linkName: "Resource Hub" },
+
+      { sign: "Aquarius", nodes: [{name: "Tablet/Freestyle King", planet: "3H Portal"}, {name: "H8 Recorder", planet: "Music/Performance"}], linkName: "Recording Hub" },
+
+      { sign: "Pisces", nodes: [{name: "Passport/Travel", planet: "Global Expansion"}, {name: "Water/Relaxation", planet: "Emotional Recharge"}], linkName: "Travel/Recharge" }
+
+    ];
+
+    const svg = d3.select("#chart");
+
+    const sectionHeight = 160;
+
+    const nodeSpacing = 180;
+
+    data.forEach((d, i) => {
+
+      const y = i * sectionHeight + 50;
+
+      const centerX = 250;
+
+      // Sign label
+
+      svg.append("text")
+
+        .attr("x", centerX)
+
+        .attr("y", y - 40)
+
+        .attr("text-anchor", "middle")
+
+        .attr("class", "sign-label")
+
+        .text(d.sign);
+
+      // Nodes
+
+      const x1 = centerX - nodeSpacing / 2;
+
+      const x2 = centerX + nodeSpacing / 2;
+
+      svg.append("circle").attr("cx", x1).attr("cy", y).attr("r", 25);
+
+      svg.append("circle").attr("cx", x2).attr("cy", y).attr("r", 25);
+
+      // Node names
+
+      svg.append("text").attr("x", x1).attr("y", y + 40).attr("text-anchor", "middle").attr("class", "node-name").text(d.nodes[0].name);
+
+      svg.append("text").attr("x", x2).attr("y", y + 40).attr("text-anchor", "middle").attr("class", "node-name").text(d.nodes[1].name);
+
+      // Planet labels
+
+      svg.append("text").attr("x", x1).attr("y", y + 60).attr("text-anchor", "middle").attr("class", "planet-label").text(d.nodes[0].planet);
+
+      svg.append("text").attr("x", x2).attr("y", y + 60).attr("text-anchor", "middle").attr("class", "planet-label").text(d.nodes[1].planet);
+
+      // Connecting line
+
+      svg.append("line").attr("x1", x1).attr("y1", y).attr("x2", x2).attr("y2", y);
+
+      svg.append("text").attr("x", centerX).attr("y", y - 10).attr("text-anchor", "middle").text(d.linkName);
+
+    });
+
+  </script>
+
+</body>
+
+</html>
