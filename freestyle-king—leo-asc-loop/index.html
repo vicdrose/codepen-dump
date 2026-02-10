@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <title>Freestyle King — Leo Asc Loop</title>
+
+  <style>
+
+    html, body {
+
+      margin: 0;
+
+      padding: 0;
+
+      overflow: hidden;
+
+      background: radial-gradient(circle at center, #1a0f2e 0%, #000 70%);
+
+      font-family: system-ui, sans-serif;
+
+    }
+
+    canvas {
+
+      display: block;
+
+    }
+
+    .mercury {
+
+      position: absolute;
+
+      color: rgba(255,255,255,0.15);
+
+      font-size: 12px;
+
+      letter-spacing: 2px;
+
+      animation: whisper 12s infinite alternate;
+
+      pointer-events: none;
+
+    }
+
+    @keyframes whisper {
+
+      0% { opacity: 0; transform: translateY(10px); }
+
+      50% { opacity: 0.4; }
+
+      100% { opacity: 0.05; transform: translateY(-10px); }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<!-- Hidden Mercury Messages (12H) -->
+
+<div class="mercury" style="top:20%; left:10%;">train</div>
+
+<div class="mercury" style="top:60%; left:70%;">create</div>
+
+<div class="mercury" style="top:40%; left:45%;">share</div>
+
+<div class="mercury" style="top:75%; left:25%;">reset</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+
+<script>
+
+/* === SCENE SETUP === */
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+
+  75,
+
+  window.innerWidth / window.innerHeight,
+
+  0.1,
+
+  1000
+
+);
+
+camera.position.z = 8;
+
+/* === RENDERER === */
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+document.body.appendChild(renderer.domElement);
+
+/* === LEO ASCENDANT SUN (JUPITER) === */
+
+const sunGeometry = new THREE.SphereGeometry(1.6, 64, 64);
+
+const sunMaterial = new THREE.MeshStandardMaterial({
+
+  color: 0xffaa33,
+
+  emissive: 0xff6600,
+
+  emissiveIntensity: 1.4,
+
+});
+
+const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+
+sun.position.z = -4;
+
+scene.add(sun);
+
+/* === LIGHTS === */
+
+const pointLight = new THREE.PointLight(0xffcc66, 2, 30);
+
+pointLight.position.set(0, 0, 5);
+
+scene.add(pointLight);
+
+const ambient = new THREE.AmbientLight(0x442266, 0.6);
+
+scene.add(ambient);
+
+/* === URANUS SHARDS (5H) === */
+
+const shards = [];
+
+const shardGeo = new THREE.TetrahedronGeometry(0.3);
+
+for (let i = 0; i < 24; i++) {
+
+  const shardMat = new THREE.MeshStandardMaterial({
+
+    color: 0x66ccff,
+
+    emissive: 0x224466,
+
+    transparent: true,
+
+    opacity: 0.7,
+
+  });
+
+  const shard = new THREE.Mesh(shardGeo, shardMat);
+
+  shard.position.set(
+
+    Math.cos(i) * 4,
+
+    Math.sin(i) * 4,
+
+    (Math.random() - 0.5) * 2
+
+  );
+
+  shard.rotationSpeed = Math.random() * 0.01 + 0.002;
+
+  shards.push(shard);
+
+  scene.add(shard);
+
+}
+
+/* === NEPTUNE FOG WAVES (5H) === */
+
+const fogGeometry = new THREE.PlaneGeometry(20, 20, 32, 32);
+
+const fogMaterial = new THREE.MeshStandardMaterial({
+
+  color: 0x553388,
+
+  transparent: true,
+
+  opacity: 0.15,
+
+  side: THREE.DoubleSide,
+
+});
+
+const fog = new THREE.Mesh(fogGeometry, fogMaterial);
+
+fog.position.z = -6;
+
+scene.add(fog);
+
+/* === LOOP ANIMATION === */
+
+let t = 0;
+
+function animate() {
+
+  requestAnimationFrame(animate);
+
+  t += 0.01;
+
+  // Leo Sun Pulse
+
+  sun.scale.setScalar(1 + Math.sin(t) * 0.05);
+
+  sun.rotation.y += 0.002;
+
+  // Uranus Shard Orbit
+
+  shards.forEach((s, i) => {
+
+    s.rotation.x += s.rotationSpeed;
+
+    s.rotation.y += s.rotationSpeed;
+
+    s.position.x = Math.cos(t + i) * 4;
+
+    s.position.y = Math.sin(t + i) * 4;
+
+  });
+
+  // Neptune Fog Drift
+
+  fog.rotation.z += 0.0005;
+
+  fog.material.opacity = 0.12 + Math.sin(t * 0.5) * 0.05;
+
+  renderer.render(scene, camera);
+
+}
+
+animate();
+
+/* === RESIZE === */
+
+window.addEventListener('resize', () => {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+});
+
+</script>
+
+</body>
+
+</html>
