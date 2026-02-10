@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Freestyle King – Strategy Orbit</title>
+
+<style>
+
+  :root {
+
+    --bg: #0b0e14;
+
+    --glow: #7df9ff;
+
+    --accent: #8b5cf6;
+
+    --muted: #94a3b8;
+
+    --danger: #ef4444;
+
+    --money: #22c55e;
+
+  }
+
+  html, body {
+
+    margin: 0;
+
+    padding: 0;
+
+    background: radial-gradient(circle at center, #111827, #020617);
+
+    color: white;
+
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+    overflow: hidden;
+
+    height: 100%;
+
+  }
+
+  #scene {
+
+    position: relative;
+
+    width: 100vw;
+
+    height: 100vh;
+
+  }
+
+  .node {
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    display: grid;
+
+    place-items: center;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    line-height: 1.2;
+
+    padding: 10px;
+
+    box-sizing: border-box;
+
+    user-select: none;
+
+    animation: float 6s ease-in-out infinite;
+
+  }
+
+  .root {
+
+    width: 180px;
+
+    height: 180px;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background: radial-gradient(circle, var(--accent), #312e81);
+
+    box-shadow: 0 0 60px var(--accent);
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    z-index: 10;
+
+  }
+
+  .orbit {
+
+    width: 120px;
+
+    height: 120px;
+
+    background: #020617;
+
+    border: 1px solid var(--muted);
+
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+
+  }
+
+  .money { border-color: var(--money); box-shadow: 0 0 20px rgba(34,197,94,.5); }
+
+  .risk { border-color: var(--danger); box-shadow: 0 0 20px rgba(239,68,68,.5); }
+
+  .creative { border-color: var(--glow); box-shadow: 0 0 20px rgba(125,249,255,.5); }
+
+  @keyframes float {
+
+    0%,100% { transform: translate(-50%, -50%) translateY(0px); }
+
+    50% { transform: translate(-50%, -50%) translateY(-8px); }
+
+  }
+
+  svg {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+  }
+
+  line {
+
+    stroke: rgba(255,255,255,0.15);
+
+    stroke-width: 1;
+
+  }
+
+  .label {
+
+    font-size: 11px;
+
+    color: var(--muted);
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<div id="scene">
+
+  <svg id="lines"></svg>
+
+  <!-- ROOT -->
+
+  <div class="node root">
+
+    Freestyle King<br/>
+
+    <span class="label">Highest ROI<br/>Identity Engine</span>
+
+  </div>
+
+  <!-- ORBITS -->
+
+  <div class="node orbit creative" data-angle="0" data-radius="260">
+
+    Live Freestyle<br/>TikTok<br/>
+
+    <span class="label">Discovery</span>
+
+  </div>
+
+  <div class="node orbit money" data-angle="60" data-radius="320">
+
+    Uber Airport<br/>
+
+    <span class="label">Cash Flow</span>
+
+  </div>
+
+  <div class="node orbit money" data-angle="140" data-radius="380">
+
+    Tech Job<br/>
+
+    <span class="label">Stability</span>
+
+  </div>
+
+  <div class="node orbit creative" data-angle="210" data-radius="340">
+
+    Game Streaming<br/>
+
+    <span class="label">Celebrate Wins</span>
+
+  </div>
+
+  <div class="node orbit risk" data-angle="280" data-radius="300">
+
+    Teaching / Backup<br/>
+
+    <span class="label">Worst Case</span>
+
+  </div>
+
+  <div class="node orbit creative" data-angle="330" data-radius="420">
+
+    Garage / Van<br/>
+
+    <span class="label">Mobility Base</span>
+
+  </div>
+
+</div>
+
+<script>
+
+const scene = document.getElementById('scene');
+
+const root = document.querySelector('.root');
+
+const orbits = document.querySelectorAll('.orbit');
+
+const svg = document.getElementById('lines');
+
+function positionNodes() {
+
+  const cx = window.innerWidth / 2;
+
+  const cy = window.innerHeight / 2;
+
+  svg.setAttribute('width', window.innerWidth);
+
+  svg.setAttribute('height', window.innerHeight);
+
+  svg.innerHTML = '';
+
+  orbits.forEach((node, i) => {
+
+    const angle = (node.dataset.angle * Math.PI) / 180;
+
+    const radius = node.dataset.radius;
+
+    const x = cx + Math.cos(angle) * radius;
+
+    const y = cy + Math.sin(angle) * radius;
+
+    node.style.left = `${x}px`;
+
+    node.style.top = `${y}px`;
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+
+    line.setAttribute('x1', cx);
+
+    line.setAttribute('y1', cy);
+
+    line.setAttribute('x2', x);
+
+    line.setAttribute('y2', y);
+
+    svg.appendChild(line);
+
+  });
+
+}
+
+window.addEventListener('resize', positionNodes);
+
+positionNodes();
+
+</script>
+
+</body>
+
+</html>
