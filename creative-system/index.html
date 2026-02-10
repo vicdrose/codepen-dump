@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Creative System – Segmented</title>
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    background: #0f0f0f;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }.layout { display: flex; gap: 40px; }
+
+.segment { border: 2px solid #444; border-radius: 14px; padding: 20px; min-width: 220px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+
+.segment-title { font-size: 14px; opacity: 0.7; margin-bottom: 10px; }
+
+.row { display: flex; gap: 20px; }
+
+.column { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+
+.node { width: 120px; height: 56px; border: 2px solid #00ffff; border-radius: 10px; display: flex; justify-content: center; align-items: center; cursor: pointer; background: #1b1b1b; user-select: none; }
+
+.node:hover { background: #2a2a2a; }
+
+.arrow { font-size: 22px; opacity: 0.8; }
+
+.outer { border-color: #ff00ff; padding: 16px; } </style>
+
+</head>
+<body><div class="layout">  <!-- Segment A -->  <div class="segment">
+    <div class="segment-title">Segment A</div>
+    <div class="row">
+      <div class="node" onclick="explain(2)">2</div>
+      <div class="node" onclick="explain(3)">3</div>
+    </div>
+    <div class="arrow">↘︎ &nbsp; ↙︎</div>
+    <div class="node" onclick="explain(1)">1</div>
+  </div>  <!-- Segment B -->  <div class="segment">
+    <div class="segment-title">Segment B</div>
+    <div class="column">
+      <div class="node" onclick="explain(4)">4</div>
+      <div class="arrow">↓</div>
+      <div class="node" onclick="explain(5)">5</div>
+    </div>
+  </div>  <!-- Segment C -->  <div class="segment">
+    <div class="segment-title">Segment C</div>
+    <div class="node outer" onclick="explain(7)">7</div>
+    <div class="node" onclick="explain(6)">6</div>
+  </div></div><script>
+function explain(n) {
+  const descriptions = {
+    1: "Astro Beats — astrology + crystals + music paired with visuals.",
+    2: "Virtual Space — Unity mockups, terrains, camera animation, 3JS-style environments.",
+    3: "Blender + Resolume — transparent assets, animations, shaders for live visuals.",
+    4: "UX / Storyboarding — Figma / Marvel flows before any code exists.",
+    5: "Coding — GitHub + AI-assisted implementation of designed systems.",
+    6: "System OS Game — the daily-loop game you’re building and actively playing.",
+    7: "Freestyle King — the container state where the system is performed live."
+  };
+  alert(descriptions[n]);
+}
+</script></body>
+</html>
