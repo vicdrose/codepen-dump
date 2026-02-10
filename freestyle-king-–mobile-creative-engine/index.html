@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Freestyle King – Mobile Creative Engine</title>
+<style>
+  :root{
+    --bg:#0b0f1a;
+    --card:#12182a;
+    --accent:#6cf2c2;
+    --accent2:#7aa2ff;
+    --muted:#8b92b2;
+    --danger:#ff6b6b;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: radial-gradient(circle at top, #11183a, var(--bg));
+    color:white;
+    overflow:hidden;
+  }
+
+  .scene{
+    position:relative;
+    width:100vw;
+    height:100vh;
+  }
+
+  /* CENTER ROOT */
+  .root{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    background:
+      radial-gradient(circle at top left, #1b2350, #0f1430);
+    border:2px solid var(--accent);
+    box-shadow:0 0 40px rgba(108,242,194,.35);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    z-index:10;
+  }
+
+  .root h1{
+    margin:0;
+    font-size:1.4rem;
+    letter-spacing:.04em;
+  }
+
+  .root p{
+    margin:.5rem 1rem 0;
+    font-size:.8rem;
+    color:var(--muted);
+  }
+
+  /* ORBIT RING */
+  .orbit{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:650px;
+    height:650px;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    animation:spin 90s linear infinite;
+  }
+
+  @keyframes spin{
+    from{transform:translate(-50%,-50%) rotate(0deg)}
+    to{transform:translate(-50%,-50%) rotate(360deg)}
+  }
+
+  /* CARDS */
+  .card{
+    position:absolute;
+    width:210px;
+    background:linear-gradient(180deg, #1a2142, var(--card));
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    padding:14px;
+    cursor:pointer;
+    transition:.3s ease;
+  }
+
+  .card:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 30px rgba(122,162,255,.25);
+  }
+
+  .card h3{
+    margin:0 0 .25rem;
+    font-size:.95rem;
+    color:var(--accent2);
+  }
+
+  .card span{
+    font-size:.7rem;
+    color:var(--accent);
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+
+  .card p{
+    margin:.4rem 0 0;
+    font-size:.75rem;
+    color:var(--muted);
+    line-height:1.4;
+  }
+
+  /* POSITIONING AROUND ORBIT */
+  .c1{ top:-20px; left:220px; }
+  .c2{ top:140px; right:-20px; }
+  .c3{ bottom:140px; right:-20px; }
+  .c4{ bottom:-20px; left:220px; }
+  .c5{ bottom:140px; left:-20px; }
+  .c6{ top:140px; left:-20px; }
+
+  /* INNER DEPTH LAYER */
+  .inner{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:420px;
+    height:420px;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    border:1px dashed rgba(255,255,255,.12);
+    animation:spinReverse 120s linear infinite;
+  }
+
+  @keyframes spinReverse{
+    from{transform:translate(-50%,-50%) rotate(360deg)}
+    to{transform:translate(-50%,-50%) rotate(0deg)}
+  }
+
+  .mini{
+    position:absolute;
+    width:150px;
+    padding:10px;
+    border-radius:12px;
+    background:rgba(18,24,42,.85);
+    border:1px solid rgba(255,255,255,.08);
+    font-size:.7rem;
+    text-align:center;
+  }
+
+  .m1{ top:-10px; left:135px; }
+  .m2{ right:-10px; top:135px; }
+  .m3{ bottom:-10px; left:135px; }
+
+  footer{
+    position:absolute;
+    bottom:10px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:.65rem;
+    color:var(--muted);
+    opacity:.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="scene">
+
+  <!-- ROOT -->
+  <div class="root">
+    <h1>FREESTYLE KING</h1>
+    <p>
+      Highest ROI Root<br>
+      Performance · Identity · Signal
+    </p>
+  </div>
+
+  <!-- INNER DEPTH -->
+  <div class="inner">
+    <div class="mini m1">Vertical Stream<br>TikTok / Live</div>
+    <div class="mini m2">Tech Memory<br>GitHub · WebSockets</div>
+    <div class="mini m3">Visuals<br>Blender · Shaders</div>
+  </div>
+
+  <!-- ORBIT -->
+  <div class="orbit">
+
+    <div class="card c1">
+      <span>Daily Output</span>
+      <h3>5 Beats / Day</h3>
+      <p>
+        Storage unit creation engine.<br>
+        Fuels videos, freestyles, visuals.
+      </p>
+    </div>
+
+    <div class="card c2">
+      <span>Embodied Signal</span>
+      <h3>Burpeathon + Freestyle</h3>
+      <p>
+        Live-streamed fitness + voice.
+        Identity forged in public.
+      </p>
+    </div>
+
+    <div class="card c3">
+      <span>Cash + Time</span>
+      <h3>Uber Airport</h3>
+      <p>
+        Reliable income, long idle windows,
+        networking exposure.
+      </p>
+    </div>
+
+    <div class="card c4">
+      <span>Infrastructure</span>
+      <h3>Garage Van</h3>
+      <p>
+        Guaranteed night practice.
+        Mobile studio + autonomy.
+      </p>
+    </div>
+
+    <div class="card c5">
+      <span>Creative Leverage</span>
+      <h3>Blender Reps</h3>
+      <p>
+        Beat visuals, animation,
+        future 3JS worlds.
+      </p>
+    </div>
+
+    <div class="card c6">
+      <span>Recovery / Gravity</span>
+      <h3>Game Streaming</h3>
+      <p>
+        Productive rest.
+        Community gravity well.
+      </p>
+    </div>
+
+  </div>
+
+  <footer>
+    Mobile Creative Engine · Rooted in Signal, Not Circumstance
+  </footer>
+
+</div>
+
+</body>
+</html>
