@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Daily Music Ecosystem</title>
+
+<style>
+
+  body {
+
+    font-family: sans-serif;
+
+    display: flex;
+
+    justify-content: center;
+
+    padding: 40px;
+
+    background: #111;
+
+    color: #fff;
+
+  }
+
+  .flow {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 40px;
+
+  }
+
+  .node {
+
+    background: #222;
+
+    padding: 20px 30px;
+
+    border-radius: 10px;
+
+    width: 300px;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition: all 0.2s;
+
+    border: 2px solid #444;
+
+  }
+
+  .node:hover {
+
+    border-color: #ffcc00;
+
+    transform: scale(1.05);
+
+  }
+
+  .output {
+
+    margin-top: 10px;
+
+    font-size: 0.9rem;
+
+    color: #ffcc00;
+
+    display: none;
+
+  }
+
+  .arrow {
+
+    width: 2px;
+
+    height: 30px;
+
+    background: #fff;
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="flow">
+
+  <div class="node" data-output="Fuel creativity and generate visual ideas. Includes music discovery, shader and Blender experiments, and optional burpees.">
+
+    1. Music Discovery + Visual Creation
+
+    <div class="output"></div>
+
+  </div>
+
+  <div class="arrow"></div>
+
+  <div class="node" data-output="Record live beats while teaching astrology. Produces AstroBeats videos (audio + visual) and beats that feed setlists and Freestyle King.">
+
+    2. Beat Creation → AstroBeats Live Stream
+
+    <div class="output"></div>
+
+  </div>
+
+  <div class="arrow"></div>
+
+  <div class="node" data-output="Play guitar over the beats, optionally record in GarageBand. Produces setlists for live shows and audio-only content for streaming/remixing.">
+
+    3. Setlist Creation / Guitar Performance
+
+    <div class="output"></div>
+
+  </div>
+
+  <div class="arrow"></div>
+
+  <div class="node" data-output="Freestyle over AstroBeats or setlist recordings, optionally with guitar. Produces unique Freestyle King clips for social media and future content.">
+
+    4. Freestyle King
+
+    <div class="output"></div>
+
+  </div>
+
+</div>
+
+<script>
+
+  const nodes = document.querySelectorAll('.node');
+
+  nodes.forEach(node => {
+
+    node.addEventListener('click', () => {
+
+      const outputDiv = node.querySelector('.output');
+
+      outputDiv.style.display = outputDiv.style.display === 'block' ? 'none' : 'block';
+
+      outputDiv.textContent = node.getAttribute('data-output');
+
+    });
+
+  });
+
+</script>
+
+</body>
+
+</html>
