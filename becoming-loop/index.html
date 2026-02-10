@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>The Becoming Loop - Process Game</title>
+
+    <style>
+
+        :root {
+
+            --bg-dark: #0a0e27;
+
+            --bg-medium: #1a1a3e;
+
+            --process-color: #ff6b35;
+
+            --routine-color: #00d4ff;
+
+            --output-color: #00ff88;
+
+            --neon-glow: 0 0 10px;
+
+            --card-bg: rgba(30, 30, 60, 0.8);
+
+        }
+
+        
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        }
+
+        
+
+        body {
+
+            background: linear-gradient(to bottom, var(--bg-dark), var(--bg-medium));
+
+            color: white;
+
+            min-height: 100vh;
+
+            padding: 20px;
+
+        }
+
+        
+
+        .container {
+
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+        }
+
+        
+
+        header {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+
+            padding: 20px;
+
+            border-bottom: 2px solid rgba(255, 107, 53, 0.3);
+
+        }
+
+        
+
+        h1 {
+
+            font-size: 2.8rem;
+
+            margin-bottom: 10px;
+
+            background: linear-gradient(to right, #ff6b35, #00d4ff, #00ff88);
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+
+            text-shadow: var(--neon-glow) rgba(255, 107, 53, 0.5);
+
+        }
+
+        
+
+        .subtitle {
+
+            color: #aaa;
+
+            font-size: 1.2rem;
+
+            max-width: 800px;
+
+            margin: 0 auto;
+
+            line-height: 1.6;
+
+        }
+
+        
+
+        .core-loop {
+
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 20px;
+
+            margin: 30px 0;
+
+            text-align: center;
+
+        }
+
+        
+
+        @media (max-width: 768px) {
+
+            .core-loop {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+        
+
+        .loop-node {
+
+            background: var(--card-bg);
+
+            border-radius: 15px;
+
+            padding: 25px;
+
+            border: 3px solid;
+
+            position: relative;
+
+            overflow: hidden;
+
+            transition: all 0.3s;
+
+        }
+
+        
+
+        .loop-node:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow: var(--neon-glow);
+
+        }
+
+        
+
+        .node1 { border-color: var(--process-color); }
+
+        .node2 { border-color: var(--routine-color); }
+
+        .node3 { border-color: var(--output-color); }
+
+        
+
+        .loop-node.active {
+
+            animation: pulse-node 2s infinite;
+
+        }
+
+        
+
+        @keyframes pulse-node {
+
+            0%, 100% { box-shadow: 0 0 15px; }
+
+            50% { box-shadow: 0 0 30px; }
+
+        }
+
+        
+
+        .node-icon {
+
+            font-size: 3rem;
+
+            margin-bottom: 15px;
+
+        }
+
+        
+
+        .node-title {
+
+            font-size: 1.5rem;
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+
+        }
+
+        
+
+        .node-desc {
+
+            color: #ccc;
+
+            line-height: 1.5;
+
+        }
+
+        
+
+        .game-stats {
+
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+
+        }
+
+        
+
+        @media (max-width: 900px) {
+
+            .game-stats {
+
+                grid-template-columns: repeat(2, 1fr);
+
+            }
+
+        }
+
+        
+
+        .stat-card {
+
+            background: var(--card-bg);
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+            text-align: center;
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+        }
+
+        
+
+        .stat-value {
+
+            font-size: 2.5rem;
+
+            font-weight: bold;
+
+            margin: 10px 0;
+
+        }
+
+        
+
+        .stat-label {
+
+            color: #aaa;
+
+            font-size: 0.9rem;
+
+        }
+
+        
+
+        .routine-section {
+
+            background: var(--card-bg);
+
+            border-radius: 15px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            border: 2px solid var(--routine-color);
+
+        }
+
+        
+
+        .routine-title {
+
+            text-align: center;
+
+            font-size: 1.8rem;
+
+            margin-bottom: 20px;
+
+            color: var(--routine-color);
+
+        }
+
+        
+
+        .routine-days {
+
+            display: grid;
+
+            grid-template-columns: repeat(7, 1fr);
+
+            gap: 10px;
+
+            margin-bottom: 20px;
+
+        }
+
+        
+
+        @media (max-width: 768px) {
+
+            .routine-days {
+
+                grid-template-columns: repeat(4, 1fr);
+
+            }
+
+        }
+
+        
+
+        .day-card {
+
+            background: rgba(40, 40, 80, 0.5);
+
+            border-radius: 10px;
+
+            padding: 15px;
+
+            text-align: center;
+
+            transition: all 0.3s;
+
+            cursor: pointer;
+
+            border: 2px solid transparent;
+
+        }
+
+        
+
+        .day-card:hover {
+
+            background: rgba(60, 60, 100, 0.7);
+
+            transform: translateY(-3px);
+
+        }
+
+        
+
+        .day-card.completed {
+
+            background: rgba(0, 212, 255, 0.2);
+
+            border-color: var(--routine-color);
+
+        }
+
+        
+
+        .day-card.active {
+
+            background: rgba(255, 107, 53, 0.3);
+
+            border-color: var(--process-color);
+
+            animation: pulse 2s infinite;
+
+        }
+
+        
+
+        .day-number {
+
+            font-size: 1.5rem;
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+
+        }
+
+        
+
+        .day-activity {
+
+            font-size: 0.9rem;
+
+            color: #ccc;
+
+        }
+
+        
+
+        .actions-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+            gap: 20px;
+
+            margin-bottom: 25px;
+
+        }
+
+        
+
+        .action-card {
+
+            background: var(--card-bg);
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            border: 2px solid;
+
+            transition: all 0.3s;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+        
+
+        .action-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow: var(--neon-glow);
+
+        }
+
+        
+
+        .action-process { border-color: var(--process-color); }
+
+        .action-network { border-color: var(--routine-color); }
+
+        .action-output { border-color: var(--output-color); }
+
+        
+
+        .action-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 15px;
+
+        }
+
+        
+
+        .action-title {
+
+            font-size: 1.3rem;
+
+            font-weight: bold;
+
+        }
+
+        
+
+        .action-type {
+
+            padding: 4px 10px;
+
+            border-radius: 12px;
+
+            font-size: 0.8rem;
+
+            font-weight: bold;
+
+        }
+
+        
+
+        .action-process .action-type { background: rgba(255, 107, 53, 0.2); color: var(--process-color); }
+
+        .action-network .action-type { background: rgba(0, 212, 255, 0.2); color: var(--routine-color); }
+
+        .action-output .action-type { background: rgba(0, 255, 136, 0.2); color: var(--output-color); }
+
+        
+
+        .action-desc {
+
+            color: #ccc;
+
+            margin-bottom: 15px;
+
+            line-height: 1.5;
+
+        }
+
+        
+
+        .action-cost {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 15px;
+
+            padding: 10px;
+
+            background: rgba(0, 0, 0, 0.2);
+
+            border-radius: 8px;
+
+        }
+
+        
+
+        .cost-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+        }
+
+        
+
+        .action-btn {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: all 0.3s;
+
+            font-size: 1rem;
+
+        }
+
+        
+
+        .action-process .action-btn { 
+
+            background: linear-gradient(to right, #cc5500, var(--process-color));
+
+            color: white;
+
+        }
+
+        
+
+        .action-network .action-btn { 
+
+            background: linear-gradient(to right, #006699, var(--routine-color));
+
+            color: white;
+
+        }
+
+        
+
+        .action-output .action-btn { 
+
+            background: linear-gradient(to right, #006633, var(--output-color));
+
+            color: white;
+
+        }
+
+        
+
+        .action-btn:hover {
+
+            filter: brightness(1.2);
+
+            box-shadow: 0 0 15px;
+
+        }
+
+        
+
+        .action-btn:disabled {
+
+            background: #555;
+
+            cursor: not-allowed;
+
+            box-shadow: none;
+
+        }
+
+        
+
+        .stream-section {
+
+            background: var(--card-bg);
+
+            border-radius: 15px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            border: 2px solid var(--output-color);
+
+        }
+
+        
+
+        .stream-title {
+
+            text-align: center;
+
+            font-size: 1.8rem;
+
+            margin-bottom: 20px;
+
+            color: var(--output-color);
+
+        }
+
+        
+
+        .stream-stats {
+
+            display: flex;
+
+            justify-content: space-around;
+
+            flex-wrap: wrap;
+
+            gap: 20px;
+
+            margin-bottom: 20px;
+
+        }
+
+        
+
+        .stream-stat {
+
+            text-align: center;
+
+            padding: 15px;
+
+            background: rgba(0, 255, 136, 0.1);
+
+            border-radius: 10px;
+
+            min-width: 150px;
+
+        }
+
+        
+
+        .stream-value {
+
+            font-size: 2rem;
+
+            font-weight: bold;
+
+            color: var(--output-color);
+
+        }
+
+        
+
+        .stream-label {
+
+            color: #ccc;
+
+            margin-top: 5px;
+
+        }
+
+        
+
+        .compounding-effect {
+
+            text-align: center;
+
+            padding: 20px;
+
+            background: rgba(0, 212, 255, 0.1);
+
+            border-radius: 10px;
+
+            margin: 20px 0;
+
+            border: 2px solid var(--routine-color);
+
+        }
+
+        
+
+        .effect-title {
+
+            font-size: 1.5rem;
+
+            color: var(--routine-color);
+
+            margin-bottom: 10px;
+
+        }
+
+        
+
+        .effect-desc {
+
+            color: #ccc;
+
+            line-height: 1.5;
+
+        }
+
+        
+
+        .log-section {
+
+            background: var(--card-bg);
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            margin-top: 20px;
+
+            max-height: 300px;
+
+            overflow-y: auto;
+
+        }
+
+        
+
+        .log-section h2 {
+
+            margin-bottom: 15px;
+
+            color: var(--routine-color);
+
+            font-size: 1.4rem;
+
+        }
+
+        
+
+        .log-entries {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+
+        }
+
+        
+
+        .log-entry {
+
+            padding: 10px;
+
+            background: rgba(40, 40, 70, 0.5);
+
+            border-radius: 6px;
+
+            border-left: 4px solid #666;
+
+            font-size: 0.9rem;
+
+        }
+
+        
+
+        .log-process { border-left-color: var(--process-color); }
+
+        .log-routine { border-left-color: var(--routine-color); }
+
+        .log-output { border-left-color: var(--output-color); }
+
+        .log-magic { border-left-color: #ffd700; }
+
+        
+
+        .controls {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 20px;
+
+            margin-top: 25px;
+
+        }
+
+        
+
+        .control-btn {
+
+            padding: 15px 30px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            font-size: 1.1rem;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: all 0.3s;
+
+        }
+
+        
+
+        .complete-day {
+
+            background: linear-gradient(to right, var(--process-color), #ff8e53);
+
+            color: white;
+
+        }
+
+        
+
+        .complete-day:hover {
+
+            background: linear-gradient(to right, #ff7b45, #ff9e63);
+
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.7);
+
+        }
+
+        
+
+        .stream-now {
+
+            background: linear-gradient(to right, #006633, var(--output-color));
+
+            color: white;
+
+        }
+
+        
+
+        .stream-now:hover {
+
+            background: linear-gradient(to right, #007744, #11ff99);
+
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+
+        }
+
+        
+
+        .reset {
+
+            background: rgba(80, 80, 100, 0.7);
+
+            color: white;
+
+        }
+
+        
+
+        .reset:hover {
+
+            background: rgba(100, 100, 120, 0.9);
+
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+
+        }
+
+        
+
+        .magic-moment {
+
+            position: fixed;
+
+            top: 50%;
+
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            background: rgba(0, 0, 0, 0.95);
+
+            padding: 30px 50px;
+
+            border-radius: 20px;
+
+            font-size: 2.5rem;
+
+            color: #ffd700;
+
+            z-index: 100;
+
+            animation: magic-glow 2s infinite;
+
+            border: 3px solid #ffd700;
+
+            text-align: center;
+
+            display: none;
+
+        }
+
+        
+
+        @keyframes magic-glow {
+
+            0%, 100% { 
+
+                box-shadow: 0 0 30px #ffd700, 0 0 60px rgba(255, 215, 0, 0.5); 
+
+                transform: translate(-50%, -50%) scale(1);
+
+            }
+
+            50% { 
+
+                box-shadow: 0 0 60px #ffd700, 0 0 120px rgba(255, 215, 0, 0.7); 
+
+                transform: translate(-50%, -50%) scale(1.05);
+
+            }
+
+        }
+
+        
+
+        .becoming-meter {
+
+            width: 100%;
+
+            height: 20px;
+
+            background: rgba(255, 255, 255, 0.1);
+
+            border-radius: 10px;
+
+            margin: 20px 0;
+
+            overflow: hidden;
+
+        }
+
+        
+
+        .becoming-fill {
+
+            height: 100%;
+
+            background: linear-gradient(to right, var(--process-color), var(--routine-color), var(--output-color));
+
+            border-radius: 10px;
+
+            transition: width 1s ease-out;
+
+            width: 0%;
+
+        }
+
+        
+
+        .becoming-label {
+
+            text-align: center;
+
+            font-size: 1.1rem;
+
+            color: #aaa;
+
+            margin-top: 5px;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+
+            <h1>The Becoming Loop</h1>
+
+            <p class="subtitle">Never-ending process of becoming • Stream your growth • Compound networking • Live the loop</p>
+
+        </header>
+
+        
+
+        <div class="core-loop">
+
+            <div class="loop-node node1 active" id="process-node">
+
+                <div class="node-icon">🎨</div>
+
+                <div class="node-title">PROCESS</div>
+
+                <div class="node-desc">The daily becoming: Unity/Blender visuals, beats, guitar practice. The work before the networking.</div>
+
+            </div>
+
+            
+
+            <div class="loop-node node2" id="routine-node">
+
+                <div class="node-icon">🔄</div>
+
+                <div class="node-title">ROUTINE</div>
+
+                <div class="node-desc">7-day cycles: DJ/bartender networking, music school, Uber Airport. Stream the process.</div>
+
+            </div>
+
+            
+
+            <div class="loop-node node3" id="output-node">
+
+                <div class="node-icon">✨</div>
+
+                <div class="node-title">OUTPUT</div>
+
+                <div class="node-desc">Astro Beats streams, set list performances, compound networking. The trophy you're hunting.</div>
+
+            </div>
+
+        </div>
+
+        
+
+        <div class="becoming-meter">
+
+            <div class="becoming-fill" id="becoming-bar"></div>
+
+        </div>
+
+        <div class="becoming-label" id="becoming-text">Becoming Level: 0%</div>
+
+        
+
+        <div class="game-stats">
+
+            <div class="stat-card">
+
+                <div class="stat-value" id="day-count">1</div>
+
+                <div class="stat-label">Day in Loop</div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-value" id="visuals-count">0</div>
+
+                <div class="stat-label">Visuals Created</div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-value" id="beats-count">0</div>
+
+                <div class="stat-label">Beats Made</div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-value" id="network-count">0</div>
+
+                <div class="stat-label">Network Nodes</div>
+
+            </div>
+
+        </div>
+
+        
+
+        <div class="routine-section">
+
+            <div class="routine-title">7-Day Becoming Cycle</div>
+
+            <div class="routine-days" id="routine-days">
+
+                <!-- Days will be populated by JS -->
+
+            </div>
+
+        </div>
+
+        
+
+        <div class="actions-grid">
+
+            <!-- PROCESS Actions -->
+
+            <div class="action-card action-process">
+
+                <div class="action-header">
+
+                    <div class="action-title">Unity Environment UI</div>
+
+                    <div class="action-type">PROCESS</div>
+
+                </div>
+
+                <div class="action-desc">Your warm-up with music. Build virtual spaces with camera animations, interior design, environment art.</div>
+
+                <div class="action-cost">
+
+                    <div class="cost-item">⚡ 25 energy</div>
+
+                    <div class="cost-item">🎬 +2 visuals</div>
+
+                </div>
+
+                <button class="action-btn" id="unity-btn">Work on Unity</button>
+
+            </div>
+
+            
+
+            <div class="action-card action-process">
+
+                <div class="action-header">
+
+                    <div class="action-title">Blender GLSL Shaders</div>
+
+                    <div class="action-type">PROCESS</div>
+
+                </div>
+
+                <div class="action-desc">For Resolume/3JS output. Higher quality, slower pace. Claim Touch Designer, Blender, 3JS all at once.</div>
+
+                <div class="action-cost">
+
+                    <div class="cost-item">⚡ 35 energy</div>
+
+                    <div class="cost-item">✨ +1 premium visual</div>
+
+                </div>
+
+                <button class="action-btn" id="blender-btn">Create Shader</button>
+
+            </div>
+
+            
+
+            <div class="action-card action-process">
+
+                <div class="action-header">
+
+                    <div class="action-title">Astro Beats Creation</div>
+
+                    <div class="action-type">PROCESS</div>
+
+                </div>
+
+                <div class="action-desc">5 beats a day. Teaching astrology through music. Records to RC505 for later use.</div>
+
+                <div class="action-cost">
+
+                    <div class="cost-item">⚡ 20 energy</div>
+
+                    <div class="cost-item">🎵 +2 beats</div>
+
+                </div>
+
+                <button class="action-btn" id="beats-btn">Make Beats</button>
+
+            </div>
+
+            
+
+            <!-- NETWORK/Routine Actions -->
+
+            <div class="action-card action-network">
+
+                <div class="action-header">
+
+                    <div class="action-title">DJ/Bartender Networking</div>
+
+                    <div class="action-type">ROUTINE</div>
+
+                </div>
+
+                <div class="action-desc">At bars with good food. Vibe code on phone, check event flyers, meet camera people.</div>
+
+                <div class="action-cost">
+
+                    <div class="cost-item">🚗 10 vehicle</div>
+
+                    <div class="cost-item">🤝 +1 network node</div>
+
+                </div>
+
+                <button class="action-btn" id="network-btn" disabled>Needs 3+ visuals</button>
+
+            </div>
+
+            
+
+            <div class="action-card action-network">
+
+                <div class="action-header">
+
+                    <div class="action-title">Music School Networking</div>
+
+                    <div class="action-type">ROUTINE</div>
+
+                </div>
+
+                <div class="action-desc">Stream Astro Beats, meet other musicians, find performance opportunities.</div>
+
+                <div class="action-cost">
+
+                    <div class="cost-item">⚡ 30 energy</div>
+
+                    <div class="cost-item">🎸 +1 performance chance</div>
+
+                </div>
+
+                <button class="action-btn" id="music-net-btn" disabled>Needs 5+ beats</button>
+
+            </div>
+
+            
+
+            <!-- OUTPUT Actions -->
+
+            <div class="action-card action-output">
+
+                <div class="action-header">
+
+                    <div class="action-title">Set List Performance</div>
+
+                    <div class="action-type">OUTPUT</div>
+
+                </div>
+
+                <div class="action-desc">Guitar over 3JS/Resolume shaders at college campuses or conventions.</div>
+
+                <div class="action-cost">
+
+                    <div class="cost-item">⚡ 40 energy</div>
+
+                    <div class="cost-item">🔥 +1 stream highlight</div>
+
+                </div>
+
+                <button class="action-btn" id="performance-btn" disabled>Needs beats + visuals</button>
+
+            </div>
+
+            
+
+            <div class="action-card action-output">
+
+                <div class="action-header">
+
+                    <div class="action-title">Uber Airport + DoorDash</div>
+
+                    <div class="action-type">OUTPUT</div>
+
+                </div>
+
+                <div class="action-desc">The income game. Works best with van life. Find convention attendees as passengers.</div>
+
+                <div class="action-cost">
+
+                    <div class="cost-item">🚗 15 vehicle</div>
+
+                    <div class="cost-item">💰 +2 income units</div>
+
+                </div>
+
+                <button class="action-btn" id="uber-btn" disabled>Needs network</button>
+
+            </div>
+
+            
+
+            <div class="action-card action-process">
+
+                <div class="action-header">
+
+                    <div class="action-title">Job Application Game</div>
+
+                    <div class="action-type">PROCESS</div>
+
+                </div>
+
+                <div class="action-desc">The game you beat to unlock Job Security Game. Test many jobs to find what meshes.</div>
+
+                <div class="action-cost">
+
+                    <div class="cost-item">⚡ 15 energy</div>
+
+                    <div class="cost-item">💼 +1 job lead</div>
+
+                </div>
+
+                <button class="action-btn" id="job-btn">Apply to Jobs</button>
+
+            </div>
+
+        </div>
+
+        
+
+        <div class="compounding-effect">
+
+            <div class="effect-title">✨ The Magic of Compound Networking ✨</div>
+
+            <div class="effect-desc">Network only when you have work to share → Build relationships → Grow community while active → Get better parking spots through network → Loop continues</div>
+
+        </div>
+
+        
+
+        <div class="stream-section">
+
+            <div class="stream-title">🎥 Stream Your Becoming</div>
+
+            <div class="stream-stats">
+
+                <div class="stream-stat">
+
+                    <div class="stream-value" id="stream-days">0</div>
+
+                    <div class="stream-label">Days Streamed</div>
+
+                </div>
+
+                <div class="stream-stat">
+
+                    <div class="stream-value" id="viewers-count">0</div>
+
+                    <div class="stream-label">Avg Viewers</div>
+
+                </div>
+
+                <div class="stream-stat">
+
+                    <div class="stream-value" id="clips-count">0</div>
+
+                    <div class="stream-label">Highlights Made</div>
+
+                </div>
+
+            </div>
+
+            <div class="effect-desc">Streaming the process is the point. It makes you feel alive. Every day feels like living.</div>
+
+        </div>
+
+        
+
+        <div class="log-section">
+
+            <h2>Becoming Log</h2>
+
+            <div class="log-entries" id="event-log">
+
+                <div class="log-entry log-process">Welcome to The Becoming Loop. Start with PROCESS: Create visuals and beats.</div>
+
+                <div class="log-entry log-routine">ROUTINE unlocks when you have work to share. Network only then.</div>
+
+                <div class="log-entry log-output">OUTPUT is the trophy: performances, streams, compound networking.</div>
+
+            </div>
+
+        </div>
+
+        
+
+        <div class="controls">
+
+            <button class="control-btn complete-day" id="complete-day-btn">Complete Day</button>
+
+            <button class="control-btn stream-now" id="stream-btn">Stream Now</button>
+
+            <button class="control-btn reset" id="reset-btn">Reset Loop</button>
+
+        </div>
+
+        
+
+        <div class="magic-moment" id="magic-moment">
+
+            ✨ COMPOUND NETWORKING ACTIVATED ✨
+
+        </div>
+
+    </div>
+
+    <script>
+
+        // The Becoming Loop Game State
+
+        const gameState = {
+
+            // Core Loop
+
+            day: 1,
+
+            dayInCycle: 1,
+
+            becomingLevel: 0,
+
+            
+
+            // Process Stats
+
+            visualsCreated: 0,
+
+            beatsCreated: 0,
+
+            jobApplications: 0,
+
+            energy: 100,
+
+            
+
+            // Routine Stats
+
+            networkNodes: 0,
+
+            routineCompletion: 0,
+
+            vehicleHealth: 100,
+
+            
+
+            // Output Stats
+
+            performances: 0,
+
+            streamsCompleted: 0,
+
+            incomeUnits: 0,
+
+            
+
+            // Unlock States
+
+            canNetwork: false,
+
+            canPerform: false,
+
+            canUber: false,
+
+            
+
+            // Stream Stats
+
+            streamDays: 0,
+
+            avgViewers: 0,
+
+            highlights: 0,
+
+            
+
+            // Current Phase
+
+            currentPhase: 'process', // 'process', 'routine', 'output'
+
+            
+
+            // 7-Day Cycle Activities
+
+            cycleActivities: [
+
+                "Unity Visuals + Job Apps",
+
+                "Blender Shaders + Beats",
+
+                "Music School Networking",
+
+                "DJ Bar Networking",
+
+                "Set List Practice",
+
+                "Uber Airport + DoorDash",
+
+                "Stream Day + Rest"
+
+            ],
+
+            completedDays: []
+
+        };
+
+        
+
+        // DOM Elements
+
+        const dayCountEl = document.getElementById('day-count');
+
+        const visualsCountEl = document.getElementById('visuals-count');
+
+        const beatsCountEl = document.getElementById('beats-count');
+
+        const networkCountEl = document.getElementById('network-count');
+
+        const becomingBarEl = document.getElementById('becoming-bar');
+
+        const becomingTextEl = document.getElementById('becoming-text');
+
+        const routineDaysEl = document.getElementById('routine-days');
+
+        const eventLogEl = document.getElementById('event-log');
+
+        
+
+        // Phase Nodes
+
+        const processNode = document.getElementById('process-node');
+
+        const routineNode = document.getElementById('routine-node');
+
+        const outputNode = document.getElementById('output-node');
+
+        
+
+        // Action Buttons
+
+        const unityBtn = document.getElementById('unity-btn');
+
+        const blenderBtn = document.getElementById('blender-btn');
+
+        const beatsBtn = document.getElementById('beats-btn');
+
+        const networkBtn = document.getElementById('network-btn');
+
+        const musicNetBtn = document.getElementById('music-net-btn');
+
+        const performanceBtn = document.getElementById('performance-btn');
+
+        const uberBtn = document.getElementById('uber-btn');
+
+        const jobBtn = document.getElementById('job-btn');
+
+        
+
+        // Stream Stats
+
+        const streamDaysEl = document.getElementById('stream-days');
+
+        const viewersCountEl = document.getElementById('viewers-count');
+
+        const clipsCountEl = document.getElementById('clips-count');
+
+        
+
+        // Control Buttons
+
+        const completeDayBtn = document.getElementById('complete-day-btn');
+
+        const streamBtn = document.getElementById('stream-btn');
+
+        const resetBtn = document.getElementById('reset-btn');
+
+        const magicMomentEl = document.getElementById('magic-moment');
+
+        
+
+        // Initialize Game
+
+        function initGame() {
+
+            renderRoutineDays();
+
+            updateStats();
+
+            updateButtonStates();
+
+            
+
+            // Event Listeners
+
+            unityBtn.addEventListener('click', () => doAction('unity'));
+
+            blenderBtn.addEventListener('click', () => doAction('blender'));
+
+            beatsBtn.addEventListener('click', () => doAction('beats'));
+
+            networkBtn.addEventListener('click', () => doAction('network'));
+
+            musicNetBtn.addEventListener('click', () => doAction('musicNet'));
+
+            performanceBtn.addEventListener('click', () => doAction('performance'));
+
+            uberBtn.addEventListener('click', () => doAction('uber'));
+
+            jobBtn.addEventListener('click', () => doAction('job'));
+
+            
+
+            completeDayBtn.addEventListener('click', completeDay);
+
+            streamBtn.addEventListener('click', streamNow);
+
+            resetBtn.addEventListener('click', resetGame);
+
+            
+
+            addLogEvent("The Becoming Loop begins. Start with PROCESS: create before you connect.", "process");
+
+        }
+
+        
+
+        // Render 7-day routine
+
+        function renderRoutineDays() {
+
+            routineDaysEl.innerHTML = '';
+
+            
+
+            for (let i = 1; i <= 7; i++) {
+
+                const isCompleted = gameState.completedDays.includes(i);
+
+                const isActive = i === gameState.dayInCycle;
+
+                
+
+                const dayEl = document.createElement('div');
+
+                dayEl.className = `day-card ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}`;
+
+                dayEl.innerHTML = `
+
+                    <div class="day-number">Day ${i}</div>
+
+                    <div class="day-activity">${gameState.cycleActivities[i-1]}</div>
+
+                `;
+
+                
+
+                routineDaysEl.appendChild(dayEl);
+
+            }
+
+        }
+
+        
+
+        // Perform action
+
+        function doAction(actionType) {
+
+            switch(actionType) {
+
+                case 'unity':
+
+                    gameState.visualsCreated += 2;
+
+                    gameState.energy -= 25;
+
+                    addLogEvent("Created Unity environment visuals with camera animations. Great warm-up with music!", "process");
+
+                    break;
+
+                    
+
+                case 'blender':
+
+                    gameState.visualsCreated += 1;
+
+                    gameState.energy -= 35;
+
+                    addLogEvent("Made Blender GLSL shader for Resolume/3JS. Claiming Touch Designer, Blender, 3JS expertise!", "process");
+
+                    break;
+
+                    
+
+                case 'beats':
+
+                    gameState.beatsCreated += 2;
+
+                    gameState.energy -= 20;
+
+                    addLogEvent("Produced Astro Beats - teaching astrology through music. Recorded to RC505.", "process");
+
+                    break;
+
+                    
+
+                case 'network':
+
+                    if (!gameState.canNetwork) {
+
+                        addLogEvent("Can't network yet! Need 3+ visuals and 5+ beats first.", "routine");
+
+                        return;
+
+                    }
+
+                    gameState.networkNodes += 1;
+
+                    gameState.vehicleHealth -= 10;
+
+                    addLogEvent("Networked at DJ bar with good food. Checked event flyers, met potential camera people.", "routine");
+
+                    break;
+
+                    
+
+                case 'musicNet':
+
+                    if (!gameState.canNetwork) {
+
+                        addLogEvent("Need 5+ beats to network at music school!", "routine");
+
+                        return;
+
+                    }
+
+                    gameState.networkNodes += 1;
+
+                    gameState.energy -= 30;
+
+                    addLogEvent("Music school networking - streamed Astro Beats, met musicians.", "routine");
+
+                    break;
+
+                    
+
+                case 'performance':
+
+                    if (!gameState.canPerform) {
+
+                        addLogEvent("Need beats AND visuals for set list performance!", "output");
+
+                        return;
+
+                    }
+
+                    gameState.performances += 1;
+
+                    gameState.energy -= 40;
+
+                    gameState.highlights += 1;
+
+                    addLogEvent("Set list performance! Guitar over 3JS/Resolume shaders. Streamed live.", "output");
+
+                    break;
+
+                    
+
+                case 'uber':
+
+                    if (!gameState.canUber) {
+
+                        addLogEvent("Need network connections for Uber Airport!", "output");
+
+                        return;
+
+                    }
+
+                    gameState.incomeUnits += 2;
+
+                    gameState.vehicleHealth -= 15;
+
+                    addLogEvent("Uber Airport + DoorDash shifts. High income, van life compatible.", "output");
+
+                    
+
+                    // 20% chance of networking during Uber
+
+                    if (Math.random() > 0.8) {
+
+                        gameState.networkNodes += 1;
+
+                        addLogEvent("🚖 Passenger was a convention organizer! Networked on the go.", "routine");
+
+                    }
+
+                    break;
+
+                    
+
+                case 'job':
+
+                    gameState.jobApplications += 1;
+
+                    gameState.energy -= 15;
+
+                    addLogEvent("Applied to jobs. Testing different work to find what meshes.", "process");
+
+                    
+
+                    // 10% chance of interview
+
+                    if (Math.random() > 0.9) {
+
+                        addLogEvent("📞 Got a callback! Job Application Game progressing.", "process");
+
+                    }
+
+                    break;
+
+            }
+
+            
+
+            // Update unlocks
+
+            checkUnlocks();
+
+            
+
+            // Update UI
+
+            updateStats();
+
+            updateButtonStates();
+
+            
+
+            // Check for phase transitions
+
+            checkPhase();
+
+        }
+
+        
+
+        // Check what actions are unlocked
+
+        function checkUnlocks() {
+
+            gameState.canNetwork = gameState.visualsCreated >= 3 && gameState.beatsCreated >= 5;
+
+            gameState.canPerform = gameState.visualsCreated >= 5 && gameState.beatsCreated >= 10;
+
+            gameState.canUber = gameState.networkNodes >= 3;
+
+        }
+
+        
+
+        // Check and update current phase
+
+        function checkPhase() {
+
+            let newPhase = 'process';
+
+            
+
+            if (gameState.canNetwork && gameState.networkNodes >= 1) {
+
+                newPhase = 'routine';
+
+            }
+
+            
+
+            if (gameState.canPerform && gameState.performances >= 1) {
+
+                newPhase = 'output';
+
+            }
+
+            
+
+            if (gameState.currentPhase !== newPhase) {
+
+                gameState.currentPhase = newPhase;
+
+                updatePhaseVisuals();
+
+                
+
+                if (newPhase === 'routine') {
+
+                    addLogEvent("🎉 PHASE UNLOCKED: ROUTINE! Now you can network - you have work to share.", "routine");
+
+                } else if (newPhase === 'output') {
+
+                    addLogEvent("🚀 PHASE UNLOCKED: OUTPUT! The trophy hunt begins. Compound networking time.", "output");
+
+                }
+
+            }
+
+        }
+
+        
+
+        // Update phase visuals
+
+        function updatePhaseVisuals() {
+
+            processNode.classList.remove('active');
+
+            routineNode.classList.remove('active');
+
+            outputNode.classList.remove('active');
+
+            
+
+            if (gameState.currentPhase === 'process') {
+
+                processNode.classList.add('active');
+
+            } else if (gameState.currentPhase === 'routine') {
+
+                routineNode.classList.add('active');
+
+            } else if (gameState.currentPhase === 'output') {
+
+                outputNode.classList.add('active');
+
+            }
+
+        }
+
+        
+
+        // Update all stats
+
+        function updateStats() {
+
+            dayCountEl.textContent = gameState.day;
+
+            visualsCountEl.textContent = gameState.visualsCreated;
+
+            beatsCountEl.textContent = gameState.beatsCreated;
+
+            networkCountEl.textContent = gameState.networkNodes;
+
+            
+
+            // Update stream stats
+
+            streamDaysEl.textContent = gameState.streamDays;
+
+            viewersCountEl.textContent = gameState.avgViewers;
+
+            clipsCountEl.textContent = gameState.highlights;
+
+            
+
+            // Calculate becoming level
+
+            const processScore = Math.min(100, (gameState.visualsCreated + gameState.beatsCreated) * 5);
+
+            const routineScore = Math.min(100, gameState.networkNodes * 20);
+
+            const outputScore = Math.min(100, (gameState.performances + gameState.incomeUnits) * 15);
+
+            
+
+            gameState.becomingLevel = Math.floor((processScore * 0.4 + routineScore * 0.3 + outputScore * 0.3) / 3);
+
+            
+
+            becomingBarEl.style.width = `${gameState.becomingLevel}%`;
+
+            becomingTextEl.textContent = `Becoming Level: ${gameState.becomingLevel}%`;
+
+            
+
+            // Update vehicle display if needed
+
+            if (gameState.vehicleHealth < 30) {
+
+                addLogEvent("⚠️ Vehicle health low! Maintenance needed for Uber Airport.", "routine");
+
+            }
+
+        }
+
+        
+
+        // Update button states
+
+        function updateButtonStates() {
+
+            networkBtn.disabled = !gameState.canNetwork;
+
+            musicNetBtn.disabled = !gameState.canNetwork;
+
+            performanceBtn.disabled = !gameState.canPerform;
+
+            uberBtn.disabled = !gameState.canUber;
+
+            
+
+            // Update button text
+
+            networkBtn.textContent = gameState.canNetwork ? "DJ Bar Networking" : "Needs 3+ visuals";
+
+            musicNetBtn.textContent = gameState.canNetwork ? "Music School Networking" : "Needs 5+ beats";
+
+            performanceBtn.textContent = gameState.canPerform ? "Set List Performance" : "Needs beats + visuals";
+
+            uberBtn.textContent = gameState.canUber ? "Uber Airport + DoorDash" : "Needs network";
+
+        }
+
+        
+
+        // Complete a day
+
+        function completeDay() {
+
+            // Complete current day in cycle
+
+            if (!gameState.completedDays.includes(gameState.dayInCycle)) {
+
+                gameState.completedDays.push(gameState.dayInCycle);
+
+            }
+
+            
+
+            // Move to next day
+
+            gameState.day++;
+
+            gameState.dayInCycle++;
+
+            
+
+            // Reset at day 8
+
+            if (gameState.dayInCycle > 7) {
+
+                gameState.dayInCycle = 1;
+
+                gameState.completedDays = [];
+
+                addLogEvent("🎯 7-day cycle complete! The loop continues...", "routine");
+
+            }
+
+            
+
+            // Restore some energy
+
+            gameState.energy = Math.min(100, gameState.energy + 30);
+
+            
+
+            // Vehicle degrades
+
+            gameState.vehicleHealth = Math.max(0, gameState.vehicleHealth - 5);
+
+            
+
+            // Update UI
+
+            renderRoutineDays();
+
+            updateStats();
+
+            
+
+            addLogEvent(`Day ${gameState.day-1} complete. Starting Day ${gameState.day}: ${gameState.cycleActivities[gameState.dayInCycle-1]}`, "process");
+
+            
+
+            // Check for compound networking magic
+
+            if (gameState.networkNodes >= 5 && gameState.performances >= 2) {
+
+                showMagicMoment();
+
+            }
+
+        }
+
+        
+
+        // Stream now
+
+        function streamNow() {
+
+            gameState.streamDays++;
+
+            
+
+            // Viewer growth based on content
+
+            const baseViewers = 1 + Math.floor(gameState.performances * 0.5);
+
+            const randomBonus = Math.floor(Math.random() * 5);
+
+            gameState.avgViewers = Math.max(1, Math.floor((gameState.avgViewers + baseViewers + randomBonus) / 2));
+
+            
+
+            // Highlights based on visuals
+
+            if (gameState.visualsCreated > 0 && Math.random() > 0.7) {
+
+                gameState.highlights++;
+
+            }
+
+            
+
+            addLogEvent(`Streamed the becoming process! ${gameState.avgViewers} viewers. Making every day feel alive.`, "output");
+
+            updateStats();
+
+        }
+
+        
+
+        // Show magic moment
+
+        function showMagicMoment() {
+
+            magicMomentEl.style.display = 'block';
+
+            setTimeout(() => {
+
+                magicMomentEl.style.display = 'none';
+
+            }, 3000);
+
+            
+
+            addLogEvent("✨ COMPOUND NETWORKING MAGIC! Your network is growing itself.", "magic");
+
+        }
+
+        
+
+        // Reset game
+
+        function resetGame() {
+
+            if (confirm("Reset the becoming loop?")) {
+
+                gameState.day = 1;
+
+                gameState.dayInCycle = 1;
+
+                gameState.becomingLevel = 0;
+
+                gameState.visualsCreated = 0;
+
+                gameState.beatsCreated = 0;
+
+                gameState.jobApplications = 0;
+
+                gameState.energy = 100;
+
+                gameState.networkNodes = 0;
+
+                gameState.routineCompletion = 0;
+
+                gameState.vehicleHealth = 100;
+
+                gameState.performances = 0;
+
+                gameState.streamsCompleted = 0;
+
+                gameState.incomeUnits = 0;
+
+                gameState.canNetwork = false;
+
+                gameState.canPerform = false;
+
+                gameState.canUber = false;
+
+                gameState.streamDays = 0;
+
+                gameState.avgViewers = 0;
+
+                gameState.highlights = 0;
+
+                gameState.currentPhase = 'process';
+
+                gameState.completedDays = [];
+
+                
+
+                eventLogEl.innerHTML = `
+
+                    <div class="log-entry log-process">Welcome to The Becoming Loop. Start with PROCESS: Create visuals and beats.</div>
+
+                    <div class="log-entry log-routine">ROUTINE unlocks when you have work to share. Network only then.</div>
+
+                    <div class="log-entry log-output">OUTPUT is the trophy: performances, streams, compound networking.</div>
+
+                `;
+
+                
+
+                renderRoutineDays();
+
+                updateStats();
+
+                updateButtonStates();
+
+                updatePhaseVisuals();
+
+                
+
+                addLogEvent("Loop reset. Begin the becoming anew.", "process");
+
+            }
+
+        }
+
+        
+
+        // Add log entry
+
+        function addLogEvent(message, type = "process") {
+
+            const logEntry = document.createElement('div');
+
+            logEntry.className = `log-entry log-${type}`;
+
+            logEntry.textContent = `[Day ${gameState.day}] ${message}`;
+
+            
+
+            eventLogEl.appendChild(logEntry);
+
+            eventLogEl.scrollTop = eventLogEl.scrollHeight;
+
+        }
+
+        
+
+        // Initialize
+
+        window.addEventListener('DOMContentLoaded', initGame);
+
+    </script>
+
+</body>
+
+</html>
