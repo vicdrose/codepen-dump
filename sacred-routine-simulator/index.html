@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sacred Routine Simulator</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    background: linear-gradient(135deg, #0f0f0f, #1e1e2f);
+    color: white;
+    overflow: hidden;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  #scene {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    transition: opacity 0.4s ease;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .activity {
+    margin: 8px 0;
+    padding: 10px;
+    background: rgba(255,255,255,0.05);
+    border-left: 4px solid #00ffcc;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .activity:hover {
+    background: rgba(255,255,255,0.12);
+  }
+
+  .subtasks {
+    margin-top: 6px;
+    margin-left: 20px;
+    font-size: 14px;
+    opacity: 0.85;
+  }
+
+  #nav {
+    height: 80px;
+    background: #111;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+  }
+
+  button {
+    padding: 12px 20px;
+    background: #00ffcc;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  #driveOverlay {
+    position: absolute;
+    inset: 0;
+    background: black;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    animation: drive 2s linear;
+  }
+
+  @keyframes drive {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  #cycleMessage {
+    position: absolute;
+    bottom: 110px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.6;
+  }
+
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="scene"></div>
+  <div id="cycleMessage"></div>
+
+  <div id="nav">
+    <button onclick="prevScene()">Previous Scene</button>
+    <button onclick="nextScene()">Next Scene</button>
+  </div>
+</div>
+
+<div id="driveOverlay">🚗 Driving...</div>
+
+<script>
+
+const scenes = [
+
+{
+  title: "1. Uber Airport (Income Anchor)",
+  activities: [
+    { name: "Airport pickups", subtasks: ["Morning momentum", "Light networking"] },
+    { name: "Mental planning", subtasks: ["Visualize day", "Strategize campus base"] }
+  ]
+},
+
+{
+  title: "2. College Stream Base",
+  activities: [
+    { name: "Rocket League buffer" },
+    { name: "Open Game Buffer (Community game)" },
+    { name: "Astro Beats / Set List (Music School Zone)" },
+    { name: "Set Prep (Guitar transitions)" },
+    { name: "Virtual Study Hall (Edit + Post)" },
+    { name: "Microwave Food Optimization" }
+  ]
+},
+
+{
+  title: "3. Frisbee / Swim / Burpeethon",
+  activities: [
+    { name: "Frisbee energy reset" },
+    { name: "Swim recovery" },
+    { name: "Burpeethon intensity burst" }
+  ]
+},
+
+{
+  title: "4. Bike Networking (Rush Hour)",
+  activities: [
+    { name: "Street ride + visibility" },
+    { name: "Collect DJ / event intel" },
+    { name: "Freestyle King Mode" }
+  ]
+},
+
+{
+  title: "5. DoorDash → WeWork",
+  activities: [
+    { name: "DoorDash income ($30–60 target)" },
+    { name: "Night code session (Rhythm game + Hangout)" }
+  ]
+},
+
+{
+  title: "6. Night Gym Reset",
+  activities: [
+    { name: "Late cardio" },
+    { name: "Shower reset" },
+    { name: "Prepare for next Uber Airport" }
+  ]
+}
+
+];
+
+let currentScene = 0;
+
+function renderScene() {
+  const scene = scenes[currentScene];
+  const container = document.getElementById("scene");
+  const cycleMsg = document.getElementById("cycleMessage");
+
+  container.innerHTML = "";
+  cycleMsg.innerHTML = "";
+
+  const title = document.createElement("h1");
+  title.textContent = scene.title;
+  container.appendChild(title);
+
+  scene.activities.forEach(activity => {
+    const div = document.createElement("div");
+    div.className = "activity";
+    div.textContent = activity.name;
+
+    if(activity.subtasks){
+      const sub = document.createElement("div");
+      sub.className = "subtasks";
+      sub.innerHTML = activity.subtasks.map(t => "• " + t).join("<br>");
+      div.appendChild(sub);
+    }
+
+    container.appendChild(div);
+  });
+}
+
+function nextScene(){
+  driveTransition(() => {
+
+    if(currentScene === scenes.length - 1){
+      currentScene = 0;
+      showCycleMessage("🌅 New Day Begins → Back to 1");
+    } else {
+      currentScene++;
+    }
+
+    renderScene();
+  });
+}
+
+function prevScene(){
+  driveTransition(() => {
+
+    if(currentScene === 0){
+      currentScene = scenes.length - 1;
+      showCycleMessage("🌙 Cycling Back → End of Day");
+    } else {
+      currentScene--;
+    }
+
+    renderScene();
+  });
+}
+
+function driveTransition(callback){
+  const overlay = document.getElementById("driveOverlay");
+  overlay.style.display = "flex";
+  setTimeout(() => {
+    overlay.style.display = "none";
+    callback();
+  }, 2000);
+}
+
+function showCycleMessage(text){
+  const msg = document.getElementById("cycleMessage");
+  msg.innerText = text;
+}
+
+renderScene();
+
+</script>
+
+</body>
+</html>
