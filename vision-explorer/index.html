@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Explorer - The Satellite Life</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            color: white;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .intro {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid #00ff88;
+            max-width: 600px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px #00ff88; }
+            50% { box-shadow: 0 0 40px #00ff88, 0 0 60px #00ff88; }
+        }
+
+        .intro h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+        }
+
+        .intro p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            color: #000;
+            transition: transform 0.3s, box-shadow 0.3s;
+            pointer-events: all;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px #00ff88;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .hud {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #00ff88;
+            z-index: 20;
+            max-width: 350px;
+        }
+
+        .hud h3 {
+            color: #00ff88;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .hud p {
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .node-info {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px 30px;
+            border-radius: 15px;
+            border: 2px solid #ff00ff;
+            z-index: 20;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .node-info h4 {
+            color: #ff00ff;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .node-info p {
+            font-size: 1em;
+            line-height: 1.4;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #00ff88;
+            z-index: 20;
+            font-size: 0.9em;
+        }
+
+        .controls p {
+            margin: 5px 0;
+        }
+
+        .pulse {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .connection-line {
+            stroke: rgba(0, 255, 136, 0.3);
+            stroke-width: 2;
+        }
+
+        @media (max-width: 768px) {
+            .intro h1 { font-size: 1.8em; }
+            .intro p { font-size: 1em; }
+            .hud, .node-info { font-size: 0.85em; max-width: 280px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div class="overlay">
+        <div class="intro" id="intro">
+            <h1>🌟 THE SATELLITE LIFE 🌟</h1>
+            <p>An immersive journey through a vision of freedom, creativity, and perpetual motion.</p>
+            <p>Click nodes to explore the interconnected lifestyle map.</p>
+            <button class="start-btn" onclick="startJourney()">BEGIN THE VISION</button>
+        </div>
+
+        <div class="hud hidden" id="hud">
+            <h3>🎯 Vision Core</h3>
+            <p>"Any income makes you rich with this setup"</p>
+            <p class="pulse">Click the glowing nodes to explore...</p>
+        </div>
+
+        <div class="controls hidden" id="controls">
+            <p>🖱️ Click: Explore node</p>
+            <p>🌊 Drag: Pan view</p>
+            <p>⚡ Nodes explored: <span id="explored">0</span>/12</p>
+        </div>
+
+        <div class="node-info hidden" id="nodeInfo">
+            <h4 id="nodeTitle"></h4>
+            <p id="nodeDesc"></p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // Vision nodes - the key elements of the lifestyle
+        const nodes = [
+            {
+                x: 0, y: 0,
+                label: "🌏 Satellite Living",
+                desc: "Winter in Asia, parking spot in Arizona, Honda Element in Milwaukee. Never settling, always orbiting.",
+                color: "#ff6b6b",
+                connections: [1, 2, 3],
+                explored: false
+            },
+            {
+                x: -300, y: -200,
+                label: "🎸 Music Production",
+                desc: "404 Mark II, travel guitar, streaming performances. Build your setlist daily. Perform on stream, not just live shows.",
+                color: "#4ecdc4",
+                connections: [0, 4, 5],
+                explored: false
+            },
+            {
+                x: 300, y: -200,
+                label: "💻 Freestyle King",
+                desc: "Web MIDI, ToneJS, Unity rhythm games. Host singles on GitHub. Your coding career endpoint.",
+                color: "#95e1d3",
+                connections: [0, 6, 7],
+                explored: false
+            },
+            {
+                x: 0, y: 250,
+                label: "🚗 Uber & DoorDash",
+                desc: "Airport runs in the morning, Door Dash after. The income engine that makes any lifestyle rich.",
+                color: "#f38181",
+                connections: [0, 8],
+                explored: false
+            },
+            {
+                x: -450, y: 50,
+                label: "🎨 3JS Shaders",
+                desc: "Visual art with Resolum. Peak professionalism for tech conferences. Jazz guitarist meets visual artist.",
+                color: "#aa96da",
+                connections: [1, 9],
+                explored: false
+            },
+            {
+                x: -200, y: 150,
+                label: "🚴 Street Performance",
+                desc: "Electric bike around Milwaukee nightlife playing music. Cold approach, public guitar, embrace humiliation.",
+                color: "#fcbad3",
+                connections: [1, 10],
+                explored: false
+            },
+            {
+                x: 450, y: 50,
+                label: "🎮 Unity Games",
+                desc: "Rhythm games, Parsec multiplayer, unlimited characters. Dance Central meets your own music.",
+                color: "#ffffd2",
+                connections: [2, 11],
+                explored: false
+            },
+            {
+                x: 200, y: 150,
+                label: "🔮 Divination Tool",
+                desc: "Paired with Freestyle King and virtual space. The spiritual layer of your digital ecosystem.",
+                color: "#a8d8ea",
+                connections: [2],
+                explored: false
+            },
+            {
+                x: 150, y: 400,
+                label: "💰 Lightweight Wealth",
+                desc: "Job security = God. Any income works. Jump job to job. The freedom of minimalism.",
+                color: "#ffaaa5",
+                connections: [3],
+                explored: false
+            },
+            {
+                x: -500, y: -350,
+                label: "🎭 Live Performances",
+                desc: "Throw dance parties with custom rhythm games. Hire choreographers. Projector + tiny house vision.",
+                color: "#ff8b94",
+                connections: [4, 1],
+                explored: false
+            },
+            {
+                x: -350, y: 350,
+                label: "🎯 Practice Humility",
+                desc: "Play goalie in Roblox, cold approach, public freestyle. Ground yourself in reality through humiliation.",
+                color: "#ffd3b6",
+                connections: [5],
+                explored: false
+            },
+            {
+                x: 500, y: -350,
+                label: "🌐 Discord Community",
+                desc: "Work on stream. Build community. Share the journey. Make the process public.",
+                color: "#dcedc1",
+                connections: [6, 2],
+                explored: false
+            }
+        ];
+
+        let camera = { x: 0, y: 0 };
+        let targetCamera = { x: 0, y: 0 };
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+        let particles = [];
+        let exploredCount = 0;
+
+        // Create background particles
+        for (let i = 0; i < 100; i++) {
+            particles.push({
+                x: Math.random() * width - width / 2,
+                y: Math.random() * height - height / 2,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                size: Math.random() * 3 + 1,
+                opacity: Math.random() * 0.5 + 0.3
+            });
+        }
+
+        function startJourney() {
+            document.getElementById('intro').classList.add('hidden');
+            document.getElementById('hud').classList.remove('hidden');
+            document.getElementById('controls').classList.remove('hidden');
+        }
+
+        function worldToScreen(wx, wy) {
+            return {
+                x: wx - camera.x + width / 2,
+                y: wy - camera.y + height / 2
+            };
+        }
+
+        function screenToWorld(sx, sy) {
+            return {
+                x: sx + camera.x - width / 2,
+                y: sy + camera.y - height / 2
+            };
+        }
+
+        function drawConnections() {
+            ctx.strokeStyle = 'rgba(0, 255, 136, 0.2)';
+            ctx.lineWidth = 2;
+            
+            nodes.forEach(node => {
+                node.connections.forEach(connIdx => {
+                    const conn = nodes[connIdx];
+                    const start = worldToScreen(node.x, node.y);
+                    const end = worldToScreen(conn.x, conn.y);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(start.x, start.y);
+                    ctx.lineTo(end.x, end.y);
+                    ctx.stroke();
+                });
+            });
+        }
+
+        function drawNodes() {
+            const time = Date.now() / 1000;
+            
+            nodes.forEach((node, idx) => {
+                const pos = worldToScreen(node.x, node.y);
+                
+                // Skip if off screen
+                if (pos.x < -100 || pos.x > width + 100 || pos.y < -100 || pos.y > height + 100) return;
+                
+                const pulse = Math.sin(time * 2 + idx) * 0.2 + 0.8;
+                const radius = node.explored ? 40 : 35;
+                
+                // Glow effect
+                const gradient = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, radius * 1.5);
+                gradient.addColorStop(0, node.color + 'aa');
+                gradient.addColorStop(0.5, node.color + '44');
+                gradient.addColorStop(1, node.color + '00');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, radius * 1.5 * pulse, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Main circle
+                ctx.fillStyle = node.explored ? node.color : node.color + 'cc';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Border
+                ctx.strokeStyle = node.explored ? '#fff' : 'rgba(255, 255, 255, 0.5)';
+                ctx.lineWidth = node.explored ? 3 : 2;
+                ctx.stroke();
+                
+                // Label
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 14px Courier New';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                const emoji = node.label.split(' ')[0];
+                ctx.font = '24px Arial';
+                ctx.fillText(emoji, pos.x, pos.y);
+            });
+        }
+
+        function drawParticles() {
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                if (p.x < -width / 2) p.x = width / 2;
+                if (p.x > width / 2) p.x = -width / 2;
+                if (p.y < -height / 2) p.y = height / 2;
+                if (p.y > height / 2) p.y = -height / 2;
+                
+                const pos = worldToScreen(p.x, p.y);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function animate() {
+            // Smooth camera movement
+            camera.x += (targetCamera.x - camera.x) * 0.1;
+            camera.y += (targetCamera.y - camera.y) * 0.1;
+            
+            // Clear canvas
+            ctx.fillStyle = 'rgba(102, 126, 234, 0.1)';
+            ctx.fillRect(0, 0, width, height);
+            
+            drawParticles();
+            drawConnections();
+            drawNodes();
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Mouse interaction
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            dragStart = { x: e.clientX, y: e.clientY };
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                targetCamera.x -= (e.clientX - dragStart.x);
+                targetCamera.y -= (e.clientY - dragStart.y);
+                dragStart = { x: e.clientX, y: e.clientY };
+            }
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            
+            const dragDistance = Math.sqrt(
+                Math.pow(e.clientX - dragStart.x, 2) + 
+                Math.pow(e.clientY - dragStart.y, 2)
+            );
+            
+            if (dragDistance < 5) {
+                // It was a click, not a drag
+                const worldPos = screenToWorld(e.clientX, e.clientY);
+                
+                nodes.forEach((node, idx) => {
+                    const dx = worldPos.x - node.x;
+                    const dy = worldPos.y - node.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 40) {
+                        if (!node.explored) {
+                            exploredCount++;
+                            document.getElementById('explored').textContent = exploredCount;
+                        }
+                        node.explored = true;
+                        
+                        // Show node info
+                        document.getElementById('nodeTitle').textContent = node.label;
+                        document.getElementById('nodeDesc').textContent = node.desc;
+                        document.getElementById('nodeInfo').classList.remove('hidden');
+                        
+                        // Move camera to node
+                        targetCamera.x = node.x;
+                        targetCamera.y = node.y;
+                        
+                        setTimeout(() => {
+                            document.getElementById('nodeInfo').classList.add('hidden');
+                        }, 5000);
+                    }
+                });
+            }
+            
+            isDragging = false;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+
+        // Touch support
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            isDragging = true;
+            dragStart = { x: touch.clientX, y: touch.clientY };
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!isDragging) return;
+            const touch = e.touches[0];
+            targetCamera.x -= (touch.clientX - dragStart.x);
+            targetCamera.y -= (touch.clientY - dragStart.y);
+            dragStart = { x: touch.clientX, y: touch.clientY };
+        });
+
+        canvas.addEventListener('touchend', (e) => {
+            isDragging = false;
+        });
+
+        animate();
+    </script>
+</body>
+</html>
