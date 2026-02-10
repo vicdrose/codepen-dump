@@ -1,0 +1,385 @@
+<!DOCTYPE html><html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Freestyle King — Beat Harvesting Loop</title>  <!-- Fonts -->  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">  <style>
+
+    :root {
+
+      --bg: #05070d;
+
+      --panel: rgba(255,255,255,0.05);
+
+      --accent: #7cffd7;
+
+      --accent2: #7aa2ff;
+
+      --text: #e6e9f0;
+
+      --muted: #8b90a3;
+
+      --glow: 0 0 20px rgba(124,255,215,0.35);
+
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+
+      margin: 0;
+
+      font-family: 'Inter', system-ui, sans-serif;
+
+      background: radial-gradient(circle at 20% 20%, #0b1020, var(--bg));
+
+      color: var(--text);
+
+      overflow-x: hidden;
+
+    }
+
+    header {
+
+      padding: 4rem 2rem 2rem;
+
+      text-align: center;
+
+    }
+
+    header h1 {
+
+      font-family: 'Orbitron', sans-serif;
+
+      font-size: clamp(2rem, 5vw, 3.5rem);
+
+      letter-spacing: 0.08em;
+
+      margin-bottom: 1rem;
+
+      color: var(--accent);
+
+      text-shadow: var(--glow);
+
+    }
+
+    header p {
+
+      max-width: 720px;
+
+      margin: 0 auto;
+
+      color: var(--muted);
+
+      font-size: 1.05rem;
+
+    }
+
+    .grid {
+
+      display: grid;
+
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+      gap: 1.5rem;
+
+      padding: 3rem 2rem 5rem;
+
+      max-width: 1200px;
+
+      margin: 0 auto;
+
+    }
+
+    .card {
+
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+
+      border-radius: 18px;
+
+      padding: 1.75rem;
+
+      position: relative;
+
+      overflow: hidden;
+
+      box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+    }
+
+    .card::before {
+
+      content: '';
+
+      position: absolute;
+
+      inset: 0;
+
+      background: linear-gradient(120deg, transparent, rgba(124,255,215,0.15), transparent);
+
+      opacity: 0;
+
+      transition: opacity 0.4s ease;
+
+    }
+
+    .card:hover {
+
+      transform: translateY(-8px);
+
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card h2 {
+
+      font-family: 'Orbitron', sans-serif;
+
+      font-size: 1.1rem;
+
+      letter-spacing: 0.12em;
+
+      color: var(--accent2);
+
+      margin-bottom: 0.75rem;
+
+    }
+
+    .card p {
+
+      font-size: 0.95rem;
+
+      line-height: 1.6;
+
+      color: var(--text);
+
+    }
+
+    .tag {
+
+      display: inline-block;
+
+      margin-top: 1rem;
+
+      padding: 0.35rem 0.7rem;
+
+      border-radius: 999px;
+
+      font-size: 0.7rem;
+
+      letter-spacing: 0.1em;
+
+      text-transform: uppercase;
+
+      background: rgba(124,255,215,0.15);
+
+      color: var(--accent);
+
+    }
+
+    footer {
+
+      text-align: center;
+
+      padding: 3rem 1.5rem 4rem;
+
+      color: var(--muted);
+
+      font-size: 0.85rem;
+
+    }
+
+    /* Ambient particles */
+
+    canvas {
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: -1;
+
+    }
+
+  </style></head>
+
+<body><canvas id="particles"></canvas>
+
+<header>
+
+  <h1>FREESTYLE KING</h1>
+
+  <p>
+
+    A high-tech beat harvesting loop where movement becomes music, music becomes signal,
+
+    and signal becomes freedom.
+
+  </p>
+
+</header><section class="grid">
+
+  <div class="card">
+
+    <h2>PHASE I — BEAT HARVESTING</h2>
+
+    <p>
+
+      Cardio becomes a sensor array. Treadmill, swim, basketball, bike.
+
+      New music flows in while the body moves. Rhythm is captured before thought.
+
+    </p>
+
+    <span class="tag">Body Online</span>
+
+  </div>  <div class="card">
+
+    <h2>PHASE II — SIGNAL REFINEMENT</h2>
+
+    <p>
+
+      Coffee shops act as transmission towers. Four‑star beats power visuals,
+
+      transparency tech, and live artifacts shared with the world.
+
+    </p>
+
+    <span class="tag">Mind Online</span>
+
+  </div>  <div class="card">
+
+    <h2>PHASE III — BEAT FORGING</h2>
+
+    <p>
+
+      Storage units, vans, rooms — sealed creation pods. Five beats per day.
+
+      Raw rhythm becomes permanent matter.
+
+    </p>
+
+    <span class="tag">Hands Online</span>
+
+  </div>  <div class="card">
+
+    <h2>THE TELEPROMPTER</h2>
+
+    <p>
+
+      Freestyle King guides expression without control. Random words,
+
+      phonetics, flow engines. Performance without pressure.
+
+    </p>
+
+    <span class="tag">Creative OS</span>
+
+  </div>  <div class="card">
+
+    <h2>THE LOOP</h2>
+
+    <p>
+
+      Shower. Reset. Return to movement. Gym hours, coffee hours,
+
+      storage hours — a cyber‑monastic rhythm that sustains itself.
+
+    </p>
+
+    <span class="tag">Self‑Healing System</span>
+
+  </div>  <div class="card">
+
+    <h2>THE OUTCOME</h2>
+
+    <p>
+
+      Health feeds drums. Drums feed tech. Tech feeds opportunity.
+
+      Opportunity feeds freedom — anywhere on Earth.
+
+    </p>
+
+    <span class="tag">Future‑Proof</span>
+
+  </div>
+
+</section><footer>
+
+  Beat harvesting is not a workflow. It is a way of moving through reality.
+
+</footer><script>
+
+  const canvas = document.getElementById('particles');
+
+  const ctx = canvas.getContext('2d');
+
+  let w, h;
+
+  function resize() {
+
+    w = canvas.width = window.innerWidth;
+
+    h = canvas.height = window.innerHeight;
+
+  }
+
+  window.addEventListener('resize', resize);
+
+  resize();
+
+  const particles = Array.from({ length: 80 }, () => ({
+
+    x: Math.random() * w,
+
+    y: Math.random() * h,
+
+    r: Math.random() * 1.8 + 0.5,
+
+    dx: (Math.random() - 0.5) * 0.3,
+
+    dy: (Math.random() - 0.5) * 0.3,
+
+  }));
+
+  function animate() {
+
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.fillStyle = 'rgba(124,255,215,0.6)';
+
+    for (const p of particles) {
+
+      p.x += p.dx;
+
+      p.y += p.dy;
+
+      if (p.x < 0 || p.x > w) p.dx *= -1;
+
+      if (p.y < 0 || p.y > h) p.dy *= -1;
+
+      ctx.beginPath();
+
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+      ctx.fill();
+
+    }
+
+    requestAnimationFrame(animate);
+
+  }
+
+  animate();
+
+</script></body>
+
+</html>
