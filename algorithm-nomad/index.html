@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Algorithm Nomad</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0d1117;
+            color: #00ff99;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #story-container {
+            max-width: 600px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 255, 153, 0.5);
+        }
+
+        #story-text {
+            font-size: 16px;
+            min-height: 120px;
+        }
+
+        button {
+            background: #00ff99;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #00cc77;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0px 0px 5px #00ff99; }
+            50% { text-shadow: 0px 0px 15px #00ff99; }
+            100% { text-shadow: 0px 0px 5px #00ff99; }
+        }
+
+        h1 {
+            animation: glow 2s infinite alternate;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 The Algorithm Nomad</h1>
+    <div id="story-container">
+        <p id="story-text">Click below to begin the journey...</p>
+        <button onclick="nextSection()">Next</button>
+    </div>
+
+    <script>
+        const story = [
+            "The world wasn’t built for people like him—people who saw through the illusion, who understood that the game was rigged, yet still found ways to win.",
+            "With his Toyota Camry as his command center—destined to be replaced by a Honda Element, the ultimate warhorse—he moved like a ghost, taking jobs, stacking cash, until the system cracked open.",
+            "His guitar was a key. A relic from a past age, yet a weapon in the present. Street Music → Online Content → Show Bookings → Fan Funnel.",
+            "By night, he was a Lyft driver, weaving through college parties, networking not for money—but for access.",
+            "At night, the real work began. He wasn’t just a musician. He was a technomancer. Unity3D. Blender. Resolume. AframeJS. TouchDesigner.",
+            "The final mission? Bypass the narcissist matrix. Build the empire. 20-40K. A war chest. Freedom.",
+            "The game wasn’t about security. It was about understanding the system, bending it, and taking what was yours."
+        ];
+
+        let index = 0;
+        function nextSection() {
+            if (index < story.length) {
+                typeWriter(story[index]);
+                index++;
+            } else {
+                typeWriter("🔥 The journey is yours. Execute the plan. Take control of the algorithm.");
+            }
+        }
+
+        function typeWriter(text) {
+            let i = 0;
+            const speed = 50;
+            document.getElementById("story-text").innerHTML = "";
+            
+            function type() {
+                if (i < text.length) {
+                    document.getElementById("story-text").innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+    </script>
+
+</body>
+</html>
