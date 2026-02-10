@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Creative Pipeline: Production Engine</title>
+
+    <style>
+
+        :root {
+
+            --bg: #0f0f23; --card: #1a1a3e;
+
+            --path1: #ff00ff; --path2: #00d4ff;
+
+            --path3: #ffd700; --path4: #00ff88;
+
+        }
+
+        body {
+
+            background: linear-gradient(135deg, var(--bg), #1a1a3e);
+
+            color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px;
+
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .header-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+
+        .stat-card { background: var(--card); padding: 15px; border-radius: 10px; text-align: center; border-bottom: 3px solid #444; }
+
+        
+
+        .pipeline-map {
+
+            display: flex; justify-content: space-around; align-items: center; 
+
+            margin: 30px 0; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 50px;
+
+        }
+
+        .node { width: 15px; height: 15px; border-radius: 50%; background: #444; position: relative; transition: 0.5s; }
+
+        .node.active { transform: scale(1.5); box-shadow: 0 0 15px currentColor; }
+
+        .arrow { flex-grow: 1; height: 2px; background: #333; margin: 0 10px; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .path-card { 
+
+            background: var(--card); padding: 20px; border-radius: 15px; 
+
+            position: relative; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
+
+        }
+
+        .path-card:hover { transform: translateY(-5px); background: #252555; }
+
+        
+
+        .progress-container { background: #000; height: 10px; border-radius: 5px; margin: 15px 0; overflow: hidden; }
+
+        .progress-bar { height: 100%; width: 0%; transition: 0.5s; }
+
+        .outputs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 30px; }
+
+        .output-item { 
+
+            background: #111; padding: 15px; border-radius: 8px; text-align: center;
+
+            opacity: 0.4; filter: grayscale(1); transition: 0.5s; font-size: 0.8rem;
+
+        }
+
+        .output-item.unlocked { opacity: 1; filter: grayscale(0); border: 1px solid gold; box-shadow: 0 0 10px rgba(255,215,0,0.3); }
+
+        .btn-action {
+
+            width: 100%; padding: 10px; border-radius: 5px; border: none; cursor: pointer;
+
+            font-weight: bold; text-transform: uppercase; margin-top: 5px;
+
+        }
+
+        .btn-action:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .label-easy { color: #00ff88; font-size: 0.6rem; font-weight: bold; }
+
+        .label-hard { color: #ff4444; font-size: 0.6rem; font-weight: bold; }
+
+        
+
+        #log { height: 120px; overflow-y: scroll; background: #000; padding: 10px; font-family: monospace; font-size: 0.8rem; margin-top: 20px; border-radius: 5px; }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header-stats">
+
+        <div class="stat-card">Energy: <span id="energy">100</span></div>
+
+        <div class="stat-card">Shots: <span id="shots">0</span></div>
+
+        <div class="stat-card">Beats: <span id="beats">0</span></div>
+
+        <div class="stat-card">Perf: <span id="perf">0</span></div>
+
+    </div>
+
+    <div class="pipeline-map">
+
+        <div id="node1" class="node" style="color: var(--path1)"></div><div class="arrow"></div>
+
+        <div id="node2" class="node" style="color: var(--path2)"></div><div class="arrow"></div>
+
+        <div id="node3" class="node" style="color: var(--path3)"></div><div class="arrow"></div>
+
+        <div id="node4" class="node" style="color: var(--path4)"></div>
+
+    </div>
+
+    <div class="grid">
+
+        <div class="path-card" style="border-top: 4px solid var(--path1)">
+
+            <h4>Discovery & Visuals</h4>
+
+            <div class="progress-container"><div id="p1-bar" class="progress-bar" style="background: var(--path1)"></div></div>
+
+            <button class="btn-action" onclick="doWork('unity')">Unity Path (-20E)</button>
+
+            <button class="btn-action" onclick="doWork('blender')">Blender Path (-25E)</button>
+
+        </div>
+
+        <div class="path-card" style="border-top: 4px solid var(--path2)">
+
+            <h4>Astro Beats <span class="label-easy">EASIEST</span></h4>
+
+            <div class="progress-container"><div id="p2-bar" class="progress-bar" style="background: var(--path2)"></div></div>
+
+            <button class="btn-action" onclick="doWork('astro')">Stream Session (-30E)</button>
+
+        </div>
+
+        <div class="path-card" style="border-top: 4px solid var(--path3)">
+
+            <h4>Set List <span class="label-easy">EASIEST</span></h4>
+
+            <div class="progress-container"><div id="p3-bar" class="progress-bar" style="background: var(--path3)"></div></div>
+
+            <button id="btn-perf" class="btn-action" onclick="doWork('perf')">Perform Live (-35E)</button>
+
+            <small id="perf-msg" style="color: #ff4444; font-size: 0.7rem;">Needs 2+ Beats</small>
+
+        </div>
+
+        <div class="path-card" style="border-top: 4px solid var(--path4)">
+
+            <h4>FreestyleKing <span class="label-hard">HARDEST/FAVORITE</span></h4>
+
+            <div class="progress-container"><div id="p4-bar" class="progress-bar" style="background: var(--path4)"></div></div>
+
+            <button class="btn-action" onclick="doWork('fk')">Dev Session (-40E)</button>
+
+        </div>
+
+    </div>
+
+    <div class="outputs-grid" id="outputs">
+
+        <div id="out-3js" class="output-item">3JS Virtual Space (20 Shots)</div>
+
+        <div id="out-mv" class="output-item">Music Videos (10B + 10S)</div>
+
+        <div id="out-conv" class="output-item">Conventions (5 Perf)</div>
+
+        <div id="out-git" class="output-item">GitHub Green Boxes (15 FK)</div>
+
+        <div id="out-app" class="output-item">FreestyleKing App (30 FK)</div>
+
+        <div id="out-disc" class="output-item">Astro Discord (15 Beats)</div>
+
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+
+        <button class="btn-action" style="background: #444;" onclick="rest()">Rest (+50E)</button>
+
+        <button class="btn-action" style="background: #222;" onclick="location.reload()">Reset</button>
+
+    </div>
+
+    <div id="log"></div>
+
+</div>
+
+<script>
+
+    let resources = { energy: 100, shots: 0, beats: 0, perf: 0, fk: 0 };
+
+    
+
+    function update() {
+
+        document.getElementById('energy').innerText = resources.energy;
+
+        document.getElementById('shots').innerText = resources.shots;
+
+        document.getElementById('beats').innerText = resources.beats;
+
+        document.getElementById('perf').innerText = resources.perf;
+
+        // Progress Bars
+
+        document.getElementById('p1-bar').style.width = (resources.shots / 30 * 100) + '%';
+
+        document.getElementById('p2-bar').style.width = (resources.beats / 20 * 100) + '%';
+
+        document.getElementById('p3-bar').style.width = (resources.perf / 10 * 100) + '%';
+
+        document.getElementById('p4-bar').style.width = (resources.fk / 30 * 100) + '%';
+
+        // Unlock logic
+
+        const canPerf = resources.beats >= 2;
+
+        document.getElementById('btn-perf').disabled = !canPerf || resources.energy < 35;
+
+        document.getElementById('perf-msg').style.display = canPerf ? 'none' : 'block';
+
+        // Achievements
+
+        if(resources.shots >= 20) unlock('out-3js');
+
+        if(resources.beats >= 10 && resources.shots >= 10) unlock('out-mv');
+
+        if(resources.perf >= 5) unlock('out-conv');
+
+        if(resources.fk >= 15) unlock('out-git');
+
+        if(resources.fk >= 30) unlock('out-app');
+
+        if(resources.beats >= 15) unlock('out-disc');
+
+    }
+
+    function doWork(type) {
+
+        let cost = 0;
+
+        let color = '#fff';
+
+        if(type === 'unity') { cost = 20; resources.shots += 3; color = 'var(--path1)'; log("Unity: Collected shots via asset store.", color); }
+
+        if(type === 'blender') { cost = 25; resources.shots += 2; color = 'var(--path1)'; log("Blender: Rendered Resolume-ready visuals.", color); }
+
+        if(type === 'astro') { cost = 30; resources.beats += 2; color = 'var(--path2)'; log("Astro Beats: Streamed and saved to RC505.", color); }
+
+        if(type === 'perf') { cost = 35; resources.perf += 1; color = 'var(--path3)'; log("Setlist: Shredded guitar over shaders.", color); }
+
+        if(type === 'fk') { cost = 40; resources.fk += 3; color = 'var(--path4)'; log("FreestyleKing: Built UX in MarvelApp.", color); }
+
+        resources.energy -= cost;
+
+        setActiveNode(type);
+
+        update();
+
+    }
+
+    function setActiveNode(type) {
+
+        document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+
+        if(type === 'unity' || type === 'blender') document.getElementById('node1').classList.add('active');
+
+        if(type === 'astro') document.getElementById('node2').classList.add('active');
+
+        if(type === 'perf') document.getElementById('node3').classList.add('active');
+
+        if(type === 'fk') document.getElementById('node4').classList.add('active');
+
+    }
+
+    function unlock(id) { document.getElementById(id).classList.add('unlocked'); }
+
+    function rest() {
+
+        resources.energy = Math.min(100, resources.energy + 50);
+
+        log("Resting: Recovered energy for the next sprint.", "#aaa");
+
+        update();
+
+    }
+
+    function log(msg, color) {
+
+        const log = document.getElementById('log');
+
+        log.innerHTML = `<div style="color:${color}; margin-bottom: 5px;">> ${msg}</div>` + log.innerHTML;
+
+    }
+
+    update();
+
+</script>
+
+</body>
+
+</html>
+
