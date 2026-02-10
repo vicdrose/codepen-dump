@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Immersive Network System</title>
+
+<style>
+
+  body {
+
+    margin: 0;
+
+    background: radial-gradient(circle at center, #0a0a1f, #000);
+
+    font-family: monospace;
+
+    overflow: hidden;
+
+    color: white;
+
+  }
+
+  .universe {
+
+    position: relative;
+
+    width: 100vw;
+
+    height: 100vh;
+
+  }
+
+  canvas {
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+  }
+
+  .center-node {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 130px;
+
+    height: 130px;
+
+    background: linear-gradient(45deg, #ff00ff, #00ffff);
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 0 0 30px #00ffff;
+
+    animation: pulse 3s infinite;
+
+    z-index: 2;
+
+  }
+
+  .node {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    width: 100px;
+
+    height: 100px;
+
+    background: #111;
+
+    border: 2px solid #00ffff;
+
+    border-radius: 50%;
+
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateX(260px) rotate(calc(-1 * var(--angle)));
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 6px;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+    z-index: 2;
+
+  }
+
+  .node:hover {
+
+    background: #00ffff;
+
+    color: black;
+
+    box-shadow: 0 0 20px #00ffff;
+
+  }
+
+  .info-panel {
+
+    position: absolute;
+
+    bottom: 20px;
+
+    left: 20px;
+
+    width: 320px;
+
+    background: rgba(0, 0, 0, 0.75);
+
+    padding: 15px;
+
+    border: 1px solid #00ffff;
+
+    border-radius: 10px;
+
+    z-index: 2;
+
+  }
+
+  @keyframes pulse {
+
+    0% { box-shadow: 0 0 20px #ff00ff; }
+
+    50% { box-shadow: 0 0 60px #00ffff; }
+
+    100% { box-shadow: 0 0 20px #ff00ff; }
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="universe">
+
+  <canvas id="stars"></canvas>
+
+  <div class="center-node" id="core">YOU</div>
+
+  <div class="node" data-label="Street Music" style="--angle: 0deg;">Street Music</div>
+
+  <div class="node" data-label="Code Projects" style="--angle: 60deg;">Code Projects</div>
+
+  <div class="node" data-label="Astrology Bot" style="--angle: 120deg;">Astrology Bot</div>
+
+  <div class="node" data-label="Gig Economy" style="--angle: 180deg;">Gig Economy</div>
+
+  <div class="node" data-label="Virtual Space" style="--angle: 240deg;">Virtual Space</div>
+
+  <div class="node" data-label="College Funnel" style="--angle: 300deg;">College Funnel</div>
+
+  <div class="info-panel" id="info">
+
+    <h2>System Output</h2>
+
+    <p>Click a node to activate a channel.</p>
+
+  </div>
+
+</div>
+
+<script>
+
+/* ===== Starfield Background ===== */
+
+const canvas = document.getElementById("stars");
+
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+
+canvas.height = window.innerHeight;
+
+let stars = [];
+
+for (let i = 0; i < 150; i++) {
+
+  stars.push({
+
+    x: Math.random() * canvas.width,
+
+    y: Math.random() * canvas.height,
+
+    radius: Math.random() * 1.5,
+
+    speed: Math.random() * 0.5
+
+  });
+
+}
+
+function animateStars() {
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "white";
+
+  stars.forEach(star => {
+
+    star.y += star.speed;
+
+    if (star.y > canvas.height) star.y = 0;
+
+    ctx.beginPath();
+
+    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+
+    ctx.fill();
+
+  });
+
+  requestAnimationFrame(animateStars);
+
+}
+
+animateStars();
+
+/* ===== Network Logic ===== */
+
+const nodes = document.querySelectorAll(".node");
+
+const info = document.getElementById("info");
+
+const systemData = {
+
+  "Street Music": "Live performance → Capture content → Social funnel → Fans.",
+
+  "Code Projects": "Build tools → Share GitHub → LinkedIn funnel → Recruiters.",
+
+  "Astrology Bot": "Tarot input → AI output → Personalized engagement → Subscription.",
+
+  "Gig Economy": "Lyft + DoorDash → Cash flow → Freedom to create.",
+
+  "Virtual Space": "Three.js / Unity → Immersive world → Live hangout.",
+
+  "College Funnel": "Public beat sets → QR code → Online ecosystem."
+
+};
+
+nodes.forEach(node => {
+
+  node.addEventListener("click", () => {
+
+    const label = node.getAttribute("data-label");
+
+    info.innerHTML = `
+
+      <h2>${label}</h2>
+
+      <p>${systemData[label]}</p>
+
+      <p><strong>Status:</strong> Channel Activated ⚡</p>
+
+    `;
+
+    node.style.background = "#ff00ff";
+
+    node.style.color = "white";
+
+  });
+
+});
+
+document.getElementById("core").addEventListener("click", () => {
+
+  info.innerHTML = `
+
+    <h2>Core Activated</h2>
+
+    <p>You are the signal source. Every node is an extension of you.</p>
+
+    <p><strong>System State:</strong> Network Energized 🌌</p>
+
+  `;
+
+});
+
+/* ===== Resize Handling ===== */
+
+window.addEventListener("resize", () => {
+
+  canvas.width = window.innerWidth;
+
+  canvas.height = window.innerHeight;
+
+});
+
+</script>
+
+</body>
+
+</html>
