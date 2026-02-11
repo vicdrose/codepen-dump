@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Saturn Stack</title>
+<style>
+  body {
+    margin: 0;
+    font-family: monospace;
+    background: radial-gradient(circle at top, #111, #000);
+    color: #eaeaea;
+  }
+  .game {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    letter-spacing: 2px;
+  }
+  .stats, .actions, .log {
+    border: 1px solid #333;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+  }
+  .stats span {
+    display: inline-block;
+    width: 23%;
+  }
+  button {
+    background: #111;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+  button:hover {
+    background: #0f0;
+    color: #000;
+  }
+  .danger {
+    color: #f55;
+  }
+  .log {
+    height: 180px;
+    overflow-y: auto;
+    font-size: 14px;
+    background: #050505;
+  }
+</style>
+</head>
+
+<body>
+<div class="game">
+  <h1>🪐 SATURN STACK</h1>
+
+  <div class="stats">
+    <span>Day: <strong id="day">1</strong></span>
+    <span>Energy: <strong id="energy">10</strong></span>
+    <span>Money: <strong id="money">50</strong></span>
+    <span>Health: <strong id="health">50</strong></span>
+    <span>Signal: <strong id="signal">10</strong></span>
+  </div>
+
+  <div class="actions">
+    <h3>Actions (cost Energy)</h3>
+    <button onclick="act('vehicle')">🚐 Maintain Vehicle</button>
+    <button onclick="act('job')">💼 Job App / Shift</button>
+    <button onclick="act('music')">🎵 Music Discovery</button>
+    <button onclick="act('code')">💻 Code / Unity / Three.js</button>
+    <button onclick="act('date')">📍 Date4Location</button>
+    <button onclick="act('sleep')">😴 Sleeper Health</button>
+    <button onclick="nextDay()">⏭ End Day</button>
+  </div>
+
+  <div class="log" id="log"></div>
+</div>
+
+<script>
+let state = {
+  day: 1,
+  energy: 10,
+  money: 50,
+  health: 50,
+  signal: 10,
+  vehicle: 50,
+  chaos: 0
+};
+
+const log = msg => {
+  const el = document.getElementById("log");
+  el.innerHTML += msg + "<br>";
+  el.scrollTop = el.scrollHeight;
+};
+
+function updateUI() {
+  for (let k of ["day","energy","money","health","signal"]) {
+    document.getElementById(k).textContent = state[k];
+  }
+}
+
+function act(type) {
+  if (state.energy <= 0) {
+    log("<span class='danger'>Too tired. End the day.</span>");
+    return;
+  }
+
+  state.energy--;
+
+  switch(type) {
+    case "vehicle":
+      state.vehicle += 5;
+      state.money -= 5;
+      log("🚐 Vehicle stabilized. Saturn nods.");
+      break;
+
+    case "job":
+      state.money += 15;
+      state.signal += 1;
+      log("💼 Income secured. Boring is powerful.");
+      break;
+
+    case "music":
+      state.signal += 3;
+      state.health += 1;
+      log("🎵 New sounds harvested. Future assets unlocked.");
+      break;
+
+    case "code":
+      state.signal += 4;
+      state.money += 2;
+      log("💻 Environments built. Code becomes edible.");
+      break;
+
+    case "date":
+      state.signal += 2;
+      state.money += 1;
+      log("📍 Location intel gained. Social map updated.");
+      break;
+
+    case "sleep":
+      state.health += 8;
+      state.energy += 2;
+      log("😴 Deep rest. Saturn rewards restraint.");
+      break;
+  }
+
+  updateUI();
+}
+
+function nextDay() {
+  state.day++;
+  state.energy = 10;
+
+  // decay
+  state.health -= 2;
+  state.vehicle -= 3;
+
+  // chaos check
+  if (state.vehicle < 20) {
+    state.money -= 10;
+    log("<span class='danger'>Vehicle neglect caused chaos.</span>");
+  }
+
+  if (state.health < 20) {
+    state.signal -= 5;
+    log("<span class='danger'>Sleep debt detected. Signal corrupted.</span>");
+  }
+
+  if (state.signal > 40) {
+    log("🪐 Saturn Event: Consistency compound activated.");
+    state.money += 10;
+    state.health += 5;
+  }
+
+  updateUI();
+}
+
+updateUI();
+log("Welcome. Saturn is watching.");
+</script>
+</body>
+</html>
