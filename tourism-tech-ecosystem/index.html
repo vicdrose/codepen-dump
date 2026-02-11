@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Tourism-Driven Creative + Tech System</title>
+<style>
+  :root {
+    --bg: #0e0e11;
+    --panel: #17171c;
+    --accent: #ff9f43;
+    --accent2: #4ecdc4;
+    --text: #eaeaea;
+    --muted: #9a9a9a;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: radial-gradient(circle at top, #1b1b22, var(--bg));
+    color: var(--text);
+  }
+
+  header {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+  }
+
+  header p {
+    color: var(--muted);
+    max-width: 800px;
+    margin: 0.5rem auto 0;
+  }
+
+  .mode-toggle {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+    gap: 1rem;
+  }
+
+  .mode-toggle button {
+    background: var(--panel);
+    border: 1px solid #2a2a33;
+    color: var(--text);
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: 0.3s;
+  }
+
+  .mode-toggle button.active {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .card {
+    background: linear-gradient(180deg, #1a1a22, var(--panel));
+    border: 1px solid #2a2a33;
+    border-radius: 16px;
+    padding: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  .card h3 {
+    margin-top: 0;
+    color: var(--accent2);
+  }
+
+  .card p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    display: none;
+  }
+
+  .card.active p {
+    display: block;
+    margin-top: 0.6rem;
+  }
+
+  .flow {
+    text-align: center;
+    margin: 3rem auto;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .flow span {
+    color: var(--accent);
+    margin: 0 0.4rem;
+  }
+
+  footer {
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid #222;
+    background: #0b0b0e;
+  }
+
+  footer strong {
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Tourism-Driven Creative + Tech System</h1>
+  <p>A mobile operating system for income, creativity, and momentum.</p>
+</header>
+
+<div class="mode-toggle">
+  <button class="active" onclick="setMode('vertical')">Vertical · Build Mode</button>
+  <button onclick="setMode('freestyle')">Freestyle · Momentum Mode</button>
+</div>
+
+<section class="grid" id="cards">
+
+  <div class="card">
+    <h3>Vertical Stream (Core Engine)</h3>
+    <p>
+      Live instrumental set list with a backend (.NET / Unity / A-Frame).
+      This is your tech credibility, portfolio, and income magnet.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Freestyle King</h3>
+    <p>
+      Daily embodied practice. Health, confidence, audience magnetism.
+      This compounds forever if never abandoned.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Five Beats a Day</h3>
+    <p>
+      Storage unit or basement = creative forge.
+      Discovery → remake → catalog → visual output.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Airport Uber</h3>
+    <p>
+      Tourism alignment, guaranteed cash flow, endless downtime.
+      The economic stabilizer of the system.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Mobile Living Stack</h3>
+    <p>
+      Camper, sleeper vehicle, bike, gyms, Starlink.
+      Freedom of location without loss of routine.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>Networking Flywheel</h3>
+    <p>
+      Music students, DJs, open mics, camera people, comment sections.
+      Always recruiting allies, never chasing clout.
+    </p>
+  </div>
+
+</section>
+
+<div class="flow">
+  Tourism <span>→</span> Income <span>→</span> Downtime <span>→</span> Creation
+  <span>→</span> Network <span>→</span> Mobility <span>→</span> Tourism
+</div>
+
+<footer>
+  <p><strong>Non-Negotiable Truth:</strong></p>
+  <p>Nobody is coming to keep you on track. This system only works if you do.</p>
+</footer>
+
+<script>
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('active');
+    });
+  });
+
+  function setMode(mode) {
+    document.querySelectorAll('.mode-toggle button')
+      .forEach(btn => btn.classList.remove('active'));
+    
+    if (mode === 'vertical') {
+      document.querySelector('.mode-toggle button:first-child').classList.add('active');
+      document.body.style.setProperty('--accent', '#ff9f43');
+    } else {
+      document.querySelector('.mode-toggle button:last-child').classList.add('active');
+      document.body.style.setProperty('--accent', '#ff6b6b');
+    }
+  }
+</script>
+
+</body>
+</html>
