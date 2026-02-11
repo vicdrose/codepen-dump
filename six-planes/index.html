@@ -1,0 +1,387 @@
+<!DOCTYPE html><html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <title>The Six Planes of Mobile Creative Systems</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+
+    :root{
+
+      --bg:#05070d;
+
+      --gold:#ffb347;
+
+      --amber:#ff7a18;
+
+      --ink:#0f1424;
+
+      --glass:rgba(255,255,255,0.06);
+
+    }*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto;}
+
+body{
+
+  margin:0;
+
+  background:radial-gradient(circle at top,#141a33 0%,#05070d 55%);
+
+  color:#eaeaf0;
+
+  overflow-x:hidden;
+
+}
+
+header{
+
+  text-align:center;
+
+  padding:4rem 1rem 2rem;
+
+}
+
+header h1{
+
+  font-size:clamp(2rem,4vw,3.2rem);
+
+  letter-spacing:0.04em;
+
+  color:var(--gold);
+
+  margin-bottom:0.5rem;
+
+}
+
+header p{
+
+  opacity:0.85;
+
+  max-width:760px;
+
+  margin:0 auto;
+
+}
+
+.system{
+
+  max-width:1200px;
+
+  margin:0 auto;
+
+  padding:2rem 1rem 4rem;
+
+  display:grid;
+
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+  gap:1.5rem;
+
+}
+
+.card{
+
+  position:relative;
+
+  background:linear-gradient(180deg,var(--glass),rgba(255,255,255,0.02));
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  border-radius:20px;
+
+  padding:1.5rem;
+
+  backdrop-filter:blur(10px);
+
+  transition:transform .3s ease, box-shadow .3s ease;
+
+}
+
+.card:hover{
+
+  transform:translateY(-6px) scale(1.01);
+
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+
+}
+
+.card h2{
+
+  margin:0 0 .5rem;
+
+  font-size:1.25rem;
+
+  color:var(--amber);
+
+}
+
+.tag{
+
+  display:inline-block;
+
+  padding:0.25rem 0.6rem;
+
+  border-radius:999px;
+
+  background:rgba(255,179,71,0.15);
+
+  color:var(--gold);
+
+  font-size:0.7rem;
+
+  margin-bottom:0.75rem;
+
+}
+
+ul{
+
+  padding-left:1.1rem;
+
+  margin:0.5rem 0 0;
+
+}
+
+li{
+
+  margin:0.4rem 0;
+
+  opacity:0.9;
+
+}
+
+/* special emphasis cards */
+
+.core{
+
+  border:1px solid rgba(255,179,71,0.45);
+
+  box-shadow:0 0 0 1px rgba(255,179,71,0.15), 0 0 40px rgba(255,122,24,0.15);
+
+}
+
+footer{
+
+  text-align:center;
+
+  padding:2rem 1rem 4rem;
+
+  opacity:0.7;
+
+  font-size:0.85rem;
+
+}
+
+/* subtle animated grid */
+
+canvas{
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:-1;
+
+}
+
+  </style>
+
+</head>
+
+<body>
+
+<canvas id="bg"></canvas><header>
+
+  <h1>THE SIX PLANES</h1>
+
+  <p>Two lives, one system — a repeatable loop that fuses tech leverage, music output, mobility, and tourism into a living creative engine.</p>
+
+</header><section class="system">
+
+  <div class="card core">
+
+    <span class="tag">CORE</span>
+
+    <h2>Vertical Stream Ecosystem</h2>
+
+    <ul>
+
+      <li>Live setlist (instrumental-first)</li>
+
+      <li>.NET backend + websockets</li>
+
+      <li>GitHub stars → tech credibility</li>
+
+      <li>Tech memory + portfolio iteration</li>
+
+    </ul>
+
+  </div>  <div class="card core">
+
+    <span class="tag">CORE</span>
+
+    <h2>Burpeathon × Freestyle King</h2>
+
+    <ul>
+
+      <li>Body + voice + instrument improv</li>
+
+      <li>Streak-based public ritual</li>
+
+      <li>Gaming / freestyle breaks</li>
+
+      <li>Embodied signal > explanation</li>
+
+    </ul>
+
+  </div>  <div class="card">
+
+    <span class="tag">PLANE 3</span>
+
+    <h2>Camera & Visual Output</h2>
+
+    <ul>
+
+      <li>2–3 cameras, same setlist</li>
+
+      <li>Serene outdoor locations</li>
+
+      <li>Blender / TouchDesigner / Resolume</li>
+
+    </ul>
+
+  </div>  <div class="card">
+
+    <span class="tag">PLANE 4</span>
+
+    <h2>Tech Job Loop</h2>
+
+    <ul>
+
+      <li>.NET + Unity vertical product</li>
+
+      <li>Marketing via making</li>
+
+      <li>Remote work leverage</li>
+
+    </ul>
+
+  </div>  <div class="card">
+
+    <span class="tag">PLANE 5</span>
+
+    <h2>Mobility Stack</h2>
+
+    <ul>
+
+      <li>Camper (non-Uber)</li>
+
+      <li>Airport Uber anchor vehicle</li>
+
+      <li>2 gym memberships (swim + recovery)</li>
+
+      <li>Sleeper = freestyle practice</li>
+
+    </ul>
+
+  </div>  <div class="card">
+
+    <span class="tag">PLANE 6</span>
+
+    <h2>Network & Anchors</h2>
+
+    <ul>
+
+      <li>Anchor people > places</li>
+
+      <li>Music students & open mics</li>
+
+      <li>Camera collaborators</li>
+
+    </ul>
+
+  </div>  <div class="card">
+
+    <span class="tag">EXTRA LOOP</span>
+
+    <h2>Daily Production Engine</h2>
+
+    <ul>
+
+      <li>5 beats/day (storage or basement)</li>
+
+      <li>Blender reps as beat posts</li>
+
+      <li>Setlist multicam by location</li>
+
+    </ul>
+
+  </div>
+
+</section><footer>
+
+  Consistent · Embodied · Repeatable · Resilient<br />
+
+  You are not chasing a career — you are running a system.
+
+</footer><script>
+
+  const canvas = document.getElementById('bg');
+
+  const ctx = canvas.getContext('2d');
+
+  let w,h;
+
+  function resize(){
+
+    w = canvas.width = window.innerWidth;
+
+    h = canvas.height = window.innerHeight;
+
+  }
+
+  window.addEventListener('resize', resize);
+
+  resize();
+
+  const points = Array.from({length:120},()=>({
+
+    x:Math.random()*w,
+
+    y:Math.random()*h,
+
+    vx:(Math.random()-0.5)*0.3,
+
+    vy:(Math.random()-0.5)*0.3
+
+  }));
+
+  function draw(){
+
+    ctx.clearRect(0,0,w,h);
+
+    for(const p of points){
+
+      p.x+=p.vx; p.y+=p.vy;
+
+      if(p.x<0||p.x>w) p.vx*=-1;
+
+      if(p.y<0||p.y>h) p.vy*=-1;
+
+      ctx.fillStyle='rgba(255,179,71,0.25)';
+
+      ctx.fillRect(p.x,p.y,1.5,1.5);
+
+    }
+
+    requestAnimationFrame(draw);
+
+  }
+
+  draw();
+
+</script></body>
+
+</html>
