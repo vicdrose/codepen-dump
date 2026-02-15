@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Life Game Dashboard</title>
+
+<style>
+
+  body {
+
+    margin: 0;
+
+    font-family: 'Arial', sans-serif;
+
+    background: #0d0d0d;
+
+    color: #f0f0f0;
+
+    overflow: hidden;
+
+  }
+
+  h1, h2 {
+
+    text-align: center;
+
+  }
+
+  #dashboard {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+
+    padding: 20px;
+
+  }
+
+  .card {
+
+    background: #1a1a1a;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    box-shadow: 0 0 15px #00ffcc88;
+
+    transition: transform 0.2s;
+
+    cursor: pointer;
+
+  }
+
+  .card:hover {
+
+    transform: scale(1.05);
+
+  }
+
+  button {
+
+    background: #00ffcc;
+
+    border: none;
+
+    color: #0d0d0d;
+
+    padding: 8px 12px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    margin-top: 10px;
+
+  }
+
+  button:hover {
+
+    background: #00cc99;
+
+  }
+
+  #log {
+
+    position: fixed;
+
+    bottom: 0;
+
+    width: 100%;
+
+    max-height: 200px;
+
+    overflow-y: auto;
+
+    background: #111;
+
+    border-top: 2px solid #00ffcc;
+
+    padding: 10px;
+
+    font-size: 14px;
+
+  }
+
+  .green-text { color: #00ffcc; }
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🎮 Life Game Dashboard</h1>
+
+<div id="dashboard">
+
+  <div class="card" id="assets">
+
+    <h2>🛠 Assets</h2>
+
+    <p>Computer, Honda Element, Parking, Storage</p>
+
+    <button onclick="useAsset()">Use Asset</button>
+
+  </div>
+
+  <div class="card" id="projects">
+
+    <h2>📂 Projects</h2>
+
+    <p>Astro Beats, Rhythm Game, Freestyle King, Multi-site Hub</p>
+
+    <button onclick="workOnProject()">Work on Project</button>
+
+  </div>
+
+  <div class="card" id="body">
+
+    <h2>💪 Body / Energy</h2>
+
+    <p>Dance, Burpees, Bike, Daytime Sleep</p>
+
+    <button onclick="trainBody()">Train Body</button>
+
+  </div>
+
+</div>
+
+<div id="log"><strong>Game Log:</strong></div>
+
+<script>
+
+  const log = document.getElementById('log');
+
+  function addLog(message) {
+
+    const p = document.createElement('p');
+
+    p.innerHTML = message;
+
+    log.appendChild(p);
+
+    log.scrollTop = log.scrollHeight;
+
+  }
+
+  // Asset interactions
+
+  function useAsset() {
+
+    const assets = [
+
+      "Honda Element 🚙: Mobility unlocked!",
+
+      "Computer 💻: Unity + Three.js ready!",
+
+      "Parking & Storage 🅿️: Base set!",
+
+      "Mini-fridge 🥪: Food secured!"
+
+    ];
+
+    const msg = assets[Math.floor(Math.random() * assets.length)];
+
+    addLog(`<span class="green-text">${msg}</span>`);
+
+  }
+
+  // Project interactions
+
+  function workOnProject() {
+
+    const projects = [
+
+      "Astro Beats 🔮: Astrology journal updated",
+
+      "Rhythm Game 🎵: New level built",
+
+      "Freestyle King 🎤: Networking freestyle performed",
+
+      "Multi-site Hub 🌐: Site updated & synced"
+
+    ];
+
+    const msg = projects[Math.floor(Math.random() * projects.length)];
+
+    addLog(`<span class="green-text">${msg}</span>`);
+
+  }
+
+  // Body interactions
+
+  function trainBody() {
+
+    const routines = [
+
+      "Dance session 💃: Energy +10",
+
+      "Burpees 🏋️: Stamina +5",
+
+      "Bike ride 🚴: Mobility +5",
+
+      "Daytime sleep 😴: Focus restored"
+
+    ];
+
+    const msg = routines[Math.floor(Math.random() * routines.length)];
+
+    addLog(`<span class="green-text">${msg}</span>`);
+
+  }
+
+  // Optional: small particle animation for immersion
+
+  const canvas = document.createElement('canvas');
+
+  document.body.appendChild(canvas);
+
+  canvas.width = window.innerWidth;
+
+  canvas.height = window.innerHeight;
+
+  const ctx = canvas.getContext('2d');
+
+  const particles = [];
+
+  for(let i=0;i<100;i++){
+
+    particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2+1, dx: Math.random()*1-0.5, dy: Math.random()*1-0.5});
+
+  }
+
+  function animate() {
+
+    ctx.fillStyle = 'rgba(13,13,13,0.3)';
+
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle = '#00ffcc';
+
+    particles.forEach(p=>{
+
+      ctx.beginPath();
+
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+
+      ctx.fill();
+
+      p.x+=p.dx; p.y+=p.dy;
+
+      if(p.x>canvas.width||p.x<0)p.dx*=-1;
+
+      if(p.y>canvas.height||p.y<0)p.dy*=-1;
+
+    });
+
+    requestAnimationFrame(animate);
+
+  }
+
+  animate();
+
+</script>
+
+</body>
+
+</html>
