@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inevitable Reality OS</title>
+<style>
+  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Segoe UI', sans-serif; }
+  body {
+    background: radial-gradient(circle at top, #0f2027, #0b0c10);
+    color: #eee;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    text-align: center;
+    padding: 20px;
+    font-size: 2rem;
+    letter-spacing: 2px;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px,1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    transition: 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px rgba(0,255,200,0.3);
+  }
+
+  h2 { margin-bottom: 10px; font-size: 1.2rem; }
+
+  ul { list-style: none; margin-top: 10px; }
+  li { padding: 4px 0; opacity: 0.8; }
+
+  button {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #00ffcc, #0077ff);
+    color: #000;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  button:hover {
+    opacity: 0.8;
+  }
+
+  .season {
+    text-align: center;
+    margin: 20px;
+    font-size: 1.1rem;
+  }
+
+  .modeDisplay {
+    font-weight: bold;
+    color: #00ffcc;
+  }
+
+  .crystal {
+    width: 120px;
+    height: 120px;
+    margin: 20px auto;
+    background: linear-gradient(45deg,#8e2de2,#4a00e0);
+    clip-path: polygon(50% 0%, 80% 25%, 100% 60%, 50% 100%, 0% 60%, 20% 25%);
+    animation: spin 8s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .pull {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<h1>INEVITABLE REALITY OS</h1>
+
+<div class="season">
+  Current Season: <span class="modeDisplay" id="mode">No Tech Job Season</span>
+  <br>
+  <button onclick="toggleSeason()">Switch Season</button>
+</div>
+
+<div class="container">
+
+  <div class="card">
+    <h2>🧰 Assets — 2H Virgo Pallas</h2>
+    <ul>
+      <li>Computer Health</li>
+      <li>Vehicle Health</li>
+      <li>Parking Rotation</li>
+      <li>Gym Access</li>
+      <li>$30/Day Minimum</li>
+    </ul>
+    <p><em>Assets protect autonomy. Autonomy protects creativity.</em></p>
+  </div>
+
+  <div class="card">
+    <h2>🏔 Build Layer — Capricorn</h2>
+    <ul id="buildList">
+      <li>Astro Beats v1</li>
+      <li>Freestyle King Training</li>
+      <li>Music Discovery Vault</li>
+    </ul>
+    <p><em>Sequence. Don't overwhelm.</em></p>
+  </div>
+
+  <div class="card">
+    <h2>🔥 Body — Aries M/V</h2>
+    <ul>
+      <li>Lift or Basketball</li>
+      <li>Sleep Priority</li>
+      <li>Simple Cooking</li>
+      <li>Presence Training</li>
+    </ul>
+    <p><em>Body sharp → Presence sharp → Network sharp.</em></p>
+  </div>
+
+  <div class="card">
+    <h2>🔮 Astro Beats Charger</h2>
+    <div class="crystal"></div>
+    <button onclick="pullAstro()">Pull 3 Archetypes</button>
+    <div class="pull" id="astroResult">Tap to charge your set.</div>
+  </div>
+
+  <div class="card">
+    <h2>👑 Freestyle King Engine</h2>
+    <ul>
+      <li>Crowd as API</li>
+      <li>Humiliation Immunity</li>
+      <li>Improv Dominance</li>
+      <li>Clip Recording</li>
+    </ul>
+    <p><em>Deploy after charging with Astro Beats.</em></p>
+  </div>
+
+</div>
+
+<div class="footer">
+  Survive → Build Culture → Build System
+</div>
+
+<script>
+  let techSeason = false;
+
+  function toggleSeason() {
+    techSeason = !techSeason;
+    const mode = document.getElementById("mode");
+    const buildList = document.getElementById("buildList");
+
+    if (techSeason) {
+      mode.textContent = "Tech Job Season";
+      buildList.innerHTML = `
+        <li>Unity Rhythm Game</li>
+        <li>Technical Skill Expansion</li>
+        <li>Night Coding Blocks</li>
+      `;
+    } else {
+      mode.textContent = "No Tech Job Season";
+      buildList.innerHTML = `
+        <li>Astro Beats v1</li>
+        <li>Freestyle King Training</li>
+        <li>Music Discovery Vault</li>
+      `;
+    }
+  }
+
+  const planets = ["Mars","Venus","Saturn","Jupiter","Mercury"];
+  const signs = ["Aries","Taurus","Gemini","Leo","Scorpio","Aquarius"];
+  const houses = ["1st House","2nd House","7th House","10th House","12th House"];
+
+  function pullAstro() {
+    const p = planets[Math.floor(Math.random()*planets.length)];
+    const s = signs[Math.floor(Math.random()*signs.length)];
+    const h = houses[Math.floor(Math.random()*houses.length)];
+    document.getElementById("astroResult").textContent =
+      p + " • " + s + " • " + h;
+  }
+</script>
+
+</body>
+</html>
