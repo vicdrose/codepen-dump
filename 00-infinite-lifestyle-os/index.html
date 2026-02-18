@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Infinite Lifestyle OS</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: monospace; }
+  body {
+    background: radial-gradient(circle at center, #0f0f1a 0%, #050509 70%);
+    color: #00ffd5;
+    overflow: hidden;
+  }
+
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+
+  .ui {
+    position: relative;
+    z-index: 2;
+    padding: 40px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+  }
+
+  .triangle {
+    margin: 40px auto;
+    width: 300px;
+    height: 260px;
+    position: relative;
+  }
+
+  .node {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border: 2px solid #00ffd5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    cursor: pointer;
+    background: rgba(0, 255, 213, 0.05);
+  }
+
+  .node:hover {
+    background: rgba(0, 255, 213, 0.2);
+    transform: scale(1.1);
+  }
+
+  #assets { top: 0; left: 90px; }
+  #project { bottom: 0; left: 0; }
+  #body { bottom: 0; right: 0; }
+
+  .mode {
+    margin-top: 20px;
+  }
+
+  button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: 1px solid #00ffd5;
+    background: transparent;
+    color: #00ffd5;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background: #00ffd5;
+    color: #050509;
+  }
+
+  .log {
+    margin-top: 20px;
+    min-height: 40px;
+    font-size: 0.9rem;
+    color: #fff;
+  }
+
+  .pipeline {
+    margin-top: 30px;
+    font-size: 0.95rem;
+    color: #ffffff;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="ui">
+  <h1>INFINITE LIFESTYLE OS</h1>
+
+  <div class="triangle">
+    <div class="node" id="assets">ASSETS</div>
+    <div class="node" id="project">PROJECT</div>
+    <div class="node" id="body">BODY</div>
+  </div>
+
+  <div class="mode">
+    <button onclick="setMode('No Tech Job')">NO TECH JOB</button>
+    <button onclick="setMode('Tech Job')">TECH JOB</button>
+  </div>
+
+  <div class="mode">
+    <button onclick="vehicle('Good')">CAR: GOOD</button>
+    <button onclick="vehicle('Bad')">CAR: BAD</button>
+  </div>
+
+  <div class="mode">
+    <button onclick="spawnBeat()">UBER/DOORDASH $30/DAY (MD)</button>
+    <button onclick="spawnBeat()">BURPEETHON (MD)</button><BR>
+    <button onclick="spawnBeat()">ASTRO BEAT REMAKE</button>
+    <button onclick="spawnFreestyle()">FREESTYLE KING</button>
+    <button onclick="spawnUnity()">UNITY MOCAP ANIMATION</button>
+    <button onclick="spawnUnity()">BLENDER / RESOLUME ANIMATION</button>
+    <button onclick="spawnUnity()">RHYTHM GAME STAGW</button>
+  </div>
+
+  <div class="log" id="log">SYSTEM READY.</div>
+  </div>
+</div>
+
+<script>
+const log = document.getElementById("log");
+let currentMode = "No Tech Job";
+let carState = "Good";
+
+function setMode(mode) {
+  currentMode = mode;
+  log.innerText = "MODE: " + mode + " — Adjusting output strategy.";
+}
+
+function vehicle(state) {
+  carState = state;
+  log.innerText = "VEHICLE STATUS: " + state + " — Assets recalibrated.";
+}
+
+function spawnBeat() {
+  log.innerText = "ASTRO BEAT REMAKE GENERATED → Feed into Freestyle King.";
+  pulse("#project");
+}
+
+function spawnFreestyle() {
+  log.innerText = "FREESTYLE KING OUTPUT → Prepare for Unity Animation.";
+  pulse("#body");
+}
+
+function spawnUnity() {
+  log.innerText = "UNITY ANIMATION SYNCED → Convert to Rhythm Game Asset.";
+  pulse("#assets");
+}
+
+function pulse(selector) {
+  const el = document.querySelector(selector);
+  el.style.boxShadow = "0 0 30px #00ffd5";
+  setTimeout(() => el.style.boxShadow = "none", 400);
+}
+
+/* Background particle system */
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for (let i = 0; i < 120; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2,
+    dx: (Math.random() - 0.5) * 0.5,
+    dy: (Math.random() - 0.5) * 0.5
+  });
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#00ffd5";
+  particles.forEach(p => {
+    p.x += p.dx;
+    p.y += p.dy;
+
+    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
