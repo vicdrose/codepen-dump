@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  
+  
+  
+
+  <title>Ai slop very good</title>
+
+    <link rel="canonical" href="https://codepen.io/VicDRose/pen/KwMjyGP">
+  
+  
+  
+  
+
+  
+  
+  
+</head>
+
+<body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TRANSPARENCY INTERACTIVE // LIFE OS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+  * { box-sizing: border-box; margin:0; padding:0; }
+
+  body {
+    font-family: 'Orbitron', sans-serif;
+    background: radial-gradient(circle at 20% 20%, #111 0%, #000 60%);
+    color: #0ff;
+    overflow: hidden;
+  }
+
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+  .container {
+    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .panel {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #0ff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px #0ff44a;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #0ff;
+  }
+
+  .stat {
+    margin: 8px 0;
+  }
+
+  .bar {
+    height: 10px;
+    background: #222;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0ff, #f0f);
+    width: 50%;
+    transition: width 0.3s ease;
+  }
+
+  button {
+    margin: 5px 0;
+    padding: 8px 12px;
+    background: black;
+    border: 1px solid #0ff;
+    color: #0ff;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%;
+  }
+
+  button:hover {
+    background: #0ff;
+    color: black;
+    box-shadow: 0 0 15px #0ff;
+  }
+
+  .log {
+    height: 120px;
+    overflow-y: auto;
+    font-size: 12px;
+    margin-top: 10px;
+  }
+
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="container">
+
+  <div class="panel">
+    <h2>BODY ENGINE</h2>
+
+    <div class="stat">Energy
+      <div class="bar"><div id="energyBar" class="fill"></div></div>
+    </div>
+
+    <div class="stat">Strength
+      <div class="bar"><div id="strengthBar" class="fill"></div></div>
+    </div>
+
+    <button onclick="burpeathon()">🔥 Burpeathon Warmup</button>
+    <button onclick="kettlebell()">🏋️ Kettlebell Flow</button>
+    <button onclick="reverseTreadmill()">🚶 Reverse Treadmill</button>
+  </div>
+
+  <div class="panel">
+    <h2>CREATIVE ENGINE</h2>
+
+    <div class="stat">Focus
+      <div class="bar"><div id="focusBar" class="fill"></div></div>
+    </div>
+
+    <div class="stat">Stage Presence
+      <div class="bar"><div id="stageBar" class="fill"></div></div>
+    </div>
+
+    <button onclick="astroBeats()">🎛 Astro Beats Session</button>
+    <button onclick="freestyle()">🎤 Freestyle King</button>
+    <button onclick="aiCode()">🧠 Voice Code with AI</button>
+  </div>
+
+  <div class="panel">
+    <h2>ASSET LEVERAGE</h2>
+
+    <div class="stat">Wealth
+      <div class="bar"><div id="wealthBar" class="fill"></div></div>
+    </div>
+
+    <div class="stat">Mobility
+      <div class="bar"><div id="mobilityBar" class="fill"></div></div>
+    </div>
+
+    <button onclick="uber()">🚗 Uber Airport</button>
+    <button onclick="doordash()">🍔 DoorDash Run</button>
+    <button onclick="travelAsia()">🌏 Travel to Asia</button>
+  </div>
+
+  <div class="panel">
+    <h2>LIFE LOG</h2>
+    <div id="log" class="log"></div>
+  </div>
+
+</div>
+
+<script>
+  const stats = {
+    energy: 70,
+    strength: 50,
+    focus: 60,
+    stage: 40,
+    wealth: 30,
+    mobility: 50
+  };
+
+  function clamp(stat) {
+    stats[stat] = Math.max(0, Math.min(100, stats[stat]));
+  }
+
+  function updateUI() {
+    energyBar.style.width = stats.energy + "%";
+    strengthBar.style.width = stats.strength + "%";
+    focusBar.style.width = stats.focus + "%";
+    stageBar.style.width = stats.stage + "%";
+    wealthBar.style.width = stats.wealth + "%";
+    mobilityBar.style.width = stats.mobility + "%";
+  }
+
+  function log(msg) {
+    const div = document.createElement("div");
+    div.textContent = "> " + msg;
+    document.getElementById("log").prepend(div);
+  }
+
+  function burpeathon() {
+    stats.energy -= 15;
+    stats.strength += 20;
+    stats.focus += 10;
+    log("Burpeathon activated. Body attuned. Dopamine unlocked.");
+    refresh();
+  }
+
+  function kettlebell() {
+    stats.energy -= 10;
+    stats.strength += 15;
+    stats.stage += 5;
+    log("Kettlebell halo. Core stabilized.");
+    refresh();
+  }
+
+  function reverseTreadmill() {
+    stats.energy -= 8;
+    stats.focus += 8;
+    log("Reverse treadmill engaged. Neural reset.");
+    refresh();
+  }
+
+  function astroBeats() {
+    stats.focus += 15;
+    stats.stage += 15;
+    stats.energy -= 5;
+    log("Astro Beats session. Intelligence networking.");
+    refresh();
+  }
+
+  function freestyle() {
+    stats.stage += 20;
+    stats.wealth += 5;
+    stats.energy -= 10;
+    log("Freestyle King performance. Inspiration network expanded.");
+    refresh();
+  }
+
+  function aiCode() {
+    stats.focus += 20;
+    stats.wealth += 10;
+    stats.energy -= 5;
+    log("Voice coding with AI. Assets refactored.");
+    refresh();
+  }
+
+  function uber() {
+    stats.wealth += 15;
+    stats.energy -= 10;
+    log("Uber airport run complete. $30 secured.");
+    refresh();
+  }
+
+  function doordash() {
+    stats.wealth += 10;
+    stats.energy -= 12;
+    log("DoorDash delivery executed. Stay aware.");
+    refresh();
+  }
+
+  function travelAsia() {
+    if (stats.wealth >= 50) {
+      stats.wealth -= 40;
+      stats.mobility += 30;
+      stats.focus += 20;
+      log("Asia trip initiated. Kitchen access unlocked.");
+    } else {
+      log("Not enough wealth to travel.");
+    }
+    refresh();
+  }
+
+  function refresh() {
+    for (let key in stats) clamp(key);
+    updateUI();
+  }
+
+  // Background animated stars
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const stars = Array.from({length: 150}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2,
+    d: Math.random() * 0.5
+  }));
+
+  function animate() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = "#0ff";
+    stars.forEach(s => {
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+      s.y += s.d;
+      if (s.y > canvas.height) s.y = 0;
+    });
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+  updateUI();
+
+</script>
+
+</body>
+</html>
+  
+  
+  
+</body>
+
+</html>
