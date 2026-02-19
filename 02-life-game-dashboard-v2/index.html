@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Life Game Dashboard</title>
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+        body {
+
+            font-family: 'Courier New', monospace;
+
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+            min-height: 100vh;
+
+            overflow-x: hidden;
+
+            color: #fff;
+
+        }
+
+        .container {
+
+            max-width: 1400px;
+
+            margin: 0 auto;
+
+            padding: 20px;
+
+        }
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+
+            animation: fadeInDown 1s ease;
+
+        }
+
+        .header h1 {
+
+            font-size: 3em;
+
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+
+            margin-bottom: 10px;
+
+        }
+
+        .header p {
+
+            font-size: 1.2em;
+
+            opacity: 0.9;
+
+        }
+
+        .stats-bar {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+            gap: 15px;
+
+            margin-bottom: 30px;
+
+            animation: fadeIn 1.5s ease;
+
+        }
+
+        .stat-card {
+
+            background: rgba(255, 255, 255, 0.15);
+
+            backdrop-filter: blur(10px);
+
+            border-radius: 15px;
+
+            padding: 20px;
+
+            text-align: center;
+
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+            border: 2px solid rgba(255, 255, 255, 0.2);
+
+        }
+
+        .stat-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+        }
+
+        .stat-number {
+
+            font-size: 2.5em;
+
+            font-weight: bold;
+
+            color: #ffd700;
+
+        }
+
+        .stat-label {
+
+            font-size: 0.9em;
+
+            opacity: 0.8;
+
+            margin-top: 5px;
+
+        }
+
+        .main-grid {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+
+            margin-bottom: 30px;
+
+        }
+
+        .panel {
+
+            background: rgba(255, 255, 255, 0.1);
+
+            backdrop-filter: blur(10px);
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            border: 2px solid rgba(255, 255, 255, 0.2);
+
+            animation: slideIn 0.8s ease;
+
+        }
+
+        .panel h2 {
+
+            margin-bottom: 20px;
+
+            font-size: 1.8em;
+
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+
+            padding-bottom: 10px;
+
+        }
+
+        .daily-tracker {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 15px;
+
+        }
+
+        .tracker-item {
+
+            background: rgba(255, 255, 255, 0.1);
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            transition: background 0.3s ease;
+
+        }
+
+        .tracker-item:hover {
+
+            background: rgba(255, 255, 255, 0.2);
+
+        }
+
+        .progress-bar {
+
+            width: 100%;
+
+            height: 25px;
+
+            background: rgba(0, 0, 0, 0.3);
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            margin-top: 10px;
+
+        }
+
+        .progress-fill {
+
+            height: 100%;
+
+            background: linear-gradient(90deg, #00f260 0%, #0575e6 100%);
+
+            transition: width 0.5s ease;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 0.8em;
+
+            font-weight: bold;
+
+        }
+
+        .counter {
+
+            display: flex;
+
+            gap: 10px;
+
+            align-items: center;
+
+        }
+
+        .btn {
+
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+            border: none;
+
+            color: white;
+
+            padding: 10px 20px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-family: 'Courier New', monospace;
+
+            font-weight: bold;
+
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+            font-size: 1em;
+
+        }
+
+        .btn:hover {
+
+            transform: scale(1.05);
+
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+        }
+
+        .btn:active {
+
+            transform: scale(0.98);
+
+        }
+
+        .btn-small {
+
+            padding: 5px 15px;
+
+            font-size: 0.9em;
+
+        }
+
+        .assets-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+            gap: 15px;
+
+            margin-top: 20px;
+
+        }
+
+        .asset-card {
+
+            background: rgba(255, 255, 255, 0.15);
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+
+            border: 2px solid transparent;
+
+        }
+
+        .asset-card:hover {
+
+            border-color: #ffd700;
+
+            transform: scale(1.05);
+
+        }
+
+        .asset-card.active {
+
+            border-color: #00ff00;
+
+            background: rgba(0, 255, 0, 0.2);
+
+        }
+
+        .asset-icon {
+
+            font-size: 3em;
+
+            margin-bottom: 10px;
+
+        }
+
+        .fortune-container {
+
+            text-align: center;
+
+            padding: 30px;
+
+        }
+
+        .cards-display {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 20px;
+
+            margin: 30px 0;
+
+            flex-wrap: wrap;
+
+        }
+
+        .tarot-card {
+
+            width: 120px;
+
+            height: 180px;
+
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 3em;
+
+            cursor: pointer;
+
+            transition: transform 0.6s ease;
+
+            transform-style: preserve-3d;
+
+            position: relative;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+        }
+
+        .tarot-card:hover {
+
+            transform: rotateY(180deg);
+
+        }
+
+        .tarot-card.revealed {
+
+            transform: rotateY(180deg);
+
+        }
+
+        .workflow-list {
+
+            list-style: none;
+
+        }
+
+        .workflow-item {
+
+            background: rgba(255, 255, 255, 0.1);
+
+            padding: 12px;
+
+            margin-bottom: 10px;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            transition: background 0.3s ease;
+
+        }
+
+        .workflow-item:hover {
+
+            background: rgba(255, 255, 255, 0.2);
+
+        }
+
+        .workflow-checkbox {
+
+            width: 20px;
+
+            height: 20px;
+
+            cursor: pointer;
+
+        }
+
+        .journal-section {
+
+            grid-column: 1 / -1;
+
+        }
+
+        .journal-input {
+
+            width: 100%;
+
+            min-height: 100px;
+
+            background: rgba(0, 0, 0, 0.3);
+
+            border: 2px solid rgba(255, 255, 255, 0.3);
+
+            border-radius: 10px;
+
+            padding: 15px;
+
+            color: white;
+
+            font-family: 'Courier New', monospace;
+
+            font-size: 1em;
+
+            resize: vertical;
+
+        }
+
+        .journal-input::placeholder {
+
+            color: rgba(255, 255, 255, 0.5);
+
+        }
+
+        .journal-entries {
+
+            margin-top: 20px;
+
+            max-height: 300px;
+
+            overflow-y: auto;
+
+        }
+
+        .journal-entry {
+
+            background: rgba(255, 255, 255, 0.1);
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            margin-bottom: 10px;
+
+            border-left: 4px solid #ffd700;
+
+        }
+
+        .journal-timestamp {
+
+            font-size: 0.8em;
+
+            opacity: 0.7;
+
+            margin-bottom: 5px;
+
+        }
+
+        .floating-particles {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            pointer-events: none;
+
+            z-index: -1;
+
+        }
+
+        .particle {
+
+            position: absolute;
+
+            background: rgba(255, 255, 255, 0.5);
+
+            border-radius: 50%;
+
+            animation: float 15s infinite;
+
+        }
+
+        @keyframes float {
+
+            0%, 100% { transform: translateY(0) translateX(0); }
+
+            25% { transform: translateY(-100px) translateX(50px); }
+
+            50% { transform: translateY(-200px) translateX(-50px); }
+
+            75% { transform: translateY(-100px) translateX(100px); }
+
+        }
+
+        @keyframes fadeIn {
+
+            from { opacity: 0; }
+
+            to { opacity: 1; }
+
+        }
+
+        @keyframes fadeInDown {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(-30px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+        @keyframes slideIn {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateX(-30px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateX(0);
+
+            }
+
+        }
+
+        .quest-badge {
+
+            display: inline-block;
+
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+
+            padding: 5px 15px;
+
+            border-radius: 20px;
+
+            font-size: 0.8em;
+
+            margin-left: 10px;
+
+            animation: pulse 2s infinite;
+
+        }
+
+        @keyframes pulse {
+
+            0%, 100% { transform: scale(1); }
+
+            50% { transform: scale(1.05); }
+
+        }
+
+        @media (max-width: 768px) {
+
+            .main-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .header h1 {
+
+                font-size: 2em;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="floating-particles" id="particles"></div>
+
+    
+
+    <div class="container">
+
+        <div class="header">
+
+            <h1>🎮 LIFE GAME DASHBOARD 🎮</h1>
+
+            <p>Living Life as a Rhythm Game • Freestyle King Mode</p>
+
+        </div>
+
+        <div class="stats-bar">
+
+            <div class="stat-card">
+
+                <div class="stat-number" id="totalPoints">0</div>
+
+                <div class="stat-label">Total XP</div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-number" id="streak">0</div>
+
+                <div class="stat-label">Day Streak 🔥</div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-number" id="dailyIncome">$30</div>
+
+                <div class="stat-label">Daily Income</div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-number" id="level">1</div>
+
+                <div class="stat-label">Level</div>
+
+            </div>
+
+        </div>
+
+        <div class="main-grid">
+
+            <!-- Daily Tasks -->
+
+            <div class="panel">
+
+                <h2>📋 Daily Quest Log</h2>
+
+                <div class="daily-tracker">
+
+                    <div class="tracker-item">
+
+                        <span>🎵 Astro Beats</span>
+
+                        <div class="counter">
+
+                            <span id="astroCount">0/5</span>
+
+                            <button class="btn btn-small" onclick="incrementTask('astro', 5)">+</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div class="progress-fill" id="astroProgress" style="width: 0%"></div>
+
+                    </div>
+
+                    <div class="tracker-item">
+
+                        <span>🎤 Freestyle King</span>
+
+                        <div class="counter">
+
+                            <span id="freestyleCount">0/3</span>
+
+                            <button class="btn btn-small" onclick="incrementTask('freestyle', 3)">+</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div class="progress-fill" id="freestyleProgress" style="width: 0%"></div>
+
+                    </div>
+
+                    <div class="tracker-item">
+
+                        <span>🎮 Unity Animation</span>
+
+                        <div class="counter">
+
+                            <span id="unityCount">0/1</span>
+
+                            <button class="btn btn-small" onclick="incrementTask('unity', 1)">+</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div class="progress-fill" id="unityProgress" style="width: 0%"></div>
+
+                    </div>
+
+                    <div class="tracker-item">
+
+                        <span>🎨 Blender/Resolume/Shader Post</span>
+
+                        <div class="counter">
+
+                            <span id="visualCount">0/1</span>
+
+                            <button class="btn btn-small" onclick="incrementTask('visual', 1)">+</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div class="progress-fill" id="visualProgress" style="width: 0%"></div>
+
+                    </div>
+
+                    <div class="tracker-item">
+
+                        <span>💪 Burpee-thon</span>
+
+                        <div class="counter">
+
+                            <span id="burpeeCount">0/1</span>
+
+                            <button class="btn btn-small" onclick="incrementTask('burpee', 1)">+</button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="progress-bar">
+
+                        <div class="progress-fill" id="burpeeProgress" style="width: 0%"></div>
+
+                    </div>
+
+                </div>
+
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="resetDaily()">Reset Daily</button>
+
+            </div>
+
+            <!-- Assets Game -->
+
+            <div class="panel">
+
+                <h2>🚗 Assets Game</h2>
+
+                <div class="assets-grid">
+
+                    <div class="asset-card" onclick="toggleAsset(this)">
+
+                        <div class="asset-icon">🏠</div>
+
+                        <div>Own Land</div>
+
+                    </div>
+
+                    <div class="asset-card" onclick="toggleAsset(this)">
+
+                        <div class="asset-icon">🚐</div>
+
+                        <div>Honda Element</div>
+
+                    </div>
+
+                    <div class="asset-card" onclick="toggleAsset(this)">
+
+                        <div class="asset-icon">🚗</div>
+
+                        <div>Backup Car</div>
+
+                    </div>
+
+                    <div class="asset-card" onclick="toggleAsset(this)">
+
+                        <div class="asset-icon">🅿️</div>
+
+                        <div>Parking Spot</div>
+
+                    </div>
+
+                    <div class="asset-card" onclick="toggleAsset(this)">
+
+                        <div class="asset-icon">🚲</div>
+
+                        <div>Bike</div>
+
+                    </div>
+
+                    <div class="asset-card" onclick="toggleAsset(this)">
+
+                        <div class="asset-icon">💻</div>
+
+                        <div>Tech Setup</div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Astro Beats Divination -->
+
+            <div class="panel fortune-container">
+
+                <h2>🔮 Astro Beats Divination</h2>
+
+                <p>Ask a question, draw your cards</p>
+
+                <div class="cards-display">
+
+                    <div class="tarot-card" onclick="revealCard(this, 0)">
+
+                        <span>🎴</span>
+
+                    </div>
+
+                    <div class="tarot-card" onclick="revealCard(this, 1)">
+
+                        <span>🎴</span>
+
+                    </div>
+
+                    <div class="tarot-card" onclick="revealCard(this, 2)">
+
+                        <span>🎴</span>
+
+                    </div>
+
+                </div>
+
+                <div id="fortuneText" style="margin-top: 20px; font-style: italic; min-height: 40px;"></div>
+
+                <button class="btn" onclick="shuffleCards()">Shuffle & Reset</button>
+
+            </div>
+
+            <!-- Workflow Checklist -->
+
+            <div class="panel">
+
+                <h2>⚡ Workflow Pipeline</h2>
+
+                <ul class="workflow-list">
+
+                    <li class="workflow-item">
+
+                        <input type="checkbox" class="workflow-checkbox" onchange="checkWorkflow()">
+
+                        <span>AI Studio → First Draft</span>
+
+                    </li>
+
+                    <li class="workflow-item">
+
+                        <input type="checkbox" class="workflow-checkbox" onchange="checkWorkflow()">
+
+                        <span>Stitch → UI Design</span>
+
+                    </li>
+
+                    <li class="workflow-item">
+
+                        <input type="checkbox" class="workflow-checkbox" onchange="checkWorkflow()">
+
+                        <span>Marvel App → Iteration</span>
+
+                    </li>
+
+                    <li class="workflow-item">
+
+                        <input type="checkbox" class="workflow-checkbox" onchange="checkWorkflow()">
+
+                        <span>Image Effects → Storyboard</span>
+
+                    </li>
+
+                    <li class="workflow-item">
+
+                        <input type="checkbox" class="workflow-checkbox" onchange="checkWorkflow()">
+
+                        <span>Asset Replacement</span>
+
+                    </li>
+
+                    <li class="workflow-item">
+
+                        <input type="checkbox" class="workflow-checkbox" onchange="checkWorkflow()">
+
+                        <span>JavaScript Refactor</span>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <!-- Social Strategy -->
+
+            <div class="panel">
+
+                <h2>🎸 Social Strategy</h2>
+
+                <div class="workflow-list">
+                  
+                    <div class="workflow-item">
+
+                        <span>📹 Live Astro Beats Stream</span>
+
+                        <span class="quest-badge">EPIC</span>
+
+                    </div>
+
+                    <div class="workflow-item">
+
+                        <span>🎤 Freestyle @ Happy Hour</span>
+
+                        <span class="quest-badge">ACTIVE</span>
+
+                    </div>
+                  
+                   <div class="workflow-item">
+
+                        <span>🎥 Music Video Production</span>
+
+                        <span class="quest-badge">PROJECT</span>
+
+                    </div>
+
+                    <div class="workflow-item">
+
+                        <span>🎸 Guitar Sets @ Tech Conventions</span>
+
+                        <span class="quest-badge">QUEST</span>
+
+                    </div>
+
+                    <div class="workflow-item">
+
+                        <span>🕹️ Dance Game Meetups</span>
+
+                        <span class="quest-badge">QUEST</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Journal -->
+
+            <div class="panel journal-section">
+
+                <h2>📝 Journal Log</h2>
+
+                <textarea class="journal-input" id="journalInput" placeholder="Document your journey... Keep going! 🚀"></textarea>
+
+                <button class="btn" style="margin-top: 15px;" onclick="addJournalEntry()">Save Entry</button>
+
+                <div class="journal-entries" id="journalEntries"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        // Game State
+
+        let gameState = {
+
+            astro: 0,
+
+            freestyle: 0,
+
+            unity: 0,
+
+            visual: 0,
+
+            burpee: 0,
+
+            totalPoints: 0,
+
+            streak: 0,
+
+            level: 1,
+
+            lastPlayedDate: null
+
+        };
+
+        // Tarot fortunes
+
+        const fortunes = [
+
+            { card: "🌟", message: "The stars align! Your creative vision will manifest through persistence." },
+
+            { card: "🎵", message: "Musical synchronicity incoming. Trust your instinct on beat selection." },
+
+            { card: "🚀", message: "Launch energy detected. Perfect time for new project initiatives." },
+
+            { card: "🔥", message: "Fire element strong. Your freestyle game will be legendary today." },
+
+            { card: "💎", message: "Asset accumulation favored. Focus on long-term vehicle strategy." },
+
+            { card: "🌊", message: "Flow state accessible. Unity animations will come naturally." },
+
+            { card: "⚡", message: "High energy period. Burpee-thon will unlock creative insights." },
+
+            { card: "🎭", message: "Performance magic ahead. Your social strategy will open doors." },
+
+            { card: "🛠️", message: "Builder's fortune. Code and creation flow with ease today." },
+
+            { card: "🌈", message: "Full spectrum creativity available. Blend all your skills." }
+
+        ];
+
+        let revealedCards = [null, null, null];
+
+        // Initialize
+
+        window.onload = function() {
+
+            loadGameState();
+
+            checkStreak();
+
+            createParticles();
+
+            updateUI();
+
+        };
+
+        function createParticles() {
+
+            const container = document.getElementById('particles');
+
+            for (let i = 0; i < 20; i++) {
+
+                const particle = document.createElement('div');
+
+                particle.className = 'particle';
+
+                particle.style.width = Math.random() * 5 + 2 + 'px';
+
+                particle.style.height = particle.style.width;
+
+                particle.style.left = Math.random() * 100 + '%';
+
+                particle.style.top = Math.random() * 100 + '%';
+
+                particle.style.animationDelay = Math.random() * 15 + 's';
+
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+
+                container.appendChild(particle);
+
+            }
+
+        }
+
+        function incrementTask(task, max) {
+
+            if (gameState[task] < max) {
+
+                gameState[task]++;
+
+                gameState.totalPoints += 10;
+
+                updateUI();
+
+                saveGameState();
+
+                
+
+                if (gameState[task] === max) {
+
+                    celebrateCompletion(task);
+
+                }
+
+            }
+
+        }
+
+        function updateUI() {
+
+            // Update counters
+
+            document.getElementById('astroCount').textContent = `${gameState.astro}/5`;
+
+            document.getElementById('freestyleCount').textContent = `${gameState.freestyle}/3`;
+
+            document.getElementById('unityCount').textContent = `${gameState.unity}/1`;
+
+            document.getElementById('visualCount').textContent = `${gameState.visual}/1`;
+
+            document.getElementById('burpeeCount').textContent = `${gameState.burpee}/1`;
+
+            // Update progress bars
+
+            updateProgressBar('astroProgress', gameState.astro, 5);
+
+            updateProgressBar('freestyleProgress', gameState.freestyle, 3);
+
+            updateProgressBar('unityProgress', gameState.unity, 1);
+
+            updateProgressBar('visualProgress', gameState.visual, 1);
+
+            updateProgressBar('burpeeProgress', gameState.burpee, 1);
+
+            // Update stats
+
+            document.getElementById('totalPoints').textContent = gameState.totalPoints;
+
+            document.getElementById('streak').textContent = gameState.streak;
+
+            document.getElementById('level').textContent = gameState.level;
+
+            // Update level
+
+            gameState.level = Math.floor(gameState.totalPoints / 100) + 1;
+
+        }
+
+        function updateProgressBar(id, current, max) {
+
+            const percent = (current / max) * 100;
+
+            const bar = document.getElementById(id);
+
+            bar.style.width = percent + '%';
+
+            bar.textContent = percent === 100 ? '✓ COMPLETE' : '';
+
+        }
+
+        function celebrateCompletion(task) {
+
+            const messages = {
+
+                astro: '🎵 5 Astro Beats Complete! Beat master!',
+
+                freestyle: '🎤 Freestyle King Activated! 3/3!',
+
+                unity: '🎮 Unity Animation Done! Game dev vibes!',
+
+                visual: '🎨 Visual Post Complete! Shader magic!',
+
+                burpee: '💪 Burpee-thon Complete! Music discovered!'
+
+            };
+
+            alert(messages[task]);
+
+        }
+
+        function resetDaily() {
+
+            if (confirm('Reset daily quests? This will save your streak and XP!')) {
+
+                gameState.astro = 0;
+
+                gameState.freestyle = 0;
+
+                gameState.unity = 0;
+
+                gameState.visual = 0;
+
+                gameState.burpee = 0;
+
+                updateUI();
+
+                saveGameState();
+
+            }
+
+        }
+
+        function toggleAsset(element) {
+
+            element.classList.toggle('active');
+
+        }
+
+        function revealCard(element, index) {
+
+            if (!element.classList.contains('revealed')) {
+
+                element.classList.add('revealed');
+
+                const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+
+                revealedCards[index] = fortune;
+
+                element.querySelector('span').textContent = fortune.card;
+
+                
+
+                setTimeout(() => {
+
+                    updateFortune();
+
+                }, 300);
+
+            }
+
+        }
+
+        function updateFortune() {
+
+            const revealed = revealedCards.filter(c => c !== null);
+
+            if (revealed.length > 0) {
+
+                const text = revealed.map(c => c.message).join(' • ');
+
+                document.getElementById('fortuneText').textContent = text;
+
+            }
+
+        }
+
+        function shuffleCards() {
+
+            const cards = document.querySelectorAll('.tarot-card');
+
+            cards.forEach(card => {
+
+                card.classList.remove('revealed');
+
+                card.querySelector('span').textContent = '🎴';
+
+            });
+
+            revealedCards = [null, null, null];
+
+            document.getElementById('fortuneText').textContent = '';
+
+        }
+
+        function checkWorkflow() {
+
+            const checkboxes = document.querySelectorAll('.workflow-checkbox');
+
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+
+            if (checked === checkboxes.length) {
+
+                gameState.totalPoints += 50;
+
+                updateUI();
+
+                saveGameState();
+
+                alert('🎉 Workflow Complete! +50 XP! Keep going!');
+
+            }
+
+        }
+
+        function addJournalEntry() {
+
+            const input = document.getElementById('journalInput');
+
+            const text = input.value.trim();
+
+            
+
+            if (text) {
+
+                const entries = document.getElementById('journalEntries');
+
+                const entry = document.createElement('div');
+
+                entry.className = 'journal-entry';
+
+                
+
+                const timestamp = new Date().toLocaleString();
+
+                entry.innerHTML = `
+
+                    <div class="journal-timestamp">${timestamp}</div>
+
+                    <div>${text}</div>
+
+                `;
+
+                
+
+                entries.insertBefore(entry, entries.firstChild);
+
+                input.value = '';
+
+                
+
+                gameState.totalPoints += 5;
+
+                updateUI();
+
+                saveGameState();
+
+            }
+
+        }
+
+        function checkStreak() {
+
+            const today = new Date().toDateString();
+
+            if (gameState.lastPlayedDate !== today) {
+
+                const yesterday = new Date();
+
+                yesterday.setDate(yesterday.getDate() - 1);
+
+                
+
+                if (gameState.lastPlayedDate === yesterday.toDateString()) {
+
+                    gameState.streak++;
+
+                } else if (gameState.lastPlayedDate !== null) {
+
+                    gameState.streak = 1;
+
+                }
+
+                
+
+                gameState.lastPlayedDate = today;
+
+                saveGameState();
+
+            }
+
+        }
+
+        function saveGameState() {
+
+            localStorage.setItem('lifeGameState', JSON.stringify(gameState));
+
+        }
+
+        function loadGameState() {
+
+            const saved = localStorage.getItem('lifeGameState');
+
+            if (saved) {
+
+                gameState = JSON.parse(saved);
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
