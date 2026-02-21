@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Transparency Interactive Ecosystem</title>
+
+<style>
+
+  body {
+
+    margin: 0;
+
+    font-family: 'Arial', sans-serif;
+
+    background: linear-gradient(#0c0032, #4a148c);
+
+    color: #fff;
+
+    overflow: hidden;
+
+  }
+
+  h1 { text-align: center; margin-top: 20px; }
+
+  .container {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+
+    padding: 20px;
+
+  }
+
+  .module {
+
+    background: rgba(255,255,255,0.05);
+
+    padding: 20px;
+
+    border-radius: 12px;
+
+    transition: 0.3s;
+
+    cursor: pointer;
+
+    text-align: center;
+
+  }
+
+  .module:hover {
+
+    background: rgba(255,255,255,0.15);
+
+    transform: scale(1.05);
+
+  }
+
+  canvas { display: block; margin: 0 auto; background: rgba(0,0,0,0.1); border-radius: 12px; }
+
+  .info { text-align: center; margin-top: 10px; font-size: 0.9rem; opacity: 0.8; }
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Transparency Interactive Ecosystem</h1>
+
+<div class="container">
+  
+  <div class="module" id="burpyThon">
+
+    <h2>💪 1) Burpee-thon</h2>
+
+    <p>Physical + creative warm-ups, syncs rhythm to productivity.</p>
+
+  </div>
+
+  <div class="module" id="astroBeats">
+
+    <h2>🌌 2) Astro Beats</h2>
+
+    <p>Interactive astrology + journaling + music discovery.</p>
+
+  </div>
+
+  <div class="module" id="freestyleKing">
+
+    <h2>🎤 3) Freestyle King</h2>
+
+    <p>Live rhythm game + music video + public performance.</p>
+
+  </div>
+
+  <div class="module" id="transparency">
+
+    <h2>💎 4) Transparency Interactive</h2>
+
+    <p>Courses, networking, and social portfolio hub.</p>
+
+  </div>
+
+</div>
+
+<canvas id="gameCanvas" width="800" height="500"></canvas>
+
+<div class="info">Click modules to see them come alive!</div>
+
+<script>
+
+const canvas = document.getElementById('gameCanvas');
+
+const ctx = canvas.getContext('2d');
+
+const modules = {
+
+  astroBeats: { x: 100, y: 250, radius: 60, color: '#ff00ff', active: false },
+
+  burpyThon: { x: 300, y: 250, radius: 60, color: '#00ffff', active: false },
+
+  freestyleKing: { x: 500, y: 250, radius: 60, color: '#ffff00', active: false },
+
+  transparency: { x: 700, y: 250, radius: 60, color: '#ff4500', active: false },
+
+};
+
+function draw() {
+
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+
+  for (let key in modules) {
+
+    let m = modules[key];
+
+    ctx.beginPath();
+
+    ctx.arc(m.x, m.y, m.radius, 0, Math.PI*2);
+
+    ctx.fillStyle = m.active ? m.color : 'rgba(255,255,255,0.2)';
+
+    ctx.fill();
+
+    ctx.lineWidth = 2;
+
+    ctx.strokeStyle = m.color;
+
+    ctx.stroke();
+
+  }
+
+}
+
+draw();
+
+canvas.addEventListener('click', (e) => {
+
+  const rect = canvas.getBoundingClientRect();
+
+  const mx = e.clientX - rect.left;
+
+  const my = e.clientY - rect.top;
+
+  for (let key in modules) {
+
+    let m = modules[key];
+
+    const dist = Math.hypot(mx - m.x, my - m.y);
+
+    if (dist < m.radius) {
+
+      m.active = !m.active;
+
+      launchModule(key);
+
+    }
+
+  }
+
+  draw();
+
+});
+
+function launchModule(name) {
+
+  switch(name) {
+
+    case 'astroBeats':
+
+      alert('🎵 Astro Beats activated! Discover music & journaling rhythm.');
+
+      break;
+
+    case 'burpyThon':
+
+      alert('🏋️ Burpee-thon activated! Sync your movement and creativity.');
+
+      break;
+
+    case 'freestyleKing':
+
+      alert('🎤 Freestyle King activated! Time for public freestyle rhythm game.');
+
+      break;
+
+    case 'transparency':
+
+      alert('💎 Transparency Interactive activated! Build your courses and social network.');
+
+      break;
+
+  }
+
+}
+
+// Fun background animation
+
+let stars = Array.from({length: 100}, () => ({
+
+  x: Math.random()*canvas.width,
+
+  y: Math.random()*canvas.height,
+
+  radius: Math.random()*2 + 1,
+
+  dx: (Math.random()-0.5)*0.3,
+
+  dy: (Math.random()-0.5)*0.3
+
+}));
+
+function animateStars() {
+
+  ctx.fillStyle = 'rgba(0,0,0,0.05)';
+
+  ctx.fillRect(0,0,canvas.width, canvas.height);
+
+  for (let s of stars) {
+
+    s.x += s.dx;
+
+    s.y += s.dy;
+
+    if(s.x < 0 || s.x > canvas.width) s.dx *= -1;
+
+    if(s.y < 0 || s.y > canvas.height) s.dy *= -1;
+
+    ctx.beginPath();
+
+    ctx.arc(s.x, s.y, s.radius, 0, Math.PI*2);
+
+    ctx.fillStyle = '#fff';
+
+    ctx.fill();
+
+  }
+
+  draw();
+
+  requestAnimationFrame(animateStars);
+
+}
+
+animateStars();
+
+</script>
+
+</body>
+
+</html>
