@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FREESTYLE KING — The Universe Instruction Manual</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #03000a;
+    --deep: #0a0515;
+    --plasma: #7b00ff;
+    --neon: #00f5d4;
+    --solar: #ff6b00;
+    --pulse: #ff006e;
+    --star: #ffe566;
+    --ghost: rgba(255,255,255,0.07);
+    --text: #e8e0ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ANIMATED BACKGROUND */
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 10%, rgba(123,0,255,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0,245,212,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 60% 30%, rgba(255,0,110,0.06) 0%, transparent 60%);
+  }
+
+  .grid-lines {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(123,0,255,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(123,0,255,0.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridPulse 8s ease-in-out infinite;
+  }
+
+  @keyframes gridPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* SCANLINES */
+  .scanlines {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+  }
+
+  /* FLOATING PARTICLES */
+  .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    border-radius: 50%;
+    animation: float linear infinite;
+  }
+  @keyframes float {
+    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-20px) translateX(var(--drift)); opacity: 0; }
+  }
+
+  /* LAYOUT */
+  .wrapper { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 60px 0 40px;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--neon);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 14vw, 160px);
+    line-height: 0.88;
+    letter-spacing: -2px;
+    animation: fadeUp 0.8s 0.1s ease both;
+    position: relative;
+  }
+
+  .hero-title .line1 { color: white; display: block; }
+  .hero-title .line2 {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--plasma);
+    display: block;
+    position: relative;
+  }
+  .hero-title .line2::after {
+    content: attr(data-text);
+    position: absolute; left: 0; top: 0;
+    color: var(--plasma);
+    filter: blur(20px);
+    opacity: 0.5;
+  }
+  .hero-title .line3 { color: var(--neon); display: block; }
+
+  .hero-sub {
+    font-size: 13px;
+    line-height: 1.8;
+    color: rgba(232,224,255,0.55);
+    max-width: 500px;
+    margin-top: 24px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-sub span { color: var(--solar); }
+
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,0,110,0.15);
+    border: 1px solid rgba(255,0,110,0.4);
+    padding: 6px 14px;
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--pulse);
+    margin-top: 32px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .live-dot {
+    width: 8px; height: 8px;
+    background: var(--pulse);
+    border-radius: 50%;
+    animation: blink 1.2s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION HEADERS */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--plasma);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 72px);
+    line-height: 1;
+    margin-bottom: 40px;
+  }
+
+  /* ACCOUNT CARDS */
+  .accounts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2px;
+    margin-bottom: 80px;
+  }
+
+  .account-card {
+    background: var(--ghost);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .account-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 20px var(--accent);
+  }
+
+  .account-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, var(--accent-glow), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .account-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.15); }
+  .account-card:hover::after { opacity: 1; }
+
+  .account-card.transparency { --accent: var(--neon); --accent-glow: rgba(0,245,212,0.1); }
+  .account-card.freestyle { --accent: var(--plasma); --accent-glow: rgba(123,0,255,0.12); }
+  .account-card.burpee { --accent: var(--solar); --accent-glow: rgba(255,107,0,0.12); }
+
+  .card-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+  .card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    color: var(--accent);
+  }
+  .card-tag {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .card-items { list-style: none; }
+  .card-items li {
+    font-size: 12px;
+    color: rgba(232,224,255,0.6);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-items li::before { content: '→'; color: var(--accent); font-size: 10px; flex-shrink: 0; }
+
+  /* DAILY FLOW TIMELINE */
+  .flow {
+    margin-bottom: 80px;
+    position: relative;
+  }
+
+  .flow-line {
+    position: absolute;
+    left: 20px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--plasma), var(--neon), transparent);
+  }
+
+  .flow-item {
+    display: flex; gap: 40px; align-items: flex-start;
+    padding: 0 0 40px 60px;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideIn 0.5s ease forwards;
+  }
+
+  .flow-item:nth-child(1) { animation-delay: 0.1s; }
+  .flow-item:nth-child(2) { animation-delay: 0.2s; }
+  .flow-item:nth-child(3) { animation-delay: 0.3s; }
+  .flow-item:nth-child(4) { animation-delay: 0.4s; }
+  .flow-item:nth-child(5) { animation-delay: 0.5s; }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .flow-node {
+    position: absolute;
+    left: 12px;
+    top: 4px;
+    width: 17px; height: 17px;
+    border-radius: 50%;
+    background: var(--node-color, var(--plasma));
+    box-shadow: 0 0 12px var(--node-color, var(--plasma));
+    flex-shrink: 0;
+  }
+
+  .flow-time {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.25);
+    min-width: 60px;
+    padding-top: 4px;
+  }
+
+  .flow-content { flex: 1; }
+  .flow-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    color: white;
+    margin-bottom: 6px;
+  }
+  .flow-desc {
+    font-size: 12px;
+    color: rgba(232,224,255,0.45);
+    line-height: 1.7;
+  }
+  .flow-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .flow-tag {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 2px 10px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* PROJECTS GRID */
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 80px;
+  }
+
+  .project-card {
+    background: var(--ghost);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .project-card:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.12);
+    transform: scale(1.02);
+  }
+
+  .project-card .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: rgba(255,255,255,0.04);
+    position: absolute;
+    right: 16px;
+    top: 8px;
+    line-height: 1;
+  }
+
+  .project-emoji { font-size: 24px; margin-bottom: 12px; display: block; }
+  .project-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: white;
+    margin-bottom: 8px;
+  }
+  .project-desc {
+    font-size: 11px;
+    color: rgba(232,224,255,0.4);
+    line-height: 1.8;
+  }
+  .project-status {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 2px 8px;
+    border-radius: 1px;
+  }
+  .status-active { background: rgba(0,245,212,0.15); color: var(--neon); border: 1px solid rgba(0,245,212,0.3); }
+  .status-soon { background: rgba(255,229,102,0.1); color: var(--star); border: 1px solid rgba(255,229,102,0.25); }
+  .status-dream { background: rgba(123,0,255,0.12); color: var(--plasma); border: 1px solid rgba(123,0,255,0.3); }
+
+  /* ASTRO SECTION */
+  .astro-panel {
+    background: linear-gradient(135deg, rgba(123,0,255,0.08) 0%, rgba(0,245,212,0.04) 100%);
+    border: 1px solid rgba(123,0,255,0.2);
+    padding: 40px;
+    margin-bottom: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .astro-panel::before {
+    content: '♅';
+    position: absolute;
+    right: 30px; top: 20px;
+    font-size: 120px;
+    color: rgba(123,0,255,0.08);
+    line-height: 1;
+  }
+
+  .astro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+  }
+
+  .astro-item { }
+  .astro-planet {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--plasma);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .astro-meaning {
+    font-size: 13px;
+    color: rgba(232,224,255,0.7);
+    line-height: 1.7;
+  }
+
+  /* STACK TICKER */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 12px 0;
+    margin-bottom: 80px;
+    background: rgba(0,0,0,0.3);
+  }
+
+  .ticker-track {
+    display: flex; gap: 60px;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .ticker-item span { color: var(--neon); }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* MANTRA SECTION */
+  .mantra {
+    text-align: center;
+    padding: 80px 0;
+    position: relative;
+  }
+
+  .mantra-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 5vw, 56px);
+    line-height: 1.2;
+    color: rgba(255,255,255,0.12);
+    letter-spacing: 2px;
+  }
+
+  .mantra-text .highlight {
+    color: white;
+    text-shadow: 0 0 40px rgba(0,245,212,0.5);
+  }
+
+  /* PULSE VISUALIZER */
+  .visualizer {
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 3px; height: 60px;
+    margin: 40px 0;
+  }
+  .bar {
+    width: 4px;
+    background: linear-gradient(to top, var(--plasma), var(--neon));
+    border-radius: 2px 2px 0 0;
+    animation: barPulse ease-in-out infinite;
+  }
+  @keyframes barPulse {
+    0%, 100% { height: var(--min); }
+    50% { height: var(--max); }
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--void); }
+  ::-webkit-scrollbar-thumb { background: var(--plasma); border-radius: 2px; }
+
+  /* CORNER DECO */
+  .corner-tl, .corner-br {
+    position: fixed;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.1);
+    z-index: 10;
+  }
+  .corner-tl { top: 16px; left: 16px; }
+  .corner-br { bottom: 16px; right: 16px; }
+
+  /* NAV DOTS */
+  .nav-dots {
+    position: fixed;
+    right: 20px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 12px;
+    z-index: 10;
+  }
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .nav-dot:hover, .nav-dot.active {
+    background: var(--neon);
+    box-shadow: 0 0 8px var(--neon);
+    transform: scale(1.5);
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(123,0,255,0.4), rgba(0,245,212,0.4), transparent);
+    margin: 60px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-canvas"></div>
+<div class="grid-lines"></div>
+<div class="scanlines"></div>
+<div class="particles" id="particles"></div>
+
+<div class="corner-tl">FREESTYLE KING OS v0.1</div>
+<div class="corner-br">BROADCASTING FROM THE BASEMENT</div>
+
+<div class="nav-dots" id="navDots">
+  <div class="nav-dot active" data-section="0"></div>
+  <div class="nav-dot" data-section="1"></div>
+  <div class="nav-dot" data-section="2"></div>
+  <div class="nav-dot" data-section="3"></div>
+  <div class="nav-dot" data-section="4"></div>
+</div>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <section class="hero" id="s0">
+    <div class="hero-eyebrow">// the universe instruction manual</div>
+    <h1 class="hero-title">
+      <span class="line1">FREESTYLE</span>
+      <span class="line2" data-text="KING">KING</span>
+      <span class="line3">OS</span>
+    </h1>
+    <p class="hero-sub">
+      Basement streamer → van life streamer.<br>
+      <span>Astrology × Beats × Code × VJing × Burpees.</span><br>
+      The expansion play is live.
+    </p>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      LIVE ACCESS UNLOCKED — FREESTYLE KING ACCOUNT
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker-track" id="ticker">
+      <span class="ticker-item">ASTRO BEATS <span>→</span></span>
+      <span class="ticker-item">VJ SET PREP <span>→</span></span>
+      <span class="ticker-item">UNITY ENV ART <span>→</span></span>
+      <span class="ticker-item">BLENDER <span>→</span></span>
+      <span class="ticker-item">3JS SHADERS <span>→</span></span>
+      <span class="ticker-item">RAPBOT <span>→</span></span>
+      <span class="ticker-item">BURPEATHON <span>→</span></span>
+      <span class="ticker-item">TOUCH DESIGNER <span>→</span></span>
+      <span class="ticker-item">RESOLUM <span>→</span></span>
+      <span class="ticker-item">MUSIC DISCOVERY <span>→</span></span>
+      <span class="ticker-item">PHOTOGRAMMETRY <span>→</span></span>
+      <!-- duplicated for seamless loop -->
+      <span class="ticker-item">ASTRO BEATS <span>→</span></span>
+      <span class="ticker-item">VJ SET PREP <span>→</span></span>
+      <span class="ticker-item">UNITY ENV ART <span>→</span></span>
+      <span class="ticker-item">BLENDER <span>→</span></span>
+      <span class="ticker-item">3JS SHADERS <span>→</span></span>
+      <span class="ticker-item">RAPBOT <span>→</span></span>
+      <span class="ticker-item">BURPEATHON <span>→</span></span>
+      <span class="ticker-item">TOUCH DESIGNER <span>→</span></span>
+      <span class="ticker-item">RESOLUM <span>→</span></span>
+      <span class="ticker-item">MUSIC DISCOVERY <span>→</span></span>
+      <span class="ticker-item">PHOTOGRAMMETRY <span>→</span></span>
+    </div>
+  </div>
+
+  <!-- ACCOUNTS -->
+  <section id="s1">
+    <div class="section-label">// three-account universe</div>
+    <h2 class="section-title">THE SETUP</h2>
+
+    <div class="accounts">
+      <div class="account-card transparency">
+        <span class="card-icon">🔬</span>
+        <div class="card-name">TRANSPARENCY TECH</div>
+        <div class="card-tag">the reflective channel</div>
+        <ul class="card-items">
+          <li>Astro Beats — beat remakes daily</li>
+          <li>Unity / Blender environment art</li>
+          <li>VJ set list streams</li>
+          <li>3JS + GSLS shader work</li>
+          <li>Music discovery → beat loop</li>
+          <li>Photogrammetry projects</li>
+        </ul>
+      </div>
+
+      <div class="account-card freestyle">
+        <span class="card-icon">👑</span>
+        <div class="card-name">FREESTYLE KING</div>
+        <div class="card-tag">the dopamine channel</div>
+        <ul class="card-items">
+          <li>Gaming — live access unlocked</li>
+          <li>Freestyling + rap content</li>
+          <li>RapBot control sessions</li>
+          <li>SSX Tricky × fighting game soap opera</li>
+          <li>Ionic UI updates</li>
+          <li>Rhythm game streams</li>
+        </ul>
+      </div>
+
+      <div class="account-card burpee">
+        <span class="card-icon">💥</span>
+        <div class="card-name">BURPEATHON</div>
+        <div class="card-tag">the bridge ritual</div>
+        <ul class="card-items">
+          <li>Physical transition between streams</li>
+          <li>Cardio = music discovery engine</li>
+          <li>Raises vibration for broadcasting</li>
+          <li>Platform TBD — Instagram / wherever</li>
+          <li>Could fit on either main channel</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- DAILY FLOW -->
+  <section id="s2">
+    <div class="section-label">// stream schedule — transparency tech</div>
+    <h2 class="section-title">THE DAILY FLOW</h2>
+
+    <div class="flow">
+      <div class="flow-line"></div>
+
+      <div class="flow-item">
+        <div class="flow-node" style="--node-color: var(--solar)"></div>
+        <div class="flow-time">OPEN</div>
+        <div class="flow-content">
+          <div class="flow-title">Burpeathon Kickoff</div>
+          <div class="flow-desc">Lead off the day with cardio. The music theory born here seeds everything after — it's the origin of the beat remakes.</div>
+          <div class="flow-tags">
+            <span class="flow-tag">CARDIO</span>
+            <span class="flow-tag">MUSIC DISCOVERY</span>
+            <span class="flow-tag">TRANSITION RITUAL</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-node" style="--node-color: var(--neon)"></div>
+        <div class="flow-time">STREAM 1</div>
+        <div class="flow-content">
+          <div class="flow-title">Astro Beats</div>
+          <div class="flow-desc">Beat remakes based on whatever track hit hardest during Burpeathon. Work in Blender/Unity simultaneously — music discovery fuels both.</div>
+          <div class="flow-tags">
+            <span class="flow-tag">BEAT REMAKES</span>
+            <span class="flow-tag">TRANSPARENCY TECH</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-node" style="--node-color: var(--plasma)"></div>
+        <div class="flow-time">STREAM 2</div>
+        <div class="flow-content">
+          <div class="flow-title">Unity / Blender Work</div>
+          <div class="flow-desc">Environment art, interior design, Resolum. Boring stream that starts deep conversations. The work is for the portfolio — the stream is for the people who want to see you work.</div>
+          <div class="flow-tags">
+            <span class="flow-tag">UNITY</span>
+            <span class="flow-tag">BLENDER</span>
+            <span class="flow-tag">RESOLUM</span>
+            <span class="flow-tag">3JS SHADERS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-node" style="--node-color: var(--star)"></div>
+        <div class="flow-time">STREAM 3</div>
+        <div class="flow-content">
+          <div class="flow-title">VJ Set List</div>
+          <div class="flow-desc">The favorite part of the whole equation. 3D objects in Touch Designer. The visual side of the music that Astro Beats created.</div>
+          <div class="flow-tags">
+            <span class="flow-tag">VJ</span>
+            <span class="flow-tag">TOUCH DESIGNER</span>
+            <span class="flow-tag">SET PREP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-item">
+        <div class="flow-node" style="--node-color: var(--pulse)"></div>
+        <div class="flow-time">FREESTYLE</div>
+        <div class="flow-content">
+          <div class="flow-title">Freestyle King Channel</div>
+          <div class="flow-desc">Gaming, freestyling, RapBot sessions. Pure dopamine. The soap opera around the peripheral you're building.</div>
+          <div class="flow-tags">
+            <span class="flow-tag">GAMING</span>
+            <span class="flow-tag">RAPBOT</span>
+            <span class="flow-tag">FREESTYLE KING</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PROJECTS -->
+  <section id="s3">
+    <div class="section-label">// active build queue</div>
+    <h2 class="section-title">THE PROJECTS</h2>
+
+    <div class="projects">
+      <div class="project-card">
+        <span class="num">01</span>
+        <span class="project-emoji">🎵</span>
+        <div class="project-title">RapBot</div>
+        <div class="project-desc">Tone.js timing-based automatic + controllable rap bot. A peripheral. An adventure soap opera around it. Not even a game — bigger.</div>
+        <span class="project-status status-active">ACTIVE</span>
+      </div>
+
+      <div class="project-card">
+        <span class="num">02</span>
+        <span class="project-emoji">👑</span>
+        <div class="project-title">Freestyle King Game</div>
+        <div class="project-desc">SSX Tricky × fighting games × soap opera. Ionic UI updates already started. Party rap music video energy.</div>
+        <span class="project-status status-active">ACTIVE</span>
+      </div>
+
+      <div class="project-card">
+        <span class="num">03</span>
+        <span class="project-emoji">🌌</span>
+        <div class="project-title">VJ + Photogrammetry</div>
+        <div class="project-desc">Beat remix community using photogrammetry. New project. Where Astro Beats meets real-world 3D scanning.</div>
+        <span class="project-status status-soon">NEXT</span>
+      </div>
+
+      <div class="project-card">
+        <span class="num">04</span>
+        <span class="project-emoji">🎨</span>
+        <div class="project-title">3JS / GSLS Shaders</div>
+        <div class="project-desc">Shader work for portfolio. Part of the transparency tech stream. Becomes VJ material and showcase ads.</div>
+        <span class="project-status status-active">ACTIVE</span>
+      </div>
+
+      <div class="project-card">
+        <span class="num">05</span>
+        <span class="project-emoji">🏙️</span>
+        <div class="project-title">Unity Environment Art</div>
+        <div class="project-desc">Interior design + environment art in Unity. Do not forget this one. Don't forget this. Seriously. Do not forget it.</div>
+        <span class="project-status status-active">ACTIVE</span>
+      </div>
+
+      <div class="project-card">
+        <span class="num">06</span>
+        <span class="project-emoji">✨</span>
+        <div class="project-title">Touch Designer</div>
+        <div class="project-desc">Using 3D Blender objects creatively in Touch Designer. VJ endgame. Be realistic — but it's the direction.</div>
+        <span class="project-status status-dream">WHEN READY</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASTROLOGY -->
+  <section id="s4">
+    <div class="astro-panel">
+      <div class="section-label">// natal chart readings</div>
+      <h2 class="section-title" style="font-size: clamp(28px, 4vw, 48px);">URANUS IS RUNNING THIS</h2>
+
+      <div class="astro-grid">
+        <div class="astro-item">
+          <div class="astro-planet">♅ Uranus Retrograde</div>
+          <div class="astro-meaning">Random people popping into your stream. Having to be social unexpectedly. That's Uranus — and the retrograde is you figuring out what to do when they arrive.</div>
+        </div>
+        <div class="astro-item">
+          <div class="astro-planet">♄ Saturn × Uranus</div>
+          <div class="astro-meaning">5th house energy creating a playable instruction manual for yourself. Maintenance manual. Your relationships are ruled by your routine — they come and go because of it.</div>
+        </div>
+        <div class="astro-item">
+          <div class="astro-planet">♎ 5th House Libra</div>
+          <div class="astro-meaning">Not about dating. Broadcasting something for people to enjoy. Showing the show AND live streaming the process. Vertex appears when you're broadcasting.</div>
+        </div>
+        <div class="astro-item">
+          <div class="astro-planet">♀ Venus</div>
+          <div class="astro-meaning">The social energy. Being ready for people to show up and already knowing what to do with them. Build the virtual hangout space into the daily stream naturally.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISUALIZER + MANTRA -->
+  <div class="visualizer" id="visualizer"></div>
+
+  <div class="mantra">
+    <div class="mantra-text">
+      THE MUSIC THEORY<br>
+      FROM <span class="highlight">BURPEES</span><br>
+      CREATES THE BEATS<br>
+      FOR <span class="highlight">ASTRO BEATS</span><br>
+      WHICH BECOME THE<br>
+      <span class="highlight">VJ SET</span><br>
+      WHICH IS THE WHOLE<br>
+      <span class="highlight">POINT</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="text-align:center; padding: 40px 0 0; font-size: 11px; letter-spacing: 3px; color: rgba(255,255,255,0.15);">
+    BASEMENT → VAN LIFE → ARIZONA / ASIA<br>
+    <span style="color: rgba(0,245,212,0.4); margin-top: 8px; display:block;">EVERYTHING IS ALREADY RUNNING</span>
+  </div>
+
+</div>
+
+<script>
+  // PARTICLES
+  const particleContainer = document.getElementById('particles');
+  const colors = ['#7b00ff','#00f5d4','#ff006e','#ffe566','#ff6b00'];
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      background: ${color};
+      box-shadow: 0 0 6px ${color};
+      animation-duration: ${6 + Math.random() * 14}s;
+      animation-delay: ${Math.random() * 10}s;
+      --drift: ${(Math.random() - 0.5) * 200}px;
+      width: ${1 + Math.random() * 2}px;
+      height: ${1 + Math.random() * 2}px;
+    `;
+    particleContainer.appendChild(p);
+  }
+
+  // VISUALIZER BARS
+  const viz = document.getElementById('visualizer');
+  for (let i = 0; i < 48; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    const min = 4 + Math.random() * 12;
+    const max = 20 + Math.random() * 44;
+    bar.style.cssText = `
+      --min: ${min}px;
+      --max: ${max}px;
+      height: ${min}px;
+      animation-duration: ${0.5 + Math.random() * 1.5}s;
+      animation-delay: ${Math.random() * 1}s;
+    `;
+    viz.appendChild(bar);
+  }
+
+  // NAV DOTS
+  const sections = ['s0','s1','s2','s3','s4'];
+  const dots = document.querySelectorAll('.nav-dot');
+
+  function updateDots() {
+    sections.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+        dots.forEach(d => d.classList.remove('active'));
+        dots[i]?.classList.add('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateDots);
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      document.getElementById(sections[i])?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // CURSOR GLOW
+  const glow = document.createElement('div');
+  glow.style.cssText = `
+    position: fixed; pointer-events: none; z-index: 9999;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,245,212,0.04) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: left 0.1s ease, top 0.1s ease;
+  `;
+  document.body.appendChild(glow);
+  document.addEventListener('mousemove', e => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+</script>
+</body>
+</html>
