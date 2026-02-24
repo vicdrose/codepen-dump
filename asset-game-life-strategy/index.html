@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>The Asset Game - Life Strategy Map</title>
+
+  <style>
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body { 
+
+      font-family: 'Courier New', monospace; 
+
+      background: linear-gradient(135deg, #0f0f23, #1a1a3e, #2a1a4e); 
+
+      color: #fff; 
+
+      overflow: hidden; 
+
+      height: 100vh; 
+
+    }
+
+    .game-container { 
+
+      position: relative; 
+
+      width: 100vw; 
+
+      height: 100vh; 
+
+      perspective: 1000px; 
+
+    }
+
+    .hud { 
+
+      position: fixed; top: 20px; left: 20px; z-index: 100; 
+
+      background: rgba(0,0,0,0.8); border: 2px solid #00ff88; border-radius: 10px; padding: 15px; 
+
+      backdrop-filter: blur(10px); 
+
+    }
+
+    .progress-bars .quest { margin: 5px 0; font-size: 12px; }
+
+    .bar { background: #333; height: 8px; border-radius: 4px; overflow: hidden; margin-left: 10px; display: inline-block; width: 100px; }
+
+    .fill { background: linear-gradient(90deg, #ff00aa, #00ff88); height: 100%; width: 0%; transition: width 0.5s ease; }
+
+    .income { color: #ffd700; font-weight: bold; }
+
+    .tier-status span { display: block; margin: 5px 0; }
+
+    .locked { opacity: 0.5; text-decoration: line-through; }
+
+    .island { 
+
+      position: absolute; top: 20%; left: 50%; transform: translateX(-50%) rotateX(20deg); 
+
+      width: 1200px; height: 600px; 
+
+      background: radial-gradient(circle, #4a5568, #2d3748); 
+
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; 
+
+      box-shadow: 0 20px 50px rgba(0,255,136,0.3); 
+
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; padding: 50px; 
+
+    }
+
+    .district, .unlockable, .hot-air-balloon { 
+
+      background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); 
+
+      border: 2px solid #00ff88; border-radius: 15px; padding: 20px; text-align: center; 
+
+      cursor: pointer; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+
+      transform: translateY(0); position: relative; 
+
+    }
+
+    .district:hover, .unlockable:hover { 
+
+      transform: translateY(-10px) scale(1.05); box-shadow: 0 15px 30px rgba(0,255,136,0.5); 
+
+      border-color: #ff00aa; 
+
+    }
+
+    .icon { font-size: 40px; margin-bottom: 10px; }
+
+    h3 { font-size: 16px; margin-bottom: 5px; }
+
+    small { color: #00ff88; }
+
+    .dessert { position: absolute; top: -100px; right: 20%; animation: float 3s ease-in-out infinite; }
+
+    @keyframes float { 0%,100%{transform: translateY(0px);} 50%{transform: translateY(-10px);} }
+
+    .locked { filter: grayscale(1); opacity: 0.6; }
+
+    .unlocked { border-color: #ffd700; animation: pulse 1s infinite; }
+
+    @keyframes pulse { 0%,100%{box-shadow: 0 0 20px #ffd700;} 50%{box-shadow: 0 0 40px #ffd700;} }
+
+    #particles { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
+
+    @media (max-width: 768px) { .island { transform: none; width: 100%; padding: 20px; } }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="game-container">
+
+    <header class="hud">
+
+      <div class="progress-bars">
+
+        <div class="quest">Burpee-thon: <div class="bar" data-max="1"><div class="fill"></div></div></div>
+
+        <div class="quest">5 Astro Beats: <div class="bar" data-max="5"><div class="fill"></div></div></div>
+
+        <div class="quest">3 Freestyles: <div class="bar" data-max="3"><div class="fill"></div></div></div>
+
+        <div class="quest">1 Unity Anim: <div class="bar" data-max="1"><div class="fill"></div></div></div>
+
+        <div class="quest">1 Blender Output: <div class="bar" data-max="1"><div class="fill"></div></div></div>
+
+        <div class="quest income">$30 Floor: <span class="cash">$0</span></div>
+
+      </div>
+
+      <div class="tier-status">
+
+        <span class="grounded">🗼 Ground: Tech Job Active</span>
+
+        <span class="dessert locked">🎈 Dessert Tier: Locked</span>
+
+      </div>
+
+    </header>
+
+    <div class="island">
+
+      <div class="district tech-tower" data-quest="tech-job">
+
+        <div class="icon">🗼</div>
+
+        <h3>Tech Job Tower<br><small>Anchor</small></h3>
+
+        <p>Start here for stability!</p>
+
+      </div>
+
+      <div class="district fitness-plaza" data-quest="burpee">
+
+        <div class="icon">💪</div>
+
+        <h3>Burpee-thon Plaza</h3>
+
+        <p>Kettlebells + Music Discovery</p>
+
+      </div>
+
+      <div class="district astro-campus" data-quest="astro">
+
+        <div class="icon">🎧</div>
+
+        <h3>Astro Beats Campus</h3>
+
+        <p>College Stream, 5x Daily</p>
+
+      </div>
+
+      <div class="district freestyle-stage" data-quest="freestyle">
+
+        <div class="icon">🎤</div>
+
+        <h3>Freestyle King Stage</h3>
+
+        <p>3x Practice, Stage Presence</p>
+
+      </div>
+
+      <div class="district unity-lab" data-quest="unity">
+
+        <div class="icon">🔄</div>
+
+        <h3>Unity Lab</h3>
+
+        <p>1 Animation Output</p>
+
+      </div>
+
+      <div class="district blender-studio" data-quest="blender">
+
+        <div class="icon">🎨</div>
+
+        <h3>Blender/Resolum Studio</h3>
+
+        <p>1 Shader/3JS Output</p>
+
+      </div>
+
+      <div class="unlockable asia-island locked" data-unlock="asia">
+
+        <div class="icon">🍜</div>
+
+        <h3>Asia Kitchen Access</h3>
+
+        <p>Extra map for no-kitchen days</p>
+
+      </div>
+
+      <div class="hot-air-balloon dessert locked" data-quest="dessert">
+
+        <div class="icon">🎈</div>
+
+        <h3>Date for Location<br><small>Dessert Tier</small></h3>
+
+        <p>Unlocked after full routine!</p>
+
+      </div>
+
+    </div>
+
+    <canvas id="particles"></canvas>
+
+  </div>
+
+  <script>
+
+    const districts = document.querySelectorAll('.district, .hot-air-balloon');
+
+    const bars = document.querySelectorAll('.bar');
+
+    const cash = document.querySelector('.cash');
+
+    const dessert = document.querySelector('.dessert');
+
+    const asia = document.querySelector('.asia-island');
+
+    let completed = { burpee:0, astro:0, freestyle:0, unity:0, blender:0, tech:0, income:0 };
+
+    districts.forEach(d => {
+
+      d.addEventListener('click', () => {
+
+        const quest = d.dataset.quest;
+
+        if (quest === 'tech-job') { completed.tech = 1; updateIncome(); }
+
+        else if (completed[quest] < (d.closest('.quest')?.querySelector('.bar')?.dataset.max || 1)) {
+
+          completed[quest]++;
+
+          d.classList.remove('locked');
+
+          d.classList.add('unlocked');
+
+          updateBars(quest);
+
+        }
+
+        checkUnlocks();
+
+      });
+
+    });
+
+    function updateBars(quest) {
+
+      const fill = document.querySelector(`.quest:has([data-quest="${quest}"]) .fill`) || bars[Math.floor(Math.random()*bars.length)];
+
+      if (fill) fill.style.width = `${Math.min((completed[quest] / (fill.parentElement.dataset.max || 1)) * 100, 100)}%`;
+
+    }
+
+    function updateIncome() {
+
+      let total = Object.values(completed).reduce((a,b)=>a+b,0);
+
+      cash.textContent = `$${Math.min(total * 6, 30)}`;
+
+      if (total >= 5) cash.textContent = '$30+ FLOOR HIT!';
+
+    }
+
+    function checkUnlocks() {
+
+      if (completed.burpee && completed.astro >= 5 && completed.freestyle >= 3 && completed.unity && completed.blender && completed.tech) {
+
+        dessert.classList.remove('locked');
+
+        dessert.classList.add('unlocked');
+
+        if (asia) asia.classList.remove('locked');
+
+      }
+
+    }
+
+    const canvas = document.getElementById('particles');
+
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    function createParticles(x,y) {
+
+      for(let i=0; i<10; i++) particles.push({x,y, vx: (Math.random()-0.5)*5, vy: (Math.random()-0.5)*5, life:1});
+
+    }
+
+    function animate() {
+
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      particles.forEach((p,i) => {
+
+        p.x += p.vx; p.y += p.vy; p.life -= 0.02;
+
+        ctx.fillStyle = `rgba(0,255,136,${p.life})`;
+
+        ctx.fillRect(p.x, p.y, 3,3);
+
+        if(p.life < 0) particles.splice(i,1);
+
+      });
+
+      requestAnimationFrame(animate);
+
+    }
+
+    districts.forEach(d => d.addEventListener('click', (e) => createParticles(e.clientX, e.clientY)));
+
+    animate();
+
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+  </script>
+
+</body>
+
+</html>
