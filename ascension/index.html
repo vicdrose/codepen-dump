@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE ARCHITECT'S ASCENSION | OS v1.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-gold: #ffcc00;
+            --halo-blue: #00f2ff;
+            --xgames-red: #ff3e3e;
+            --bg-black: #0a0a0c;
+            --card-bg: rgba(20, 20, 25, 0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            cursor: crosshair;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: white;
+            font-family: 'Space Mono', monospace;
+            margin: 0;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        #glitch-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .hud-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border: 20px solid transparent;
+            border-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 0H0V10' stroke='%23ffcc00' stroke-width='2'/%3E%3Cpath d='M90 0H100V10' stroke='%23ffcc00' stroke-width='2'/%3E%3Cpath d='M10 100H0V90' stroke='%23ffcc00' stroke-width='2'/%3E%3Cpath d='M90 100H100V90' stroke='%23ffcc00' stroke-width='2'/%3E%3C/svg%3E") 20;
+            z-index: 100;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(to bottom, rgba(255, 204, 0, 0.1), transparent);
+        }
+
+        h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(2rem, 8vw, 5rem);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            color: var(--neon-gold);
+            text-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--halo-blue);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 850px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            position: relative;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            border-color: var(--neon-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card h2 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.5rem;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tag {
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 2px;
+            vertical-align: middle;
+        }
+
+        .tag-halo { background: var(--halo-blue); color: black; }
+        .tag-xgames { background: var(--xgames-red); color: white; }
+
+        .list-item {
+            margin-bottom: 20px;
+            border-left: 2px solid var(--neon-gold);
+            padding-left: 15px;
+        }
+
+        .list-item strong {
+            display: block;
+            color: var(--neon-gold);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .action-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            margin-top: 40px;
+            background: transparent;
+            border: 1px solid var(--neon-gold);
+            color: var(--neon-gold);
+            font-family: 'Syncopate', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            transition: 0.4s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            background: var(--neon-gold);
+            color: black;
+            box-shadow: 0 0 30px var(--neon-gold);
+        }
+
+        .glitch-text:hover {
+            animation: glitch 0.3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); color: var(--halo-blue); }
+            40% { transform: translate(-2px, -2px); color: var(--xgames-red); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: 40px;
+            font-size: 0.7rem;
+            opacity: 0.5;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="glitch-canvas"></canvas>
+    <div class="hud-overlay"></div>
+
+    <header>
+        <h1 class="glitch-text">ASCENSION</h1>
+        <div class="status-bar">
+            <span>[ SYSTEM: ACTIVE ]</span>
+            <span>[ FREQUENCY: HIGH ]</span>
+            <span>[ MODE: BROADCAST ]</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="card">
+            <h2>THE FORGE <span class="tag tag-halo">HALO MODE</span></h2>
+            <div class="list-item">
+                <strong>The Ritual: Burpeathon</strong>
+                The ignition sequence. Physical sacrifice to unlock the mental download.
+            </div>
+            <div class="list-item">
+                <strong>The Alchemy: Astro Beats</strong>
+                Decomposing Music Discovery into Blender environments and forged sonics.
+            </div>
+            <div class="list-item">
+                <strong>Vibe Coding: Command Tier</strong>
+                3JS, Tone.js, and GSLS controlled via AI deity-mode. No grinding, just creation.
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>THE ARENA <span class="tag tag-xgames">X-GAMES MODE</span></h2>
+            <div class="list-item">
+                <strong>The Main Event</strong>
+                SSX Tricky swagger meets fighting-game precision. High stakes, high chrome.
+            </div>
+            <div class="list-item">
+                <strong>The Co-Pilot: RapBot</strong>
+                A digital peripheral designed for lyrical stabilization and cinematic impact.
+            </div>
+            <div class="list-item">
+                <strong>The Presence</strong>
+                Ready for the "Uranus effect." When randoms pop in, the Kingdom is ready.
+            </div>
+        </section>
+
+        <section class="card" style="grid-column: 1 / -1;">
+            <h2>OPERATIONAL PHILOSOPHY</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div>
+                    <strong>BROADCAST = MEDICINE</strong>
+                    The "Live" light is your highest state of being.
+                </div>
+                <div>
+                    <strong>ROUTINE = THE LAW</strong>
+                    A Playable Instruction Manual for total expansion.
+                </div>
+                <div>
+                    <strong>VAN LIFE = DESTINY</strong>
+                    Optimizing JSON shards today for the open road tomorrow.
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div style="max-width: 600px; margin: 0 auto; padding: 0 20px;">
+        <a href="#" class="action-btn" id="init-btn">INITIALIZE JSON SHARDING</a>
+    </div>
+
+    <div class="footer-note">
+        BASEMENT_TO_VAN_V1.0 // SCRIPTED IN ENGLISH // EXECUTED BY AI
+    </div>
+
+    <script>
+        const canvas = document.getElementById('glitch-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const characters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
+        const fontSize = 10;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function draw() {
+            ctx.fillStyle = 'rgba(10, 10, 12, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00f2ff';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 33);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        const btn = document.getElementById('init-btn');
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const originalText = btn.innerText;
+            btn.innerText = "OPTIMIZING FLOW...";
+            btn.style.borderColor = "#ff3e3e";
+            btn.style.color = "#ff3e3e";
+            
+            setTimeout(() => {
+                btn.innerText = "SHARDS SYNCED";
+                btn.style.borderColor = "#00f2ff";
+                btn.style.color = "#00f2ff";
+            }, 1500);
+
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.borderColor = "#ffcc00";
+                btn.style.color = "#ffcc00";
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
