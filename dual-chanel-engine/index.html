@@ -1,0 +1,303 @@
+<div id="app">
+
+  <canvas id="bg"></canvas>
+
+  <div class="ui">
+
+    <h1>DUAL CHANNEL ENGINE</h1>
+
+    <div class="subtitle">Music → Visual → Performance → Evolution</div>
+
+    <div class="panel">
+
+      <h2>Transparency Tech</h2>
+
+      <p>Astro Beats • Visual Dev • VJ Set Construction</p>
+
+      <button id="buildBtn">Enter Build Mode</button>
+
+    </div>
+
+    <div class="panel">
+
+      <h2>Freestyle King</h2>
+
+      <p>Gaming • Rhythm • RapBot • Live Performance</p>
+
+      <button id="performBtn">Enter Performance Mode</button>
+
+    </div>
+
+  </div>
+
+  <div class="mode-indicator" id="modeLabel">
+
+    MODE: IDLE
+
+  </div>
+
+</div>
+
+<style>
+
+* {
+
+  margin: 0;
+
+  padding: 0;
+
+  box-sizing: border-box;
+
+  font-family: monospace;
+
+}
+
+body {
+
+  background: #000;
+
+  color: #fff;
+
+  overflow: hidden;
+
+}
+
+canvas {
+
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+
+}
+
+.ui {
+
+  position: relative;
+
+  z-index: 10;
+
+  width: 100%;
+
+  padding: 40px;
+
+}
+
+h1 {
+
+  font-size: 3rem;
+
+  letter-spacing: 4px;
+
+  margin-bottom: 10px;
+
+  text-shadow: 0 0 20px cyan;
+
+}
+
+.subtitle {
+
+  opacity: 0.9;
+
+  margin-bottom: 40px;
+
+}
+
+.panel {
+
+  margin-bottom: 30px;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.75);
+
+  border: 1px solid rgba(0,255,255,0.5);
+
+  border-radius: 12px;
+
+  box-shadow: 0 0 25px rgba(0,255,255,0.2);
+
+  transition: 0.3s ease;
+
+}
+
+.panel:hover {
+
+  box-shadow: 0 0 40px rgba(0,255,255,0.6);
+
+}
+
+button {
+
+  padding: 10px 20px;
+
+  margin-top: 15px;
+
+  background: rgba(0,255,255,0.1);
+
+  border: 1px solid cyan;
+
+  color: cyan;
+
+  cursor: pointer;
+
+  border-radius: 8px;
+
+}
+
+button:hover {
+
+  background: cyan;
+
+  color: black;
+
+}
+
+.mode-indicator {
+
+  position: absolute;
+
+  bottom: 30px;
+
+  right: 40px;
+
+  font-size: 1.2rem;
+
+  background: rgba(0,0,0,0.7);
+
+  padding: 10px 15px;
+
+  border-radius: 8px;
+
+  border: 1px solid cyan;
+
+}
+
+</style>
+
+<script>
+
+const canvas = document.getElementById("bg");
+
+const ctx = canvas.getContext("2d");
+
+function resize() {
+
+  canvas.width = window.innerWidth;
+
+  canvas.height = window.innerHeight;
+
+}
+
+resize();
+
+window.addEventListener("resize", resize);
+
+let mode = "idle";
+
+let particles = [];
+
+function initParticles(count) {
+
+  particles = [];
+
+  for (let i = 0; i < count; i++) {
+
+    particles.push({
+
+      x: Math.random() * canvas.width,
+
+      y: Math.random() * canvas.height,
+
+      vx: (Math.random() - 0.5) * 2,
+
+      vy: (Math.random() - 0.5) * 2,
+
+      size: Math.random() * 2 + 1
+
+    });
+
+  }
+
+}
+
+initParticles(200);
+
+function animate() {
+
+  ctx.fillStyle = "rgba(0,0,0,0.2)";
+
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach(p => {
+
+    if (mode === "build") {
+
+      p.vx *= 1.01;
+
+      p.vy *= 1.01;
+
+    } else if (mode === "perform") {
+
+      p.vx += (Math.random() - 0.5) * 0.4;
+
+      p.vy += (Math.random() - 0.5) * 0.4;
+
+    }
+
+    p.x += p.vx;
+
+    p.y += p.vy;
+
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+    ctx.beginPath();
+
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+
+    ctx.fillStyle =
+
+      mode === "build"
+
+        ? "rgba(0,255,255,0.9)"
+
+        : mode === "perform"
+
+        ? "rgba(255,0,200,0.9)"
+
+        : "rgba(0,255,255,0.6)";
+
+    ctx.fill();
+
+  });
+
+  requestAnimationFrame(animate);
+
+}
+
+animate();
+
+document.getElementById("buildBtn").addEventListener("click", () => {
+
+  mode = "build";
+
+  document.getElementById("modeLabel").innerText = "MODE: BUILD";
+
+  initParticles(250);
+
+});
+
+document.getElementById("performBtn").addEventListener("click", () => {
+
+  mode = "perform";
+
+  document.getElementById("modeLabel").innerText = "MODE: PERFORMANCE";
+
+  initParticles(350);
+
+});
+
+</script>
