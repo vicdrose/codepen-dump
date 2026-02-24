@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Astro Freestyle · creative ecosystem</title>
+
+    <!-- fonts & vibe -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+        body {
+
+            background: #0b0d17;
+
+            font-family: 'Space Grotesk', sans-serif;
+
+            color: #eaeef2;
+
+            line-height: 1.5;
+
+            min-height: 100vh;
+
+            padding: 2rem 1.5rem;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            position: relative;
+
+            overflow-x: hidden;
+
+        }
+
+        /* cosmic grain / uranus texture */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            top: 0; left: 0; width: 100%; height: 100%;
+
+            background: radial-gradient(circle at 30% 40%, rgba(80, 140, 255, 0.08) 0%, transparent 40%),
+
+                        radial-gradient(circle at 80% 70%, rgba(210, 140, 255, 0.08) 0%, transparent 45%),
+
+                        repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 2px, transparent 2px, transparent 8px);
+
+            pointer-events: none;
+
+            z-index: 0;
+
+        }
+
+        .main-panel {
+
+            max-width: 1300px;
+
+            width: 100%;
+
+            background: rgba(18, 22, 38, 0.75);
+
+            backdrop-filter: blur(12px);
+
+            -webkit-backdrop-filter: blur(12px);
+
+            border: 1px solid rgba(160, 190, 255, 0.2);
+
+            border-radius: 2.5rem;
+
+            padding: 2.2rem 2rem;
+
+            box-shadow: 0 25px 50px -8px rgba(0,0,0,0.8), 0 0 0 1px rgba(120, 180, 255, 0.15) inset;
+
+            z-index: 2;
+
+            position: relative;
+
+        }
+
+        /* header — ruler of my life diagram */
+
+        .cosmic-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            flex-wrap: wrap;
+
+            gap: 1.5rem 1rem;
+
+            margin-bottom: 2.5rem;
+
+            border-bottom: 2px dashed rgba(140, 190, 255, 0.3);
+
+            padding-bottom: 1.8rem;
+
+        }
+
+        .title-glow {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 1rem;
+
+        }
+
+        .title-glow h1 {
+
+            font-weight: 600;
+
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+
+            letter-spacing: -0.02em;
+
+            background: linear-gradient(130deg, #b7dcff, #c2b0ff, #a0d0ff);
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+
+            text-shadow: 0 0 15px #4466ee55;
+
+        }
+
+        .badge-constellation {
+
+            background: #1e2740;
+
+            border-radius: 60px;
+
+            padding: 0.4rem 1.2rem;
+
+            font-size: 1rem;
+
+            font-weight: 500;
+
+            border: 1px solid #4d7eff;
+
+            color: #b7d0ff;
+
+            box-shadow: 0 0 12px #3f6aff55;
+
+            backdrop-filter: blur(4px);
+
+            white-space: nowrap;
+
+        }
+
+        .live-access {
+
+            display: flex;
+
+            gap: 1.2rem;
+
+            flex-wrap: wrap;
+
+        }
+
+        .pill {
+
+            background: #131b30;
+
+            border-radius: 40px;
+
+            padding: 0.5rem 1.4rem;
+
+            font-size: 1rem;
+
+            font-weight: 500;
+
+            border: 1px solid #5f7bbf;
+
+            color: #ccdcff;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+        }
+
+        .pill .dot {
+
+            width: 10px;
+
+            height: 10px;
+
+            background: #5aff8c;
+
+            border-radius: 10px;
+
+            box-shadow: 0 0 10px #2eff70;
+
+        }
+
+        /* 3‑pillar grid (freestyle | burpee | transparency) */
+
+        .trinity-dashboard {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+            gap: 1.5rem;
+
+            margin: 2.8rem 0 2.2rem;
+
+        }
+
+        .card {
+
+            background: rgba(12, 18, 34, 0.7);
+
+            backdrop-filter: blur(8px);
+
+            border: 1px solid rgba(80, 140, 255, 0.25);
+
+            border-radius: 2rem;
+
+            padding: 1.8rem 1.4rem 1.8rem 1.4rem;
+
+            transition: all 0.2s ease;
+
+            box-shadow: 0 15px 25px -15px #00000080;
+
+        }
+
+        .card:hover {
+
+            border-color: #7a9fff;
+
+            box-shadow: 0 20px 30px -12px #2f4bff60, 0 0 0 1px #3f6eff66 inset;
+
+            transform: translateY(-3px);
+
+        }
+
+        .card-icon {
+
+            font-size: 2.4rem;
+
+            margin-bottom: 0.75rem;
+
+        }
+
+        .card h3 {
+
+            font-size: 1.8rem;
+
+            font-weight: 600;
+
+            letter-spacing: -0.01em;
+
+            margin-bottom: 0.5rem;
+
+            background: linear-gradient(145deg, #fff, #bdd0ff);
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            color: transparent;
+
+        }
+
+        .card .sub {
+
+            color: #9bb0da;
+
+            font-size: 1rem;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 1.2rem;
+
+            border-left: 3px solid #567fff;
+
+            padding-left: 0.7rem;
+
+        }
+
+        .card ul {
+
+            list-style: none;
+
+            margin: 1rem 0 0.2rem;
+
+        }
+
+        .card li {
+
+            padding: 0.4rem 0;
+
+            font-weight: 400;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: #cbd5f0;
+
+            border-bottom: 1px dashed #2a3650;
+
+        }
+
+        .card li:last-child {
+
+            border: none;
+
+        }
+
+        .card li::before {
+
+            content: "✦";
+
+            color: #6d9aff;
+
+            font-weight: 300;
+
+            font-size: 1.2rem;
+
+        }
+
+        /* special burpee transition card */
+
+        .card-burpee {
+
+            background: linear-gradient(145deg, #142113, #0f1d1c);
+
+            border-color: #78c68f;
+
+        }
+
+        .card-burpee li::before { content: "⛓️‍🔥"; color: #b5ff9f; font-size: 1rem; }
+
+        /* beat / tech journal row */
+
+        .stream-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+
+            gap: 1.4rem;
+
+            margin: 2rem 0 1.5rem;
+
+        }
+
+        .stream-item {
+
+            background: #121b2f;
+
+            border-radius: 1.8rem;
+
+            padding: 1.2rem 1.4rem;
+
+            border: 1px solid #2e4570;
+
+            box-shadow: 0 6px 0 #0b121f;
+
+        }
+
+        .stream-item .time {
+
+            font-size: 0.85rem;
+
+            color: #a3bef0;
+
+            letter-spacing: 1px;
+
+        }
+
+        .stream-item h4 {
+
+            font-size: 1.5rem;
+
+            font-weight: 600;
+
+            line-height: 1.2;
+
+            margin: 0.25rem 0 0.6rem;
+
+        }
+
+        .vibe-tag {
+
+            display: inline-block;
+
+            background: #1d314f;
+
+            border-radius: 30px;
+
+            padding: 0.25rem 1rem;
+
+            font-size: 0.9rem;
+
+            margin-right: 0.5rem;
+
+            margin-bottom: 0.5rem;
+
+            border: 1px solid #3f6190;
+
+        }
+
+        .vibe-tag.highlight {
+
+            background: #374e7c;
+
+            border-color: #a0c0ff;
+
+            color: white;
+
+        }
+
+        .uranus-note {
+
+            background: #1e253f;
+
+            border-radius: 2rem;
+
+            padding: 1.5rem 2rem;
+
+            margin: 2.2rem 0 1.8rem;
+
+            border-left: 8px solid #c27aff;
+
+            font-style: italic;
+
+            box-shadow: 0 0 30px #6622cc20;
+
+            font-size: 1.2rem;
+
+            position: relative;
+
+        }
+
+        .uranus-note::before {
+
+            content: "♅";
+
+            font-size: 3rem;
+
+            opacity: 0.3;
+
+            position: absolute;
+
+            right: 30px;
+
+            bottom: 0px;
+
+            color: #ba9eff;
+
+        }
+
+        /* rapbot / vj setlist row */
+
+        .code-features {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 1rem 1.5rem;
+
+            background: #050a15;
+
+            border-radius: 2.5rem;
+
+            padding: 1.8rem 2rem;
+
+            margin: 1.8rem 0;
+
+            border: 1px solid #4f6499;
+
+        }
+
+        .feature-badge {
+
+            background: #1d2b45;
+
+            border-radius: 40px;
+
+            padding: 0.5rem 1.4rem;
+
+            font-size: 1.1rem;
+
+            font-weight: 500;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            border: 1px solid #617bbf;
+
+        }
+
+        .feature-badge .emoji-big {
+
+            font-size: 1.7rem;
+
+        }
+
+        .lunch-table-quote {
+
+            font-size: 1.3rem;
+
+            font-weight: 400;
+
+            background: #2f1c3e;
+
+            border-radius: 3rem;
+
+            padding: 1rem 2rem;
+
+            display: inline-block;
+
+            margin: 1rem 0 0.5rem;
+
+            border: 1px solid #c679ff;
+
+            box-shadow: 0 0 18px #ac4dff40;
+
+        }
+
+        /* footer schedule */
+
+        .daily-rhythm {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 0.9rem;
+
+            margin-top: 2.8rem;
+
+            border-top: 2px solid #253458;
+
+            padding-top: 2rem;
+
+        }
+
+        .rhythm-step {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 1rem;
+
+            flex-wrap: wrap;
+
+            background: #0f172bb3;
+
+            border-radius: 60px;
+
+            padding: 0.8rem 1.8rem 0.8rem 1.2rem;
+
+            border: 1px solid #3f5688;
+
+        }
+
+        .step-icon {
+
+            font-size: 2rem;
+
+            width: 3rem;
+
+            text-align: center;
+
+        }
+
+        .step-desc {
+
+            font-weight: 500;
+
+            flex: 1;
+
+        }
+
+        .step-tag {
+
+            background: #243556;
+
+            border-radius: 30px;
+
+            padding: 0.3rem 1.2rem;
+
+            color: #b5d0ff;
+
+            font-size: 0.9rem;
+
+            border: 1px solid #6e8cd4;
+
+        }
+
+        .glow {
+
+            text-shadow: 0 0 15px #6390ff;
+
+        }
+
+        .small-note {
+
+            color: #a7b9e6;
+
+            font-size: 0.95rem;
+
+            margin-top: 1rem;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="main-panel">
+
+        <!-- header / ruler of my life -->
+
+        <div class="cosmic-header">
+
+            <div class="title-glow">
+
+                <h1>✧ ɴᴇᴛᴡᴏʀᴋ ᴏꜰ ᴛʜʀᴇᴇ ✧</h1>
+
+                <span class="badge-constellation">uranus · venus · vertex</span>
+
+            </div>
+
+            <div class="live-access">
+
+                <span class="pill"><span class="dot"></span> freestyle king LIVE</span>
+
+                <span class="pill"><span class="dot" style="background: #b77aff;"></span> transparency tech</span>
+
+            </div>
+
+        </div>
+
+        <!-- trinity: freestyle king | burpeethon | transparency / astro beats -->
+
+        <div class="trinity-dashboard">
+
+            <!-- freestyle king card -->
+
+            <div class="card">
+
+                <div class="card-icon">🎮🎤</div>
+
+                <h3>freestyle king</h3>
+
+                <div class="sub">SSX tricky · soap opera · rhythm games</div>
+
+                <ul>
+
+                    <li>gaming & freestyling</li>
+
+                    <li>rapbot hypeman / peripheral</li>
+
+                    <li>ionic UI · adventure soap opera</li>
+
+                    <li>“dopamine zone”</li>
+
+                </ul>
+
+                <div style="margin-top: 1rem;"><span style="background:#2e3d62; padding:0.3rem 1rem; border-radius:30px;">⚡ fighting game energy</span></div>
+
+            </div>
+
+            <!-- burpeethon transition card (special) -->
+
+            <div class="card card-burpee">
+
+                <div class="card-icon">⛓️‍🔥🔥</div>
+
+                <h3>ʙᴜʀᴘᴇᴇᴛʜᴏɴ</h3>
+
+                <div class="sub">the GLUE · physical reset</div>
+
+                <ul>
+
+                    <li>transition: work ⇄ performance</li>
+
+                    <li>80% cardio + music discovery</li>
+
+                    <li>“leadoff the day”</li>
+
+                    <li>burpee beat switch</li>
+
+                </ul>
+
+                <div style="margin-top:1rem; color:#b5ffb5;">⏳ uranus retrograde: random pop‑in ready</div>
+
+            </div>
+
+            <!-- transparency / astro beats card -->
+
+            <div class="card">
+
+                <div class="card-icon">🌀🔮</div>
+
+                <h3>ᴛʀᴀɴꜱᴘᴀʀᴇɴᴄʏ ᴛᴇᴄʜ</h3>
+
+                <div class="sub">astro beats · blender · resolum</div>
+
+                <ul>
+
+                    <li>beat remakes + music discovery</li>
+
+                    <li>unity / blender / 3js shaders</li>
+
+                    <li>vj setlist · photogrammetry</li>
+
+                    <li>“boring but conversation”</li>
+
+                </ul>
+
+                <div style="margin-top:0.8rem;"><span class="vibe-tag">#vibecoding</span><span class="vibe-tag">#touchdesigner</span></div>
+
+            </div>
+
+        </div>
+
+        <!-- three daily transparency streams (refined schedule) -->
+
+        <div class="stream-grid">
+
+            <div class="stream-item">
+
+                <span class="time">🌅 1 / morning</span>
+
+                <h4>ᴀꜱᴛʀᴏ ʙᴇᴀᴛꜱ</h4>
+
+                <div>beat remakes · yerba + turmeric stack</div>
+
+                <div style="margin-top: 10px;">
+
+                    <span class="vibe-tag highlight">#musicdiscovery</span>
+
+                    <span class="vibe-tag">#remix</span>
+
+                </div>
+
+            </div>
+
+            <div class="stream-item">
+
+                <span class="time">🖥️ 2 / deep work</span>
+
+                <h4>ᴜɴɪᴛʏ + ʙʟᴇɴᴅᴇʀ</h4>
+
+                <div>environment art · interior design · 3JS GSLS</div>
+
+                <div style="margin-top: 10px;">
+
+                    <span class="vibe-tag highlight">#LLMcoding</span>
+
+                    <span class="vibe-tag">#spokendev</span>
+
+                </div>
+
+            </div>
+
+            <div class="stream-item">
+
+                <span class="time">🎛️ 3 / evening</span>
+
+                <h4>ᴠᴊ ꜱᴇᴛ ʟɪꜱᴛ</h4>
+
+                <div>rapbot + VJ · photogrammetry · touchdesigner dreams</div>
+
+                <div style="margin-top: 10px;">
+
+                    <span class="vibe-tag">#setprep</span>
+
+                    <span class="vibe-tag highlight">#favorite</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- uranus / venus note: random hangout & broadcast -->
+
+        <div class="uranus-note">
+
+            <strong>♅ ᴜʀᴀɴᴜꜱ ʀᴇᴛʀᴏɢʀᴀᴅᴇ · ᴛʜᴇ ʀᴀɴᴅᴏᴍ ᴘᴏᴘ‑ɪɴ</strong><br>
+
+            “virtual hangout space always ready – that’s uranus + venus. someone appears? you got beats, burpees, or blender to share. fifth house broadcasting = highest vibration.”
+
+        </div>
+
+        <!-- rapbot / code features / peripheral row -->
+
+        <div class="code-features">
+
+            <span class="feature-badge"><span class="emoji-big">🤖</span> ʀᴀᴘʙᴏᴛ · tone.js · timing</span>
+
+            <span class="feature-badge"><span class="emoji-big">📼</span> VJ setlist · resolum · 3js</span>
+
+            <span class="feature-badge"><span class="emoji-big">🧼</span> soap opera adventure</span>
+
+            <span class="feature-badge"><span class="emoji-big">⚙️</span> feature limit / day</span>
+
+        </div>
+
+        <!-- lunch table revelation + vertex -->
+
+        <div class="lunch-table-quote">
+
+            “it all comes back to the lunch tables at school. that’s where vertex appears — broadcasting to whoever’s interested.”
+
+        </div>
+
+        <!-- maintenance manual / saturn + 5th house -->
+
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin: 2rem 0 1rem;">
+
+            <div style="background:#212d4a; border-radius: 2rem; padding:0.8rem 2rem;">
+
+                <span style="font-weight:600;">🪐 saturn · 5th house instruction manual:</span> “relationships ruled by routine. cooking & gooning slots = extra time for connection.”
+
+            </div>
+
+            <div style="background:#1f2930; border-radius: 2rem; padding:0.8rem 1.5rem;">
+
+                🎯 two‑phone youtube: lizard hunter + red pill tarot
+
+            </div>
+
+        </div>
+
+        <!-- daily rhythm — new schedule -->
+
+        <div class="daily-rhythm">
+
+            <div class="rhythm-step">
+
+                <span class="step-icon">⛓️</span>
+
+                <span class="step-desc"><strong>ʙᴜʀᴘᴇᴇᴛʜᴏɴ</strong> (lead with cardio / reset)</span>
+
+                <span class="step-tag">transition in</span>
+
+            </div>
+
+            <div class="rhythm-step">
+
+                <span class="step-icon">🎧</span>
+
+                <span class="step-desc"><strong>ᴀꜱᴛʀᴏ ʙᴇᴀᴛꜱ</strong> · beat remakes</span>
+
+                <span class="step-tag">transparency #1</span>
+
+            </div>
+
+            <div class="rhythm-step">
+
+                <span class="step-icon">🖌️</span>
+
+                <span class="step-desc"><strong>ᴜɴɪᴛʏ / ʙʟᴇɴᴅᴇʀ + ᴠɪʙᴇ ᴄᴏᴅɪɴɢ</strong> (music discovery paired)</span>
+
+                <span class="step-tag">transparency #2</span>
+
+            </div>
+
+            <div class="rhythm-step">
+
+                <span class="step-icon">💨</span>
+
+                <span class="step-desc"><strong>ʙᴜʀᴘᴇᴇᴛʜᴏɴ</strong> again – switch to performance mode</span>
+
+                <span class="step-tag">transition out</span>
+
+            </div>
+
+            <div class="rhythm-step">
+
+                <span class="step-icon">🎮</span>
+
+                <span class="step-desc"><strong>ꜰʀᴇᴇꜱᴛʏʟᴇ ᴋɪɴɢ</strong> gaming · rapbot · ionic ui · SSX tricky</span>
+
+                <span class="step-tag">freestyle live</span>
+
+            </div>
+
+            <div style="margin-top: 0.5rem; background:#202943; border-radius: 3rem; padding: 1rem 1.5rem;">
+
+                🌙 after 9pm · happy hour near campus / wework + gym (unless concert)
+
+            </div>
+
+        </div>
+
+        <!-- footer notes / blender / vj / coding live -->
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-top: 2.5rem; border-top: 1px solid #314b77; padding-top: 1.5rem; color: #b1c7ff; font-size: 0.95rem;">
+
+            <div>🎛️ VJ set whenever — photogrammetry + blender + touchdesigner pipeline</div>
+
+            <div>🧑‍💻 coding live = mic + LLM · “vibe coding limit: features per day”</div>
+
+        </div>
+
+        <div class="small-note">
+
+            ⚡ current focus: party rap music videos · video game cutscenes · freestyle king ionic UI + rapbot JSON split. “image effects stitch = create something from nothing”
+
+        </div>
+
+        <div style="text-align: right; margin-top: 1.8rem; font-size: 1.5rem; opacity: 0.6; letter-spacing: 4px;">
+
+            ✦ ʙʀᴏᴀᴅᴄᴀꜱᴛ ʏᴏᴜʀ ᴠɪʙʀᴀᴛɪᴏɴ ✦
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
