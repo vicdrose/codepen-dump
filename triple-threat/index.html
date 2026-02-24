@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>◈ THE BROADCAST ◈ triple threat engine</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0b0d1a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            padding: 1rem;
+            background-image: radial-gradient(circle at 20% 30%, #1e2340 0%, #03050c 90%);
+            background-attachment: fixed;
+        }
+
+        /* main stage – halo glow */
+        .broadcast-deck {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(10, 15, 28, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 180, 40, 0.25);
+            border-radius: 3.5rem 3.5rem 2.5rem 2.5rem;
+            padding: 2.2rem 2rem 2.5rem 2rem;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.7), 0 0 0 2px rgba(255, 200, 100, 0.1) inset, 0 0 30px #f0b34b30;
+            transition: box-shadow 0.3s;
+        }
+
+        /* XGames mode stripe — leo rising signature */
+        .header-x {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #ffb24b;
+            padding-bottom: 1.2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem 1.5rem;
+        }
+
+        .callsign {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .callsign h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(130deg, #fff6d9, #ffcd88, #ffb347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px #ffb34780, 0 0 40px #ff7b0030;
+            line-height: 1;
+        }
+
+        .badge-leo {
+            background: #ffb650;
+            color: #0a0f1c;
+            font-weight: 800;
+            font-size: 0.9rem;
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border: 1px solid #ffeac2;
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .broadcast-status {
+            display: flex;
+            gap: 1.4rem;
+            color: #b9c6db;
+            font-weight: 500;
+        }
+
+        .broadcast-status span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .dot-live {
+            width: 12px;
+            height: 12px;
+            background: #f55555;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #ff4444;
+            animation: pulseLive 1.6s infinite;
+        }
+
+        @keyframes pulseLive {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* 3-panel core – halo mode layout */
+        .tri-beam {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .channel {
+            background: rgba(20, 25, 45, 0.7);
+            border-radius: 2.2rem;
+            border: 1px solid rgba(255, 180, 70, 0.2);
+            backdrop-filter: blur(6px);
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 25px 35px -15px black, 0 0 0 1px #ffb8501a inset;
+            transition: all 0.25s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .channel:hover {
+            border-color: #ffb347;
+            box-shadow: 0 0 25px #ffb34740, 0 10px 25px -10px #000;
+            transform: translateY(-3px);
+        }
+
+        .channel-icon {
+            font-size: 2.8rem;
+            filter: drop-shadow(0 0 8px #f5b042);
+            margin-bottom: 0.6rem;
+        }
+
+        .channel h2 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #ffeac2;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid #ffb347;
+            padding-left: 1rem;
+        }
+
+        .channel .desc {
+            color: #b0c0e0;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 1.4rem;
+            flex: 1;
+        }
+
+        .feature-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 0.7rem 0 1.4rem;
+        }
+
+        .feature-tag {
+            background: rgba(255, 180, 70, 0.12);
+            border: 1px solid #ffb85040;
+            color: #ffdbad;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .vibe-meter {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.95rem;
+            color: #ffe9b6;
+            margin-top: 0.7rem;
+            border-top: 1px dashed #ffb85040;
+            padding-top: 1rem;
+        }
+
+        .vibe-bar {
+            height: 8px;
+            width: 100%;
+            background: #1f2540;
+            border-radius: 20px;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .vibe-fill {
+            height: 100%;
+            width: 88%;
+            background: linear-gradient(90deg, #ffb24b, #ffdd99);
+            border-radius: 20px;
+            box-shadow: 0 0 10px #ffae44;
+        }
+
+        /* XGames mode dash */
+        .x-dash {
+            display: grid;
+            grid-template-columns: 1.2fr 0.9fr 1.2fr;
+            gap: 1.5rem;
+            margin: 2.8rem 0 2rem;
+        }
+
+        .stat-panel {
+            background: #0f1425dd;
+            border-radius: 2rem;
+            padding: 1.4rem 1.8rem;
+            border: 1px solid #ffb65040;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 15px 25px -10px #00000080;
+        }
+
+        .stat-title {
+            color: #ffcf8a;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .counter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .counter-label {
+            font-size: 0.85rem;
+            color: #9aa9c7;
+            text-transform: uppercase;
+        }
+
+        .feature-ship {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.8rem;
+        }
+
+        .ship-unit {
+            background: #1f2745;
+            border-radius: 40px;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-left: 3px solid #ffb347;
+            color: #d6e0ff;
+        }
+
+        /* bottom mantra – halo mode */
+        .mantra {
+            display: flex;
+            justify-content: center;
+            margin-top: 2.2rem;
+            font-size: 1.3rem;
+            font-weight: 400;
+            background: rgba(0,0,0,0.3);
+            padding: 1.2rem 2rem;
+            border-radius: 60px;
+            border: 1px solid #ffb65060;
+            color: #ffe1b9;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            backdrop-filter: blur(4px);
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mantra strong {
+            font-weight: 700;
+            color: #ffc56e;
+            text-shadow: 0 0 5px #ffb347;
+        }
+
+        .glow-small {
+            width: 8px;
+            height: 8px;
+            background: #ffb347;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #ffb347;
+            margin: 0 0.5rem;
+        }
+
+        /* responsive halo */
+        @media (max-width: 900px) {
+            .tri-beam {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .x-dash {
+                grid-template-columns: 1fr;
+            }
+            .header-x {
+                flex-direction: column;
+                align-items: start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="broadcast-deck">
+        <!-- LEO RISING HEADER : XGames mode engage -->
+        <div class="header-x">
+            <div class="callsign">
+                <span class="channel-icon" style="font-size:2.2rem;">◈</span>
+                <h1>THE BROADCAST</h1>
+                <span class="badge-leo">LEO RISING</span>
+            </div>
+            <div class="broadcast-status">
+                <span><span class="dot-live"></span> LIVE · 3 CHANNELS</span>
+                <span>⚡ 12H JUPITER EXPANSION</span>
+                <span>🎛️ 5H URANUS FREESTYLE</span>
+            </div>
+        </div>
+
+        <!-- Triple beam – core channels : halo mode philosophy embedded -->
+        <div class="tri-beam">
+            <!-- CH 1 : TRANSPARENCY TECH (LAB) -->
+            <div class="channel">
+                <div class="channel-icon">🧪</div>
+                <h2>TRANSPARENCY TECH</h2>
+                <div class="desc">Astro Beats at dawn — Unity walls, Blender objects, 3JS shaders that bend light. Music discovery running while you build. Boring? Good. boring filters.</div>
+                <div class="feature-strip">
+                    <span class="feature-tag">ASTRO BEATS</span>
+                    <span class="feature-tag">UNITY</span>
+                    <span class="feature-tag">3JS SHADERS</span>
+                    <span class="feature-tag">VJ SET</span>
+                </div>
+                <div class="vibe-meter">
+                    <span>🔮 VIBE</span>
+                    <div class="vibe-bar"><div class="vibe-fill" style="width:92%"></div></div>
+                    <span>deep build</span>
+                </div>
+                <div style="margin-top:1rem; color:#bfcff5; font-size:0.9rem;"><span style="color:#ffb24b;">⏳</span> next beat hides in someone else's track</div>
+            </div>
+
+            <!-- CH 2 : FREESTYLE KING (STAGE) -->
+            <div class="channel">
+                <div class="channel-icon">🎙️</div>
+                <h2>FREESTYLE KING</h2>
+                <div class="desc">SSX Tricky physics meet rap battle engine. RapBot automatic hype man (Tone.js). Adventure soap opera based on music videos — because tools are boring, worlds aren't.</div>
+                <div class="feature-strip">
+                    <span class="feature-tag">RAPBOT</span>
+                    <span class="feature-tag">TONE.JS</span>
+                    <span class="feature-tag">SOAP OPERA</span>
+                    <span class="feature-tag">SSX PHYSICS</span>
+                </div>
+                <div class="vibe-meter">
+                    <span>🎤 VIBE</span>
+                    <div class="vibe-bar"><div class="vibe-fill" style="width:96%"></div></div>
+                    <span>max energy</span>
+                </div>
+                <div style="margin-top:1rem; color:#bfcff5; font-size:0.9rem;"><span style="color:#ffb24b;">⚡</span> automatic hype man · controlled chaos</div>
+            </div>
+
+            <!-- CH 3 : BURPEETHON (PIVOT) -->
+            <div class="channel">
+                <div class="channel-icon">💥</div>
+                <h2>BURPEETHON</h2>
+                <div class="desc">The reset. 15 minutes between internal & external. Thinking stops. Moving starts. The bridge that separates deep work from performance.</div>
+                <div class="feature-strip">
+                    <span class="feature-tag">15min RESET</span>
+                    <span class="feature-tag">BRIDGE</span>
+                    <span class="feature-tag">FLOW GATE</span>
+                </div>
+                <div class="vibe-meter">
+                    <span>🔄 VIBE</span>
+                    <div class="vibe-bar"><div class="vibe-fill" style="width:78%"></div></div>
+                    <span>pivot</span>
+                </div>
+                <div style="margin-top:1rem; color:#bfcff5; font-size:0.9rem;"><span style="color:#ffb24b;">⛓️</span> transition anchor — from lab to stage</div>
+            </div>
+        </div>
+
+        <!-- XGames mode dash: strategy + philosophy (5H Uranus / 12H Jupiter) -->
+        <div class="x-dash">
+            <!-- 12H JUPITER – EXPANSION / BROADCAST -->
+            <div class="stat-panel">
+                <div class="stat-title"><span>📡</span> 12H JUPITER · BROADCAST</div>
+                <div class="counter-row">
+                    <span>∞</span>
+                    <span style="font-size:1rem;">niches</span>
+                </div>
+                <div class="feature-ship">
+                    <span class="ship-unit">club footage</span>
+                    <span class="ship-unit">lizard hunter</span>
+                    <span class="ship-unit">tarot red pill</span>
+                </div>
+                <div style="color:#adb7d5; font-size:0.9rem; margin-top:1.2rem;">two phones, two niches — watch the best, know what's available. you don't chase, you broadcast.</div>
+            </div>
+
+            <!-- 5H URANUS – FREESTYLE / RANDOM DROP-IN -->
+            <div class="stat-panel">
+                <div class="stat-title"><span>⚡</span> 5H URANUS · FREESTYLE</div>
+                <div class="counter-row">
+                    <span>🎲</span>
+                    <span style="font-size:1rem;">random drop</span>
+                </div>
+                <div style="margin-top:0.7rem; color:#ffeac2;">no script — just a warm space & creator in motion.</div>
+                <div style="display:flex; gap:0.6rem; margin-top:1.2rem;">
+                    <span class="feature-tag">VIRTUAL HANGOUT</span>
+                    <span class="feature-tag">READY FOR ANY</span>
+                </div>
+                <div style="color:#ffcf8a; font-size:0.9rem; margin-top:1rem;">Uranus pops in — you're already live.</div>
+            </div>
+
+            <!-- 5H NEPTUNE – VJ / DREAM / PHOTOGRAMMETRY -->
+            <div class="stat-panel">
+                <div class="stat-title"><span>🌊</span> 5H NEPTUNE · DREAM LAB</div>
+                <div class="counter-row">
+                    <span>🎛️</span>
+                    <span style="font-size:1rem;">VJ / TD</span>
+                </div>
+                <div class="feature-ship">
+                    <span class="ship-unit">photogrammetry</span>
+                    <span class="ship-unit">touch designer</span>
+                    <span class="ship-unit">VJ sets</span>
+                </div>
+                <div style="color:#b5c6f0; font-size:0.9rem; margin-top:1.2rem;">favorite part arrived without chase. now it builds the world.</div>
+            </div>
+        </div>
+
+        <!-- DAILY SHIP LIMIT – gamify features (halo mode) -->
+        <div style="background: #080c1ccc; border-radius: 2rem; padding: 1.4rem 2rem; margin: 2rem 0 1rem; border: 1px solid #ffb24b40;">
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; justify-content: space-between;">
+                <div style="display: flex; gap: 0.8rem; align-items: center;">
+                    <span style="font-size: 2.5rem;">⏳</span>
+                    <div>
+                        <div style="color: #ffcf8a; font-weight: 600; font-size: 1.5rem; letter-spacing: -0.5px;">FEATURE SHIP LIMIT</div>
+                        <div style="color: #adbbe5;">how many before dark? beats, rapbot spits, shaders shipped</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 2rem;">
+                    <div><span style="color:#ffc56e; font-weight:800;">5</span> <span style="color:#aab9e0;">beats</span></div>
+                    <div><span style="color:#ffc56e; font-weight:800;">∞</span> <span style="color:#aab9e0;">rapbot lines</span></div>
+                    <div><span style="color:#ffc56e; font-weight:800;">3</span> <span style="color:#aab9e0;">shaders</span></div>
+                </div>
+            </div>
+            <!-- progress to daily limit -->
+            <div style="margin-top: 1rem; background: #1b2340; height: 12px; border-radius: 30px; width: 100%;">
+                <div style="width: 67%; background: linear-gradient(90deg, #f90, #ffcd94); height: 12px; border-radius: 30px; box-shadow: 0 0 15px #ffb347;"></div>
+            </div>
+        </div>
+
+        <!-- MANTRA – LEO RISING / XGAMES MODE / HALO CORE  (3/10 halo, 5/10 leo, 2/10 xgames) -->
+        <div class="mantra">
+            <span>📢</span> <strong>YOU DON'T CHASE.</strong> <span class="glow-small"></span> <strong>YOU BROADCAST.</strong>
+            <span class="glow-small"></span> <span style="font-weight:300;">IF YOU'RE NOT BROADCASTING</span> <span class="glow-small"></span>
+            <strong>YOU'RE NOT VIBRATING.</strong> <span>⚡</span>
+        </div>
+
+        <!-- sub: xgames mode / leo signature -->
+        <div style="display: flex; justify-content: flex-end; margin-top: 1rem; color: #ffb650; font-size: 0.8rem; letter-spacing: 2px; gap: 10px;">
+            <span>✧  LEO RISING  ✧</span>
+            <span style="color:#b9a87c;">XGAMES MODE 2/10</span>
+            <span style="color:#adc0ff;">HALO 3/10</span>
+        </div>
+    </div>
+</body>
+</html>
