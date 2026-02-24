@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRANSPARENCY INTERACTIVE: THE SANDWICH OS</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+        :root {
+            --neon-blue: #00f2ff;
+            --neon-purple: #bc13fe;
+            --saturn-gold: #f4d03f;
+            --bg-dark: #050505;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-dark);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: white;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .ui-layer {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .status-item span {
+            color: var(--neon-blue);
+            font-weight: bold;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 20px;
+            flex-grow: 1;
+            margin-top: 20px;
+        }
+
+        .module-title {
+            font-size: 0.7rem;
+            color: var(--saturn-gold);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--saturn-gold);
+            display: inline-block;
+        }
+
+        .burpathon-stats .stat-row {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .frequency-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 50px;
+        }
+
+        .bar {
+            flex: 1;
+            background: var(--neon-purple);
+            height: 20%;
+            transition: height 0.1s ease;
+        }
+
+        footer {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .log-display {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #888;
+            max-height: 100px;
+            overflow-y: hidden;
+        }
+
+        .active-glow {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .btn {
+            background: none;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 5px 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .btn:hover {
+            background: var(--neon-blue);
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div class="ui-layer">
+        <header class="glass-panel">
+            <div class="brand">
+                <h1 style="margin:0; font-size: 1.5rem; letter-spacing: 4px;">TRANSPARENCY <span style="font-weight:100">INTERACTIVE</span></h1>
+            </div>
+            <div class="status-bar">
+                <div class="status-item">STATE: <span id="ws-status" class="active-glow">CONNECTED_SYNC</span></div>
+                <div class="status-item">LOCATION: <span id="loc-status">VIRTUAL_CO-WORK</span></div>
+                <div class="status-item">KITCHEN_ACCESS: <span style="color:var(--saturn-gold)">OPTIMIZED</span></div>
+            </div>
+        </header>
+
+        <main>
+            <section class="glass-panel sidebar-left">
+                <div class="module-title">Burpathon Warm-up</div>
+                <div class="burpathon-stats">
+                    <div class="stat-row">Kettlebell Halo: <span class="active-glow">ACTIVE</span></div>
+                    <div class="stat-row">Rev. Treadmill: <span id="bpm">124</span> BPM</div>
+                    <div class="stat-row">Core Stability: <span style="color:var(--neon-purple)">98%</span></div>
+                </div>
+                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+                <div class="module-title">Gigg-Income Sandwich</div>
+                <div style="font-size: 0.9rem;">
+                    <div>✈️ Uber Airport: <span style="float:right">$30/target</span></div>
+                    <div style="margin-top:5px;">🥡 Door Dash: <span style="float:right">Standby</span></div>
+                </div>
+            </section>
+
+            <section class="center-view">
+                </section>
+
+            <section class="glass-panel sidebar-right">
+                <div class="module-title">Astro Beats Engine</div>
+                <div class="frequency-bars" id="eq">
+                    </div>
+                <p style="font-size: 0.7rem; color: #aaa;">VOICE-TO-CODE LATENCY: 12ms</p>
+                
+                <div class="module-title" style="margin-top:30px;">Freestyle King Network</div>
+                <div class="log-display" id="console-log">
+                    > Syncing with DJ_State...<br>
+                    > Global State: Loaded.<br>
+                    > Environment: Saturn_Fifth_House...<br>
+                    > Social_Filter: Enabled.
+                </div>
+                <button class="btn" style="margin-top:10px; width:100%" onclick="triggerEffect()">One-Shot Tech Event</button>
+            </section>
+        </main>
+
+        <footer class="glass-panel">
+            <div class="nav-item">THROAT CHAKRA: <span class="active-glow">OPEN</span></div>
+            <div class="nav-item">ASSET: <span id="asset-view">HONDA_ELEMENT_PROTOTYPE</span></div>
+            <div class="nav-item">MODE: <span style="color:var(--saturn-gold)">ENTREPRENEUR_SPIRIT</span></div>
+        </footer>
+    </div>
+
+    <script>
+        // --- THREE.JS VIRTUAL SPACE SETUP ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Background Geometry (The "Astro Beats" Shader Feel)
+        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+        const material = new THREE.MeshPhongMaterial({
+            color: 0xbc13fe,
+            wireframe: true,
+            emissive: 0x220033
+        });
+        const torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+
+        const particlesGeom = new THREE.BufferGeometry();
+        const particlesCount = 5000;
+        const posArray = new Float32Array(particlesCount * 3);
+        for(let i=0; i<particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 50;
+        }
+        particlesGeom.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({ size: 0.005, color: 0x00f2ff });
+        const particleMesh = new THREE.Points(particlesGeom, particlesMaterial);
+        scene.add(particleMesh);
+
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(0, 10, 10);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x404040));
+
+        camera.position.z = 25;
+
+        // --- INTERACTIVE UI LOGIC ---
+        const eqContainer = document.getElementById('eq');
+        for (let i = 0; i < 20; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            eqContainer.appendChild(bar);
+        }
+
+        function updateUI() {
+            // Simulate BPM restlessness
+            document.getElementById('bpm').innerText = Math.floor(120 + Math.random() * 10);
+            
+            // Simulate EQ bars reacting to "speaking"
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                const height = Math.random() * 100;
+                bar.style.height = height + '%';
+                bar.style.backgroundColor = height > 70 ? '#00f2ff' : '#bc13fe';
+            });
+
+            // Random log messages
+            if(Math.random() > 0.95) {
+                const logs = [
+                    "> Asia Play initiated...",
+                    "> Kitchen status: Mobile.",
+                    "> Stage Presence: High.",
+                    "> Saturn cycle: Guarded.",
+                    "> WebSocket: Heartbeat sent."
+                ];
+                const consoleDiv = document.getElementById('console-log');
+                consoleDiv.innerHTML = logs[Math.floor(Math.random()*logs.length)] + "<br>" + consoleDiv.innerHTML;
+            }
+        }
+
+        function triggerEffect() {
+            gsap.to(torusKnot.rotation, { duration: 2, y: torusKnot.rotation.y + Math.PI * 2 });
+            gsap.to(material.color, { duration: 0.5, r: 1, g: 1, b: 0, yoyo: true, repeat: 1 });
+            const consoleDiv = document.getElementById('console-log');
+            consoleDiv.innerHTML = "<span style='color:white'>⚡ EVENT: ONE-SHOT CONTRACT ACQUIRED</span><br>" + consoleDiv.innerHTML;
+        }
+
+        // --- ANIMATION LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            torusKnot.rotation.x += 0.005;
+            torusKnot.rotation.y += 0.005;
+            particleMesh.rotation.y += 0.001;
+
+            updateUI();
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
