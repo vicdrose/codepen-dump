@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freestyle King Life OS</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Courier New', monospace; 
+      background: linear-gradient(45deg, #0a0a0a, #1a0033, #000); 
+      color: #00ff88; 
+      overflow: hidden; 
+      height: 100vh;
+    }
+    #game-container { position: relative; width: 100vw; height: 100vh; }
+    #ui { 
+      position: absolute; top: 20px; left: 20px; z-index: 100; 
+      background: rgba(0,0,0,0.8); padding: 20px; border-radius: 10px; 
+      border: 2px solid #00ff88; max-width: 400px;
+    }
+    #day-log { 
+      position: absolute; bottom: 20px; left: 20px; z-index: 100; 
+      background: rgba(0,255,136,0.1); padding: 15px; border-radius: 10px; 
+      max-height: 200px; overflow-y: auto; font-size: 12px;
+    }
+    button { 
+      background: linear-gradient(45deg, #00ff88, #ff00aa); 
+      border: none; color: black; padding: 10px 20px; 
+      margin: 5px; border-radius: 5px; cursor: pointer; 
+      font-weight: bold; transition: all 0.3s; font-family: inherit;
+    }
+    button:hover { transform: scale(1.05); box-shadow: 0 0 20px #00ff88; }
+    button.active { box-shadow: 0 0 30px #ff00aa; }
+    .channel { padding: 10px; margin: 5px 0; border-radius: 5px; cursor: pointer; }
+    .transparency { background: rgba(0,255,136,0.3); }
+    .freestyle { background: rgba(255,0,170,0.4); }
+    .progress { width: 100%; height: 10px; background: rgba(0,0,0,0.5); margin: 10px 0; border-radius: 5px; overflow: hidden; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, #00ff88, #ff00aa); transition: width 0.5s; }
+    h1 { font-size: 24px; text-align: center; margin-bottom: 10px; text-shadow: 0 0 10px #00ff88; }
+    h2 { font-size: 18px; margin: 10px 0 5px 0; }
+    .beat-viz { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, #00ff88, transparent); opacity: 0.3; transition: all 0.3s; z-index: 50; }
+    .burpee { animation: burpee 1s infinite; }
+    @keyframes burpee { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.2) rotate(5deg); } }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="bg-canvas"></canvas>
+    <div id="ui">
+      <h1>🕺 Freestyle King Life OS 🕺</h1>
+      <h2>Day <span id="day-counter">1</span> | Vibe: <span id="vibe-level">50</span>%</h2>
+      
+      <div class="progress"><div class="progress-bar" id="daily-progress" style="width: 0%"></div></div>
+      
+      <h2>Switch Channel</h2>
+      <div class="channel transparency" onclick="switchChannel('transparency')">Transparency Tech 🌌<br><small>Astro Beats / Unity / VJ</small></div>
+      <div class="channel freestyle" onclick="switchChannel('freestyle')">Freestyle King 🔥<br><small>Gaming / Rapbot / Soap Opera</small></div>
+      
+      <h2>Daily Ritual</h2>
+      <button onclick="startBurpeethon()">💥 Burpeethon (0/100)</button>
+      <div id="burpee-count">Burpees: 0</div>
+      
+      <h2>Current Block</h2>
+      <div id="current-block">Choose a channel to begin...</div>
+      
+      <button id="next-action" onclick="nextAction()" disabled>▶️ Next Action</button>
+    </div>
+    
+    <div id="day-log">
+      <div>Day 1 Log: Basement streamer mode activated. Freestyle King live access unlocked! 🚀</div>
+    </div>
+    
+    <div class="beat-viz" id="beat-viz"></div>
+  </div>
+
+  <script>
+    let gameState = {
+      day: 1,
+      vibe: 50,
+      burpees: 0,
+      progress: 0,
+      currentChannel: null,
+      blocksCompleted: 0,
+      log: []
+    };
+    
+    let burpeeInterval;
+    const channels = {
+      transparency: ['Burpeethon + Music Discovery', 'Astro Beats', 'Unity/Blender/VJ', 'Portfolio Update'],
+      freestyle: ['Gaming Session', 'Freestyle + Rapbot', 'Soap Opera Episode', 'Vibe Check']
+    };
+    
+    // 3D Background Scene
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    
+    const geometry = new THREE.BufferGeometry();
+    const vertices = [];
+    for (let i = 0; i < 1000; i++) {
+      vertices.push(
+        (Math.random() - 0.5) * 2000,
+        (Math.random() - 0.5) * 2000,
+        (Math.random() - 0.5) * 2000
+      );
+    }
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+    const material = new THREE.PointsMaterial({ color: 0x00ff88, size: 2 });
+    const stars = new THREE.Points(geometry, material);
+    scene.add(stars);
+    camera.position.z = 5;
+    
+    function animate() {
+      requestAnimationFrame(animate);
+      stars.rotation.x += 0.0005;
+      stars.rotation.y += 0.001;
+      renderer.render(scene, camera);
+    }
+    animate();
+    
+    // Game Logic
+    function updateUI() {
+      document.getElementById('day-counter').textContent = gameState.day;
+      document.getElementById('vibe-level').textContent = gameState.vibe;
+      document.getElementById('daily-progress').style.width = gameState.progress + '%';
+      document.getElementById('burpee-count').textContent = `Burpees: ${gameState.burpees}`;
+      
+      const log = document.getElementById('day-log');
+      log.innerHTML = gameState.log.slice(-5).map(entry => `<div>${entry}</div>`).join('');
+    }
+    
+    function addLog(message) {
+      gameState.log.push(`Day ${gameState.day}: ${message}`);
+      updateUI();
+    }
+    
+    function switchChannel(channel) {
+      gameState.currentChannel = channel;
+      gameState.blocksCompleted = 0;
+      document.querySelectorAll('.channel').forEach(el => el.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('current-block').textContent = `${channel.toUpperCase()}: ${channels[channel][0]}`;
+      document.getElementById('next-action').disabled = false;
+      addLog(`Switched to ${channel === 'transparency' ? 'Transparency Tech 🌌' : 'Freestyle King 🔥'}`);
+    }
+    
+    function startBurpeethon() {
+      if (burpeeInterval) clearInterval(burpeeInterval);
+      gameState.burpees = 0;
+      const viz = document.getElementById('beat-viz');
+      viz.classList.add('burpee');
+      
+      burpeeInterval = setInterval(() => {
+        gameState.burpees++;
+        gameState.vibe = Math.min(100, gameState.vibe + 2);
+        updateUI();
+        if (gameState.burpees >= 100) {
+          clearInterval(burpeeInterval);
+          viz.classList.remove('burpee');
+          addLog('💥 BURPEETHON COMPLETE! +20 Vibe Boost!');
+          gameState.progress += 25;
+          gameState.vibe += 20;
+        }
+      }, 200);
+      addLog('Burpeethon started! Keep the energy high!');
+    }
+    
+    function nextAction() {
+      if (!gameState.currentChannel) return;
+      
+      const blockIndex = gameState.blocksCompleted % channels[gameState.currentChannel].length;
+      const block = channels[gameState.currentChannel][blockIndex];
+      
+      document.getElementById('current-block').innerHTML = `
+        🎯 ${block}<br>
+        <small>Progress: ${gameState.blocksCompleted + 1}/4 blocks</small>
+      `;
+      
+      // Simulate completion after 2 seconds
+      setTimeout(() => {
+        gameState.blocksCompleted++;
+        gameState.progress = Math.min(100, gameState.progress + 25);
+        gameState.vibe = Math.min(100, gameState.vibe + 5);
+        
+        if (gameState.progress >= 100) {
+          gameState.day++;
+          gameState.progress = 0;
+          gameState.blocksCompleted = 0;
+          addLog('🏆 DAY COMPLETE! Level up to Day ' + gameState.day + '. Vanlife dreams closer!');
+          
+          // Daily reward
+          if (gameState.vibe >= 80) {
+            addLog('🌟 HIGH VIBE BONUS: Unlocked new shader effect!');
+          }
+        } else {
+          const nextBlock = channels[gameState.currentChannel][(blockIndex + 1) % channels[gameState.currentChannel].length];
+          addLog(`${block} complete! Vibe +5. Next: ${nextBlock}`);
+        }
+        
+        updateUI();
+      }, 1500);
+    }
+    
+    // Responsive
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === ' ') startBurpeethon();
+      if (e.key === 'Enter') nextAction();
+    });
+    
+    updateUI();
+    addLog('Life OS loaded. Two channels, one king. Start with Burpeethon!');
+  </script>
+</body>
+</html>
