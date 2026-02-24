@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Transparency Interactive OS</title>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: monospace; }
+
+body {
+  overflow: hidden;
+  background: radial-gradient(circle at center, #111 0%, #000 70%);
+  color: #0ff;
+}
+
+/* Animated Background */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.ui {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+}
+
+.panel {
+  background: rgba(0,0,0,0.7);
+  border: 1px solid #0ff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #0ff3;
+}
+
+h1 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px #0ff;
+}
+
+.stat {
+  margin: 10px 0;
+}
+
+.bar {
+  height: 20px;
+  background: #222;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(90deg, #0ff, #f0f);
+  transition: width 0.5s ease;
+}
+
+button {
+  background: #111;
+  border: 1px solid #0ff;
+  color: #0ff;
+  padding: 8px 12px;
+  margin: 5px 5px 5px 0;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #0ff;
+  color: #000;
+}
+
+.mode {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.glow {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 10px #0ff; }
+  50% { box-shadow: 0 0 25px #f0f; }
+  100% { box-shadow: 0 0 10px #0ff; }
+}
+
+.footer {
+  font-size: 12px;
+  opacity: 0.6;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="ui">
+  <div class="panel glow">
+    <h1>Transparency Interactive OS</h1>
+    <div class="mode">Mode: <span id="mode">Burpeathon Engine</span></div>
+  </div>
+
+  <div class="panel">
+    <div class="stat">⚡ Energy</div>
+    <div class="bar"><div id="energyFill" class="fill"></div></div>
+
+    <div class="stat">💰 Assets</div>
+    <div class="bar"><div id="assetFill" class="fill"></div></div>
+  </div>
+
+  <div class="panel">
+    <button onclick="boostEnergy()">Burpeathon</button>
+    <button onclick="earnMoney()">Uber / Gig</button>
+    <button onclick="buildMode()">Build Mode</button>
+    <button onclick="stageMode()">Stage Presence</button>
+    <button onclick="travelMode()">Travel</button>
+  </div>
+
+  <div class="panel footer">
+    Keys: 1 = Energy | 2 = Gig | 3 = Build | 4 = Stage
+  </div>
+</div>
+
+<script>
+/* =========================
+   STATE
+========================= */
+
+let energy = 50;
+let assets = 30;
+let mode = "Burpeathon Engine";
+
+/* =========================
+   UI UPDATE
+========================= */
+
+function updateUI() {
+  document.getElementById("energyFill").style.width = energy + "%";
+  document.getElementById("assetFill").style.width = assets + "%";
+  document.getElementById("mode").textContent = mode;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+function boostEnergy() {
+  mode = "Burpeathon Engine";
+  energy = Math.min(100, energy + 15);
+  assets = Math.max(0, assets - 2);
+  updateUI();
+}
+
+function earnMoney() {
+  mode = "Gig Mode";
+  assets = Math.min(100, assets + 10);
+  energy = Math.max(0, energy - 5);
+  updateUI();
+}
+
+function buildMode() {
+  mode = "AI Build Mode";
+  assets = Math.min(100, assets + 5);
+  energy = Math.max(0, energy - 3);
+  updateUI();
+}
+
+function stageMode() {
+  mode = "Stage Presence";
+  energy = Math.max(0, energy - 4);
+  assets = Math.min(100, assets + 7);
+  updateUI();
+}
+
+function travelMode() {
+  mode = "Travel Mode";
+  assets = Math.max(0, assets - 10);
+  energy = Math.min(100, energy + 5);
+  updateUI();
+}
+
+/* =========================
+   PASSIVE DECAY
+========================= */
+
+setInterval(() => {
+  energy = Math.max(0, energy - 1);
+  updateUI();
+}, 3000);
+
+/* =========================
+   KEYBOARD CONTROLS
+========================= */
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "1") boostEnergy();
+  if (e.key === "2") earnMoney();
+  if (e.key === "3") buildMode();
+  if (e.key === "4") stageMode();
+});
+
+/* =========================
+   BACKGROUND ANIMATION
+========================= */
+
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for (let i = 0; i < 120; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 2,
+    speed: Math.random() * 0.5 + 0.2
+  });
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#0ff";
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+    p.y -= p.speed;
+    if (p.y < 0) p.y = canvas.height;
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+updateUI();
+</script>
+
+</body>
+</html>
