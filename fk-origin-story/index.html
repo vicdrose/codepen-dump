@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FREESTYLE KING // ORIGIN STORY</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #FFB800;
+    --hot: #FF3D00;
+    --ice: #00E5FF;
+    --dark: #080808;
+    --mid: #111111;
+    --panel: #161616;
+    --text: #F0EDE6;
+    --muted: #555;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: -200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.4;
+    animation: grain 0.5s steps(1) infinite;
+  }
+
+  @keyframes grain {
+    0%,100%{transform:translate(0,0)} 10%{transform:translate(-2%,-3%)} 20%{transform:translate(3%,2%)}
+    30%{transform:translate(-1%,4%)} 40%{transform:translate(4%,-1%)} 50%{transform:translate(-3%,2%)}
+    60%{transform:translate(2%,-4%)} 70%{transform:translate(-4%,1%)} 80%{transform:translate(1%,3%)}
+    90%{transform:translate(3%,-2%)}
+  }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,184,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,184,0,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridPulse 4s ease-in-out infinite;
+  }
+  @keyframes gridPulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
+
+  .glow-orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+  .orb-1 { width:500px;height:500px; background:radial-gradient(circle,rgba(255,184,0,0.15),transparent 70%); top:-100px;left:-100px; animation:orbFloat1 8s ease-in-out infinite; }
+  .orb-2 { width:400px;height:400px; background:radial-gradient(circle,rgba(255,61,0,0.12),transparent 70%); bottom:-80px;right:-80px; animation:orbFloat2 10s ease-in-out infinite; }
+  .orb-3 { width:300px;height:300px; background:radial-gradient(circle,rgba(0,229,255,0.08),transparent 70%); top:50%;left:50%; transform:translate(-50%,-50%); animation:orbFloat3 6s ease-in-out infinite; }
+  @keyframes orbFloat1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,30px)} }
+  @keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,-40px)} }
+  @keyframes orbFloat3 { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.2)} }
+
+  .hero-tag {
+    font-size:0.65rem; letter-spacing:0.4em; color:var(--gold);
+    text-transform:uppercase; margin-bottom:1.5rem;
+    opacity:0; animation:fadeUp 0.6s ease forwards 0.3s; position:relative;
+  }
+  .hero-tag::before, .hero-tag::after { content:'▸'; margin:0 0.8em; color:var(--hot); }
+
+  .hero-title {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(4rem,14vw,11rem);
+    line-height:0.9; text-align:center;
+    opacity:0; animation:fadeUp 0.7s ease forwards 0.5s;
+  }
+  .hero-title .line-1 { display:block; color:var(--text); -webkit-text-stroke:1px rgba(255,255,255,0.1); }
+  .hero-title .line-2 {
+    display:block; color:transparent; -webkit-text-stroke:2px var(--gold);
+    animation:glowPulse 3s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%,100%{filter:drop-shadow(0 0 20px rgba(255,184,0,0.4))}
+    50%{filter:drop-shadow(0 0 40px rgba(255,184,0,0.8)) drop-shadow(0 0 80px rgba(255,184,0,0.3))}
+  }
+
+  .hero-sub {
+    font-size:clamp(0.75rem,2vw,1rem); color:var(--muted);
+    text-align:center; max-width:500px; margin-top:2rem; line-height:1.8;
+    opacity:0; animation:fadeUp 0.7s ease forwards 0.8s;
+  }
+  .hero-sub em { color:var(--ice); font-style:normal; }
+
+  .scroll-cue {
+    position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+    font-size:0.6rem; letter-spacing:0.3em; color:var(--muted);
+    opacity:0; animation:fadeUp 0.6s ease forwards 1.4s;
+  }
+  .scroll-arrow {
+    width:1px; height:40px;
+    background:linear-gradient(to bottom,var(--gold),transparent);
+    animation:scrollBounce 2s ease-in-out infinite;
+  }
+  @keyframes scrollBounce { 0%,100%{transform:scaleY(1);opacity:1} 50%{transform:scaleY(0.6);opacity:0.4} }
+
+  /* SECTIONS */
+  section { padding:6rem 2rem; max-width:1100px; margin:0 auto; position:relative; }
+
+  .section-label {
+    font-size:0.6rem; letter-spacing:0.5em; color:var(--hot);
+    text-transform:uppercase; margin-bottom:1rem;
+    display:flex; align-items:center; gap:1rem;
+  }
+  .section-label::after { content:''; flex:1; height:1px; background:linear-gradient(to right,var(--hot),transparent); }
+
+  .big-heading { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.5rem,6vw,4.5rem); line-height:1; letter-spacing:0.02em; margin-bottom:1rem; }
+  .big-heading .accent { color:var(--gold); }
+  .big-heading .dim { color:transparent; -webkit-text-stroke:1px #333; }
+
+  .intro-text { font-size:0.8rem; line-height:2; color:#666; max-width:560px; }
+  .intro-text strong { color:var(--text); font-weight:700; }
+
+  /* CHANNEL CARDS */
+  .channels-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:3rem; }
+  @media(max-width:640px){ .channels-grid{grid-template-columns:1fr} }
+
+  .channel-card {
+    background:var(--panel); border:1px solid #222; padding:2rem;
+    position:relative; overflow:hidden;
+    transition:transform 0.3s ease, border-color 0.3s ease;
+    cursor:default;
+  }
+  .channel-card:hover { transform:translateY(-4px); border-color:var(--gold); }
+  .channel-card::before { content:''; position:absolute; top:0;left:0; width:100%;height:3px; }
+  .card-gold::before { background:linear-gradient(to right,var(--gold),var(--hot)); }
+  .card-ice::before { background:linear-gradient(to right,var(--ice),#7B2FFF); }
+
+  .card-icon { font-size:2rem; margin-bottom:1rem; display:block; }
+  .card-title { font-family:'Bebas Neue',sans-serif; font-size:2rem; letter-spacing:0.05em; margin-bottom:0.75rem; }
+  .card-gold .card-title { color:var(--gold); }
+  .card-ice .card-title { color:var(--ice); }
+  .card-desc { font-size:0.75rem; line-height:1.9; color:#888; }
+  .card-tags { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1.5rem; }
+  .tag { font-size:0.55rem; letter-spacing:0.15em; padding:0.3em 0.8em; border:1px solid #333; color:#666; text-transform:uppercase; }
+  .card-gold .tag { border-color:rgba(255,184,0,0.3); color:rgba(255,184,0,0.7); }
+  .card-ice .tag { border-color:rgba(0,229,255,0.3); color:rgba(0,229,255,0.7); }
+
+  /* ENGINE */
+  .engine-section {
+    background:var(--panel); border:1px solid #1a1a1a;
+    padding:3rem; margin-top:2rem; position:relative; overflow:hidden;
+  }
+  .engine-section::after {
+    content:'ENGINE'; position:absolute; right:-1rem; top:50%;
+    transform:translateY(-50%) rotate(90deg);
+    font-family:'Bebas Neue',sans-serif; font-size:8rem;
+    color:rgba(255,255,255,0.02); pointer-events:none; letter-spacing:0.1em;
+  }
+
+  .flow-steps { display:flex; flex-direction:column; gap:0; margin-top:2rem; }
+  .flow-step {
+    display:grid; grid-template-columns:3rem 1fr; gap:1.5rem;
+    align-items:start; padding:1.5rem 0; border-bottom:1px solid #1a1a1a;
+    transition:all 0.3s ease;
+  }
+  .flow-step:hover .step-content { transform:translateX(6px); }
+  .flow-step:last-child { border-bottom:none; }
+  .step-num { font-family:'Bebas Neue',sans-serif; font-size:2.5rem; line-height:1; color:#222; transition:color 0.3s ease; }
+  .flow-step:hover .step-num { color:var(--gold); }
+  .step-content { transition:transform 0.3s ease; }
+  .step-title { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:0.05em; color:var(--text); margin-bottom:0.4rem; }
+  .step-desc { font-size:0.7rem; line-height:1.8; color:#666; }
+  .step-badge { display:inline-block; font-size:0.5rem; letter-spacing:0.2em; padding:0.2em 0.6em; background:rgba(255,184,0,0.1); color:var(--gold); border:1px solid rgba(255,184,0,0.2); margin-left:0.5rem; vertical-align:middle; text-transform:uppercase; }
+
+  /* SCHEDULE */
+  .schedule-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:2rem; }
+  @media(max-width:640px){ .schedule-grid{grid-template-columns:1fr} }
+
+  .schedule-slot { border:1px solid #222; padding:1.5rem; position:relative; transition:all 0.3s ease; overflow:hidden; }
+  .schedule-slot:hover { border-color:rgba(255,184,0,0.4); background:rgba(255,184,0,0.02); }
+  .slot-number { font-family:'Bebas Neue',sans-serif; font-size:3.5rem; color:#1a1a1a; line-height:1; margin-bottom:0.5rem; transition:color 0.3s ease; }
+  .schedule-slot:hover .slot-number { color:#252525; }
+  .slot-name { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; color:var(--gold); letter-spacing:0.05em; margin-bottom:0.5rem; }
+  .slot-desc { font-size:0.65rem; color:#555; line-height:1.8; }
+
+  /* PROJECTS */
+  .projects-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1px; background:#1a1a1a; border:1px solid #1a1a1a; margin-top:2rem; }
+  .project-item { background:var(--panel); padding:2rem; position:relative; overflow:hidden; transition:background 0.3s ease; cursor:default; }
+  .project-item:hover { background:#1c1c1c; }
+  .project-item:hover .project-glow { opacity:1; }
+  .project-glow { position:absolute; top:0;left:0; width:100%;height:100%; background:radial-gradient(circle at top left,rgba(255,184,0,0.04),transparent 60%); opacity:0; transition:opacity 0.3s ease; pointer-events:none; }
+  .project-name { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--gold); margin-bottom:0.5rem; letter-spacing:0.05em; }
+  .project-desc { font-size:0.7rem; color:#555; line-height:1.8; }
+  .project-status { position:absolute; top:1.5rem;right:1.5rem; width:6px;height:6px; border-radius:50%; }
+  .status-live { background:#00FF88; animation:statusBlink 2s ease-in-out infinite; }
+  .status-wip { background:var(--gold); animation:statusBlink 2s ease-in-out 0.5s infinite; }
+  .status-soon { background:var(--muted); }
+  @keyframes statusBlink { 0%,100%{opacity:1;box-shadow:0 0 4px currentColor} 50%{opacity:0.4;box-shadow:none} }
+
+  /* MANIFESTO */
+  .manifesto { text-align:center; padding:8rem 2rem; position:relative; overflow:hidden; }
+  .manifesto-bg { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 50%,rgba(255,184,0,0.04) 0%,transparent 70%); }
+  .manifesto-quote { font-family:'Bebas Neue',sans-serif; font-size:clamp(1.8rem,5vw,3.5rem); line-height:1.2; max-width:800px; margin:0 auto 3rem; position:relative; }
+  .manifesto-quote .highlight { color:var(--gold); }
+  .manifesto-quote .outline { color:transparent; -webkit-text-stroke:1px rgba(255,255,255,0.3); }
+  .manifesto-closer { font-size:0.75rem; color:#444; letter-spacing:0.2em; text-transform:uppercase; position:relative; }
+
+  /* TICKER */
+  .ticker-wrap { width:100%; overflow:hidden; padding:0.6rem 0; white-space:nowrap; }
+  .ticker-gold { background:var(--gold); }
+  .ticker-hot { background:var(--hot); }
+  .ticker-track { display:inline-flex; gap:3rem; animation:ticker 20s linear infinite; }
+  .ticker-rev { animation-direction:reverse; animation-duration:25s; }
+  .ticker-item { font-family:'Bebas Neue',sans-serif; font-size:0.85rem; letter-spacing:0.1em; color:var(--dark); flex-shrink:0; }
+  .ticker-sep { color:rgba(0,0,0,0.3); }
+  @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+  /* FOOTER */
+  footer { border-top:1px solid #1a1a1a; padding:3rem 2rem; display:flex; justify-content:space-between; align-items:center; max-width:1100px; margin:0 auto; flex-wrap:wrap; gap:1rem; }
+  .footer-brand { font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:0.1em; color:var(--gold); }
+  .footer-note { font-size:0.6rem; color:#333; letter-spacing:0.15em; }
+
+  /* UTILS */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease,transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .cursor-glow { position:fixed; width:200px;height:200px; border-radius:50%; background:radial-gradient(circle,rgba(255,184,0,0.04),transparent 70%); pointer-events:none; transform:translate(-50%,-50%); z-index:9997; }
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="bg-grid"></div>
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+  <p class="hero-tag">Origin Story Activated</p>
+  <h1 class="hero-title">
+    <span class="line-1">FREESTYLE</span>
+    <span class="line-2">KING</span>
+  </h1>
+  <p class="hero-sub">
+    Live access is <em>unlocked</em>. The setup is finally as big as the vision.<br>
+    Two channels. Two worlds. Zero confusion.
+  </p>
+  <div class="scroll-cue">
+    SCROLL
+    <div class="scroll-arrow"></div>
+  </div>
+</div>
+
+<!-- TICKER 1 -->
+<div class="ticker-wrap ticker-gold">
+  <div class="ticker-track">
+    <span class="ticker-item">FREESTYLE KING <span class="ticker-sep">✦</span> TRANSPARENCY TECH <span class="ticker-sep">✦</span> ASTRO BEATS <span class="ticker-sep">✦</span> BURPEATHON <span class="ticker-sep">✦</span> VJ SET PREP <span class="ticker-sep">✦</span> RAPBOT LIVE <span class="ticker-sep">✦</span> UNITY / BLENDER <span class="ticker-sep">✦</span> ORIGIN STORY ACTIVATED <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">FREESTYLE KING <span class="ticker-sep">✦</span> TRANSPARENCY TECH <span class="ticker-sep">✦</span> ASTRO BEATS <span class="ticker-sep">✦</span> BURPEATHON <span class="ticker-sep">✦</span> VJ SET PREP <span class="ticker-sep">✦</span> RAPBOT LIVE <span class="ticker-sep">✦</span> UNITY / BLENDER <span class="ticker-sep">✦</span> ORIGIN STORY ACTIVATED <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- THE SETUP -->
+<section class="reveal">
+  <p class="section-label">01 — The Setup</p>
+  <h2 class="big-heading">TWO <span class="accent">WORLDS.</span><br><span class="dim">ONE VISION.</span></h2>
+  <p class="intro-text">Clean separation. <strong>No confusion.</strong> Each channel has its own soul — and both of them feed directly into something bigger than either one alone.</p>
+  <div class="channels-grid">
+    <div class="channel-card card-gold">
+      <span class="card-icon">👑</span>
+      <h3 class="card-title">Freestyle King</h3>
+      <p class="card-desc">Raw freestyles. Raw gameplay. Pure expression. No filter, no framework — just you running the game the way you were always going to.</p>
+      <div class="card-tags">
+        <span class="tag">Gaming</span>
+        <span class="tag">Freestyling</span>
+        <span class="tag">Live Rap</span>
+        <span class="tag">RapBot</span>
+      </div>
+    </div>
+    <div class="channel-card card-ice">
+      <span class="card-icon">⚗️</span>
+      <h3 class="card-title">Transparency Tech</h3>
+      <p class="card-desc">The lab where legends are made in private before they're celebrated in public. This is where the real work happens — out loud, on stream, for anyone paying attention.</p>
+      <div class="card-tags">
+        <span class="tag">Astro Beats</span>
+        <span class="tag">Unity / Blender</span>
+        <span class="tag">VJ Sets</span>
+        <span class="tag">Vibe Code</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DAILY ENGINE -->
+<section class="reveal">
+  <p class="section-label">02 — The Daily Engine</p>
+  <h2 class="big-heading">ONE <span class="accent">ACTION.</span><br><span class="dim">INFINITE OUTPUT.</span></h2>
+  <div class="engine-section">
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <p class="step-title">Burpeathon Ignites The Day <span class="step-badge">kickoff</span></p>
+          <p class="step-desc">Body moving, music flowing, frequency locked in. This isn't just a workout — it's the spark that sets the tone for everything that follows.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <p class="step-title">Music Discovery in The Lab</p>
+          <p class="step-desc">Blender and Unity running. Music running hot. Whatever grabs your soul during that session becomes the source material. You're not searching for a beat — you're living one.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <p class="step-title">Astro Beats Remake <span class="step-badge">core output</span></p>
+          <p class="step-desc">Whatever hit hardest gets remade. You already love the song. Now you own the derivative. Every beat in your catalog is something you felt before you made it.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <p class="step-title">Beat → VJ Set → The Show</p>
+          <p class="step-desc">The beat becomes the VJ set. The VJ set becomes the broadcast. One action, infinite output. The loop completes and it's already starting again.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <p class="step-title">Vibe Code Fills The Gaps <span class="step-badge">daily</span></p>
+          <p class="step-desc">Speak the vision. The AI builds it. Features ship daily. You hit the hard limit on output — then you figure out how to raise the ceiling again.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STREAM SCHEDULE -->
+<section class="reveal">
+  <p class="section-label">03 — Transparency Stream Schedule</p>
+  <h2 class="big-heading">THREE <span class="accent">STREAMS.</span><br><span class="dim">EVERY DAY.</span></h2>
+  <div class="schedule-grid">
+    <div class="schedule-slot">
+      <div class="slot-number">01</div>
+      <p class="slot-name">Astro Beats</p>
+      <p class="slot-desc">Beat remakes sourced from live music discovery. The emotional core of the whole operation.</p>
+    </div>
+    <div class="schedule-slot">
+      <div class="slot-number">02</div>
+      <p class="slot-name">Unity / Blender</p>
+      <p class="slot-desc">Environment art. Interior design. 3D in motion. People don't just want to see the work — they want to watch someone who loves what they're building.</p>
+    </div>
+    <div class="schedule-slot">
+      <div class="slot-number">03</div>
+      <p class="slot-name">VJ Set Prep</p>
+      <p class="slot-desc">The set list. The live visual show. Resolum, 3JS shaders, Touch Designer on deck. This is the favorite part — and it shows.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="reveal">
+  <p class="section-label">04 — Active Projects</p>
+  <h2 class="big-heading">WHAT'S <span class="accent">LIVE.</span><br><span class="dim">WHAT'S NEXT.</span></h2>
+  <div class="projects-list">
+    <div class="project-item">
+      <div class="project-glow"></div>
+      <div class="project-status status-live"></div>
+      <p class="project-name">RapBot</p>
+      <p class="project-desc">Tone.js timing-based automatic and manual rap bot. A new peripheral. A new instrument. Already alive.</p>
+    </div>
+    <div class="project-item">
+      <div class="project-glow"></div>
+      <div class="project-status status-live"></div>
+      <p class="project-name">Astro Beats</p>
+      <p class="project-desc">Daily beat remakes from music discovery. The heartbeat of Transparency Tech.</p>
+    </div>
+    <div class="project-item">
+      <div class="project-glow"></div>
+      <div class="project-status status-wip"></div>
+      <p class="project-name">Freestyle King Game</p>
+      <p class="project-desc">SSX Tricky energy meets fighting game mechanics meets adventure soap opera. Ionic UI already started. Party rap music videos. Video game cutscenes.</p>
+    </div>
+    <div class="project-item">
+      <div class="project-glow"></div>
+      <div class="project-status status-wip"></div>
+      <p class="project-name">VJ Set + Photogrammetry</p>
+      <p class="project-desc">Live visual set list built from 3D environments. Real-world scans feeding into the show. New community project incoming.</p>
+    </div>
+    <div class="project-item">
+      <div class="project-glow"></div>
+      <div class="project-status status-wip"></div>
+      <p class="project-name">Unity Environment Art</p>
+      <p class="project-desc">Interior design. Architecture. Streamed live while the music runs. The process is the content.</p>
+    </div>
+    <div class="project-item">
+      <div class="project-glow"></div>
+      <div class="project-status status-soon"></div>
+      <p class="project-name">Touch Designer</p>
+      <p class="project-desc">When the rest is locked in the ceiling gets raised. 3D objects. Creative. Limitless. Next level.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<div class="manifesto reveal">
+  <div class="manifesto-bg"></div>
+  <p class="manifesto-quote">
+    The <span class="highlight">portfolio markets itself</span><br>
+    when the work is this <span class="outline">layered.</span><br>
+    People don't just want to see the<br>
+    <span class="highlight">finished product.</span><br>
+    They want to watch someone who<br>
+    <span class="outline">actually loves</span> what they're building.
+  </p>
+  <p class="manifesto-closer">The basement is the origin story.<br>Origin stories are always the best part.</p>
+</div>
+
+<!-- TICKER 2 -->
+<div class="ticker-wrap ticker-hot">
+  <div class="ticker-track ticker-rev">
+    <span class="ticker-item">LOCK IN <span class="ticker-sep">✦</span> EVERYTHING YOU NEED IS ALREADY IN MOTION <span class="ticker-sep">✦</span> THE BASEMENT IS THE LAUNCHPAD <span class="ticker-sep">✦</span> ARIZONA COMES WHEN EVERYTHING IS RUNNING <span class="ticker-sep">✦</span> IT'S ALREADY RUNNING <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">LOCK IN <span class="ticker-sep">✦</span> EVERYTHING YOU NEED IS ALREADY IN MOTION <span class="ticker-sep">✦</span> THE BASEMENT IS THE LAUNCHPAD <span class="ticker-sep">✦</span> ARIZONA COMES WHEN EVERYTHING IS RUNNING <span class="ticker-sep">✦</span> IT'S ALREADY RUNNING <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">FREESTYLE KING // TRANSPARENCY TECH</div>
+  <p class="footer-note">ORIGIN STORY // PHASE ONE // BASEMENT ERA</p>
+</footer>
+
+<script>
+  // CURSOR GLOW
+  const glow = document.getElementById('cursorGlow');
+  document.addEventListener('mousemove', e => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+
+  // SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // TITLE LETTER SPACING EFFECT on hover
+  const line2 = document.querySelector('.line-2');
+  if (line2) {
+    line2.addEventListener('mouseenter', () => {
+      line2.style.transition = 'letter-spacing 0.4s ease';
+      line2.style.letterSpacing = '0.3em';
+      setTimeout(() => { line2.style.letterSpacing = '0em'; }, 400);
+    });
+  }
+
+  // CARD TILT
+  document.querySelectorAll('.channel-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = `translateY(-4px) rotateX(${-y*6}deg) rotateY(${x*6}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transition = 'transform 0.5s ease, border-color 0.3s ease';
+      card.style.transform = '';
+    });
+    card.addEventListener('mouseenter', () => {
+      card.style.transition = 'transform 0.1s ease, border-color 0.3s ease';
+    });
+  });
+</script>
+</body>
+</html>
