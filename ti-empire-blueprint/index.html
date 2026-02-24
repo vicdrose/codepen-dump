@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TRANSPARENCY INTERACTIVE — Empire Blueprint</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+
+<style>
+
+  :root {
+
+    --gold: #FFD700;
+
+    --orange: #FF6B00;
+
+    --hot: #FF2D55;
+
+    --teal: #00FFD1;
+
+    --deep: #0A0A0F;
+
+    --panel: #111118;
+
+    --glass: rgba(255,255,255,0.04);
+
+    --border: rgba(255,215,0,0.15);
+
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+
+    background: var(--deep);
+
+    color: #fff;
+
+    font-family: 'Space Mono', monospace;
+
+    overflow-x: hidden;
+
+    cursor: crosshair;
+
+  }
+
+  /* GRAIN OVERLAY */
+
+  body::before {
+
+    content: '';
+
+    position: fixed;
+
+    inset: 0;
+
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+
+    pointer-events: none;
+
+    z-index: 9999;
+
+    opacity: 0.4;
+
+  }
+
+  /* CURSOR TRAIL */
+
+  .cursor-dot {
+
+    position: fixed;
+
+    width: 6px; height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--gold);
+
+    pointer-events: none;
+
+    z-index: 10000;
+
+    transition: transform 0.1s;
+
+    mix-blend-mode: screen;
+
+  }
+
+  /* ===================== HERO ===================== */
+
+  #hero {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 2rem;
+
+  }
+
+  .hero-bg {
+
+    position: absolute;
+
+    inset: 0;
+
+    background: 
+
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,107,0,0.18) 0%, transparent 70%),
+
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0,255,209,0.1) 0%, transparent 60%),
+
+      radial-gradient(ellipse 40% 30% at 20% 70%, rgba(255,45,85,0.12) 0%, transparent 60%);
+
+  }
+
+  /* Animated grid lines */
+
+  .grid-lines {
+
+    position: absolute;
+
+    inset: 0;
+
+    background-image: 
+
+      linear-gradient(rgba(255,215,0,0.04) 1px, transparent 1px),
+
+      linear-gradient(90deg, rgba(255,215,0,0.04) 1px, transparent 1px);
+
+    background-size: 60px 60px;
+
+    animation: gridShift 20s linear infinite;
+
+  }
+
+  @keyframes gridShift {
+
+    0% { transform: translateY(0); }
+
+    100% { transform: translateY(60px); }
+
+  }
+
+  .hero-eyebrow {
+
+    font-family: 'Space Mono', monospace;
+
+    font-size: 0.65rem;
+
+    letter-spacing: 0.4em;
+
+    color: var(--teal);
+
+    text-transform: uppercase;
+
+    margin-bottom: 1.5rem;
+
+    opacity: 0;
+
+    animation: fadeUp 0.8s 0.3s forwards;
+
+  }
+
+  .hero-title {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: clamp(4rem, 14vw, 12rem);
+
+    line-height: 0.88;
+
+    letter-spacing: -0.01em;
+
+    background: linear-gradient(135deg, #fff 0%, var(--gold) 40%, var(--orange) 70%, var(--hot) 100%);
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+    opacity: 0;
+
+    animation: fadeUp 1s 0.5s forwards;
+
+    position: relative;
+
+  }
+
+  .hero-title .word2 {
+
+    display: block;
+
+    -webkit-text-fill-color: transparent;
+
+    -webkit-text-stroke: 1px rgba(255,215,0,0.4);
+
+    background: none;
+
+  }
+
+  .hero-sub {
+
+    font-family: 'Playfair Display', serif;
+
+    font-style: italic;
+
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+
+    color: rgba(255,255,255,0.6);
+
+    margin-top: 1.5rem;
+
+    max-width: 600px;
+
+    line-height: 1.6;
+
+    opacity: 0;
+
+    animation: fadeUp 0.8s 0.8s forwards;
+
+  }
+
+  .hero-cta {
+
+    margin-top: 3rem;
+
+    opacity: 0;
+
+    animation: fadeUp 0.8s 1.1s forwards;
+
+  }
+
+  .scroll-hint {
+
+    font-size: 0.6rem;
+
+    letter-spacing: 0.3em;
+
+    color: var(--gold);
+
+    text-transform: uppercase;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+
+  }
+
+  .scroll-hint::before, .scroll-hint::after {
+
+    content: '';
+
+    width: 40px;
+
+    height: 1px;
+
+    background: var(--gold);
+
+    opacity: 0.4;
+
+  }
+
+  .scroll-arrow {
+
+    width: 20px;
+
+    height: 30px;
+
+    border: 1px solid var(--gold);
+
+    border-radius: 10px;
+
+    margin: 1rem auto 0;
+
+    position: relative;
+
+    opacity: 0.5;
+
+  }
+
+  .scroll-arrow::after {
+
+    content: '';
+
+    position: absolute;
+
+    width: 4px; height: 8px;
+
+    background: var(--gold);
+
+    border-radius: 2px;
+
+    left: 50%; top: 6px;
+
+    transform: translateX(-50%);
+
+    animation: scrollBounce 1.5s ease-in-out infinite;
+
+  }
+
+  @keyframes scrollBounce {
+
+    0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    50% { transform: translateX(-50%) translateY(8px); opacity: 0; }
+
+  }
+
+  /* ===================== SECTIONS ===================== */
+
+  section {
+
+    padding: 6rem 2rem;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+  }
+
+  .section-label {
+
+    font-family: 'Space Mono', monospace;
+
+    font-size: 0.6rem;
+
+    letter-spacing: 0.5em;
+
+    color: var(--teal);
+
+    text-transform: uppercase;
+
+    margin-bottom: 1rem;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 1rem;
+
+  }
+
+  .section-label::after {
+
+    content: '';
+
+    flex: 1;
+
+    height: 1px;
+
+    background: linear-gradient(90deg, var(--teal), transparent);
+
+    opacity: 0.3;
+
+  }
+
+  /* ===================== MANIFESTO SCROLL ===================== */
+
+  #manifesto {
+
+    padding: 0 2rem 6rem;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+  }
+
+  .manifesto-line {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: clamp(2.5rem, 7vw, 6rem);
+
+    line-height: 1;
+
+    color: rgba(255,255,255,0.08);
+
+    transition: color 0.4s, transform 0.4s;
+
+    cursor: default;
+
+    margin-bottom: 0.3rem;
+
+    will-change: color;
+
+  }
+
+  .manifesto-line:hover {
+
+    color: #fff;
+
+    transform: translateX(16px);
+
+  }
+
+  .manifesto-line.accent { color: rgba(255,107,0,0.2); }
+
+  .manifesto-line.accent:hover { color: var(--orange); }
+
+  .manifesto-line.teal { color: rgba(0,255,209,0.1); }
+
+  .manifesto-line.teal:hover { color: var(--teal); }
+
+  .manifesto-line.hot { color: rgba(255,45,85,0.1); }
+
+  .manifesto-line.hot:hover { color: var(--hot); }
+
+  /* ===================== PORTFOLIO CARDS ===================== */
+
+  .cards-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+    gap: 1.5rem;
+
+    margin-top: 2rem;
+
+  }
+
+  .card {
+
+    background: var(--glass);
+
+    border: 1px solid var(--border);
+
+    border-radius: 2px;
+
+    padding: 2rem;
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition: transform 0.3s, border-color 0.3s;
+
+    cursor: pointer;
+
+  }
+
+  .card::before {
+
+    content: '';
+
+    position: absolute;
+
+    inset: 0;
+
+    opacity: 0;
+
+    transition: opacity 0.4s;
+
+  }
+
+  .card.gold-card::before {
+
+    background: radial-gradient(ellipse at top left, rgba(255,215,0,0.12), transparent 70%);
+
+  }
+
+  .card.teal-card::before {
+
+    background: radial-gradient(ellipse at top left, rgba(0,255,209,0.1), transparent 70%);
+
+  }
+
+  .card.hot-card::before {
+
+    background: radial-gradient(ellipse at top left, rgba(255,45,85,0.12), transparent 70%);
+
+  }
+
+  .card:hover { transform: translateY(-4px); border-color: rgba(255,215,0,0.4); }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+
+    font-size: 2rem;
+
+    margin-bottom: 1rem;
+
+  }
+
+  .card-title {
+
+    font-family: 'Black Ops One', sans-serif;
+
+    font-size: 1.3rem;
+
+    letter-spacing: 0.05em;
+
+    margin-bottom: 0.5rem;
+
+    color: var(--gold);
+
+  }
+
+  .card.teal-card .card-title { color: var(--teal); }
+
+  .card.hot-card .card-title { color: var(--hot); }
+
+  .card-body {
+
+    font-size: 0.75rem;
+
+    line-height: 1.7;
+
+    color: rgba(255,255,255,0.55);
+
+  }
+
+  .card-tag {
+
+    display: inline-block;
+
+    font-size: 0.55rem;
+
+    letter-spacing: 0.3em;
+
+    text-transform: uppercase;
+
+    padding: 0.2rem 0.6rem;
+
+    border: 1px solid;
+
+    border-radius: 1px;
+
+    margin-top: 1rem;
+
+  }
+
+  .gold-card .card-tag { border-color: rgba(255,215,0,0.4); color: var(--gold); }
+
+  .teal-card .card-tag { border-color: rgba(0,255,209,0.4); color: var(--teal); }
+
+  .hot-card .card-tag { border-color: rgba(255,45,85,0.4); color: var(--hot); }
+
+  .card-corner {
+
+    position: absolute;
+
+    top: 0; right: 0;
+
+    width: 0; height: 0;
+
+    border-style: solid;
+
+    border-width: 0 32px 32px 0;
+
+    border-color: transparent;
+
+    transition: border-color 0.3s;
+
+  }
+
+  .gold-card:hover .card-corner { border-right-color: rgba(255,215,0,0.5); }
+
+  .teal-card:hover .card-corner { border-right-color: rgba(0,255,209,0.5); }
+
+  .hot-card:hover .card-corner { border-right-color: rgba(255,45,85,0.5); }
+
+  /* ===================== DAILY SYSTEM ===================== */
+
+  #system {
+
+    background: var(--panel);
+
+    border-top: 1px solid var(--border);
+
+    border-bottom: 1px solid var(--border);
+
+    padding: 6rem 2rem;
+
+  }
+
+  #system .inner {
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+  }
+
+  .timeline {
+
+    margin-top: 3rem;
+
+    position: relative;
+
+  }
+
+  .timeline::before {
+
+    content: '';
+
+    position: absolute;
+
+    left: 80px;
+
+    top: 0; bottom: 0;
+
+    width: 1px;
+
+    background: linear-gradient(to bottom, var(--gold), var(--teal), var(--hot), transparent);
+
+    opacity: 0.3;
+
+  }
+
+  .t-item {
+
+    display: flex;
+
+    gap: 2rem;
+
+    margin-bottom: 2.5rem;
+
+    align-items: flex-start;
+
+    opacity: 0;
+
+    transform: translateX(-20px);
+
+    transition: opacity 0.6s, transform 0.6s;
+
+  }
+
+  .t-item.visible { opacity: 1; transform: translateX(0); }
+
+  .t-time {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: 1.4rem;
+
+    min-width: 80px;
+
+    text-align: right;
+
+    padding-right: 2rem;
+
+    padding-top: 0.1rem;
+
+    position: relative;
+
+  }
+
+  .t-time::after {
+
+    content: '';
+
+    position: absolute;
+
+    right: -5px; top: 12px;
+
+    width: 10px; height: 10px;
+
+    border-radius: 50%;
+
+    border: 2px solid;
+
+  }
+
+  .t-item:nth-child(1) .t-time { color: var(--orange); }
+
+  .t-item:nth-child(1) .t-time::after { border-color: var(--orange); background: var(--deep); }
+
+  .t-item:nth-child(2) .t-time { color: var(--gold); }
+
+  .t-item:nth-child(2) .t-time::after { border-color: var(--gold); background: var(--deep); }
+
+  .t-item:nth-child(3) .t-time { color: var(--teal); }
+
+  .t-item:nth-child(3) .t-time::after { border-color: var(--teal); background: var(--deep); }
+
+  .t-item:nth-child(4) .t-time { color: var(--hot); }
+
+  .t-item:nth-child(4) .t-time::after { border-color: var(--hot); background: var(--deep); }
+
+  .t-content {
+
+    flex: 1;
+
+    background: var(--glass);
+
+    border: 1px solid var(--border);
+
+    padding: 1.2rem 1.5rem;
+
+    border-radius: 2px;
+
+  }
+
+  .t-title {
+
+    font-family: 'Black Ops One', sans-serif;
+
+    font-size: 1rem;
+
+    margin-bottom: 0.4rem;
+
+    letter-spacing: 0.05em;
+
+  }
+
+  .t-desc {
+
+    font-size: 0.72rem;
+
+    line-height: 1.7;
+
+    color: rgba(255,255,255,0.5);
+
+  }
+
+  .t-pills {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.4rem;
+
+    margin-top: 0.8rem;
+
+  }
+
+  .pill {
+
+    font-size: 0.55rem;
+
+    letter-spacing: 0.2em;
+
+    text-transform: uppercase;
+
+    background: rgba(255,255,255,0.06);
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+    padding: 0.2rem 0.5rem;
+
+    border-radius: 1px;
+
+    color: rgba(255,255,255,0.4);
+
+  }
+
+  /* ===================== MAP / TERRITORIES ===================== */
+
+  .territories {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+    gap: 1px;
+
+    margin-top: 2rem;
+
+    border: 1px solid var(--border);
+
+  }
+
+  .territory {
+
+    padding: 1.8rem;
+
+    background: var(--glass);
+
+    text-align: center;
+
+    transition: background 0.3s;
+
+    cursor: pointer;
+
+    position: relative;
+
+    overflow: hidden;
+
+  }
+
+  .territory:hover { background: rgba(255,215,0,0.06); }
+
+  .territory-season {
+
+    font-size: 0.55rem;
+
+    letter-spacing: 0.4em;
+
+    text-transform: uppercase;
+
+    color: var(--teal);
+
+    margin-bottom: 0.5rem;
+
+  }
+
+  .territory-name {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: 2.5rem;
+
+    line-height: 1;
+
+    color: var(--gold);
+
+    margin-bottom: 0.5rem;
+
+  }
+
+  .territory-desc {
+
+    font-size: 0.68rem;
+
+    color: rgba(255,255,255,0.4);
+
+    line-height: 1.6;
+
+  }
+
+  .territory-flag {
+
+    font-size: 2rem;
+
+    margin-bottom: 0.8rem;
+
+    display: block;
+
+  }
+
+  /* ===================== TECH STACK ===================== */
+
+  .stack-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+
+    gap: 1rem;
+
+    margin-top: 2rem;
+
+  }
+
+  .stack-item {
+
+    border: 1px solid var(--border);
+
+    padding: 1.2rem;
+
+    text-align: center;
+
+    transition: all 0.3s;
+
+    cursor: pointer;
+
+    position: relative;
+
+    overflow: hidden;
+
+  }
+
+  .stack-item::after {
+
+    content: attr(data-hover);
+
+    position: absolute;
+
+    inset: 0;
+
+    background: rgba(0,255,209,0.08);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 0.65rem;
+
+    color: var(--teal);
+
+    letter-spacing: 0.1em;
+
+    opacity: 0;
+
+    transition: opacity 0.3s;
+
+    padding: 0.5rem;
+
+    line-height: 1.4;
+
+  }
+
+  .stack-item:hover::after { opacity: 1; }
+
+  .stack-item:hover { border-color: var(--teal); transform: scale(1.03); }
+
+  .stack-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+
+  .stack-name {
+
+    font-family: 'Black Ops One', sans-serif;
+
+    font-size: 0.75rem;
+
+    letter-spacing: 0.08em;
+
+    color: rgba(255,255,255,0.7);
+
+  }
+
+  /* ===================== CLOSING STATEMENT ===================== */
+
+  #closing {
+
+    text-align: center;
+
+    padding: 8rem 2rem;
+
+    position: relative;
+
+    overflow: hidden;
+
+  }
+
+  #closing::before {
+
+    content: 'EMPIRE';
+
+    position: absolute;
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: clamp(8rem, 25vw, 22rem);
+
+    color: rgba(255,215,0,0.02);
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    white-space: nowrap;
+
+    pointer-events: none;
+
+    letter-spacing: 0.1em;
+
+  }
+
+  .closing-quote {
+
+    font-family: 'Playfair Display', serif;
+
+    font-style: italic;
+
+    font-size: clamp(1.5rem, 4vw, 2.8rem);
+
+    line-height: 1.4;
+
+    max-width: 800px;
+
+    margin: 0 auto;
+
+    background: linear-gradient(135deg, #fff, var(--gold));
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+  }
+
+  .closing-sub {
+
+    margin-top: 2rem;
+
+    font-size: 0.65rem;
+
+    letter-spacing: 0.5em;
+
+    text-transform: uppercase;
+
+    color: rgba(255,255,255,0.25);
+
+  }
+
+  .closing-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+
+    margin-top: 3rem;
+
+    padding: 0.8rem 2rem;
+
+    border: 1px solid rgba(255,215,0,0.3);
+
+    font-family: 'Black Ops One', sans-serif;
+
+    font-size: 0.8rem;
+
+    letter-spacing: 0.2em;
+
+    color: var(--gold);
+
+    position: relative;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    transition: all 0.3s;
+
+  }
+
+  .closing-badge::before {
+
+    content: '';
+
+    position: absolute;
+
+    inset: 0;
+
+    background: var(--gold);
+
+    transform: translateX(-100%);
+
+    transition: transform 0.4s;
+
+    z-index: -1;
+
+  }
+
+  .closing-badge:hover { color: var(--deep); }
+
+  .closing-badge:hover::before { transform: translateX(0); }
+
+  .pulse-dot {
+
+    width: 6px; height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--hot);
+
+    animation: pulseDot 1.5s ease-in-out infinite;
+
+  }
+
+  @keyframes pulseDot {
+
+    0%, 100% { opacity: 1; transform: scale(1); }
+
+    50% { opacity: 0.4; transform: scale(1.5); }
+
+  }
+
+  /* ===================== SECTION TITLES ===================== */
+
+  .section-title {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: clamp(2.5rem, 6vw, 5rem);
+
+    line-height: 1;
+
+    letter-spacing: 0.02em;
+
+    margin-bottom: 0.5rem;
+
+  }
+
+  .section-title .outline {
+
+    -webkit-text-stroke: 1px rgba(255,215,0,0.4);
+
+    -webkit-text-fill-color: transparent;
+
+  }
+
+  /* ===================== UTILS ===================== */
+
+  @keyframes fadeUp {
+
+    from { opacity: 0; transform: translateY(24px); }
+
+    to { opacity: 1; transform: translateY(0); }
+
+  }
+
+  .divider {
+
+    width: 100%;
+
+    height: 1px;
+
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+
+    margin: 4rem auto;
+
+  }
+
+  /* Nav bar */
+
+  nav {
+
+    position: fixed;
+
+    top: 0; left: 0; right: 0;
+
+    z-index: 100;
+
+    padding: 1rem 2rem;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    background: rgba(10,10,15,0.7);
+
+    backdrop-filter: blur(12px);
+
+    border-bottom: 1px solid var(--border);
+
+  }
+
+  .nav-logo {
+
+    font-family: 'Black Ops One', sans-serif;
+
+    font-size: 0.9rem;
+
+    letter-spacing: 0.15em;
+
+    color: var(--gold);
+
+  }
+
+  .nav-links {
+
+    display: flex;
+
+    gap: 2rem;
+
+    list-style: none;
+
+  }
+
+  .nav-links a {
+
+    font-size: 0.6rem;
+
+    letter-spacing: 0.3em;
+
+    text-transform: uppercase;
+
+    color: rgba(255,255,255,0.4);
+
+    text-decoration: none;
+
+    transition: color 0.3s;
+
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  /* Progress bar */
+
+  .progress-bar {
+
+    position: fixed;
+
+    top: 0; left: 0;
+
+    height: 2px;
+
+    background: linear-gradient(90deg, var(--hot), var(--gold), var(--teal));
+
+    z-index: 101;
+
+    transition: width 0.1s;
+
+  }
+
+  /* Interactive counter */
+
+  .counter-section {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+
+    gap: 2rem;
+
+    padding: 4rem 2rem;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    text-align: center;
+
+  }
+
+  .counter-item .number {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: 4rem;
+
+    color: var(--gold);
+
+    line-height: 1;
+
+  }
+
+  .counter-item .label {
+
+    font-size: 0.6rem;
+
+    letter-spacing: 0.4em;
+
+    text-transform: uppercase;
+
+    color: rgba(255,255,255,0.3);
+
+    margin-top: 0.4rem;
+
+  }
+
+  /* Glitch on title hover */
+
+  .glitch {
+
+    position: relative;
+
+    display: inline-block;
+
+  }
+
+  .glitch:hover::before, .glitch:hover::after {
+
+    content: attr(data-text);
+
+    position: absolute;
+
+    top: 0; left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: inherit;
+
+    line-height: inherit;
+
+  }
+
+  .glitch:hover::before {
+
+    background: linear-gradient(135deg, #fff 0%, var(--gold) 40%, var(--orange) 70%, var(--hot) 100%);
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+    animation: glitch1 0.3s infinite;
+
+  }
+
+  .glitch:hover::after {
+
+    background: linear-gradient(135deg, var(--teal) 0%, #fff 100%);
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+    animation: glitch2 0.3s infinite;
+
+    opacity: 0.5;
+
+  }
+
+  @keyframes glitch1 {
+
+    0%   { clip-path: inset(0 0 90% 0); transform: translateX(-4px); }
+
+    25%  { clip-path: inset(30% 0 50% 0); transform: translateX(4px); }
+
+    50%  { clip-path: inset(60% 0 20% 0); transform: translateX(-2px); }
+
+    75%  { clip-path: inset(80% 0 5% 0); transform: translateX(3px); }
+
+    100% { clip-path: inset(10% 0 80% 0); transform: translateX(-4px); }
+
+  }
+
+  @keyframes glitch2 {
+
+    0%   { clip-path: inset(80% 0 5% 0); transform: translateX(4px); }
+
+    25%  { clip-path: inset(50% 0 30% 0); transform: translateX(-4px); }
+
+    50%  { clip-path: inset(10% 0 70% 0); transform: translateX(2px); }
+
+    75%  { clip-path: inset(40% 0 40% 0); transform: translateX(-3px); }
+
+    100% { clip-path: inset(70% 0 15% 0); transform: translateX(4px); }
+
+  }
+
+  @media (max-width: 600px) {
+
+    .timeline::before { left: 60px; }
+
+    .t-time { min-width: 60px; font-size: 1.1rem; }
+
+    nav .nav-links { display: none; }
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="cursor-dot" id="cursor"></div>
+
+<nav>
+
+  <div class="nav-logo">T・I</div>
+
+  <ul class="nav-links">
+
+    <li><a href="#portfolios">Portfolios</a></li>
+
+    <li><a href="#system">Daily System</a></li>
+
+    <li><a href="#territories">Territories</a></li>
+
+    <li><a href="#stack">Stack</a></li>
+
+  </ul>
+
+</nav>
+
+<!-- ===================== HERO ===================== -->
+
+<div id="hero">
+
+  <div class="hero-bg"></div>
+
+  <div class="grid-lines"></div>
+
+  <div style="position:relative;z-index:2;">
+
+    <p class="hero-eyebrow">You're not building a career</p>
+
+    <h1 class="hero-title">
+
+      <span class="glitch" data-text="TRANSPARENCY">TRANSPARENCY</span>
+
+      <span class="word2">INTERACTIVE</span>
+
+    </h1>
+
+    <p class="hero-sub">
+
+      You're building an empire — and you already have the blueprint.
+
+    </p>
+
+    <div class="hero-cta">
+
+      <div class="scroll-hint">scroll to explore</div>
+
+      <div class="scroll-arrow"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ===================== COUNTERS ===================== -->
+
+<div class="counter-section">
+
+  <div class="counter-item">
+
+    <div class="number" data-target="2">0</div>
+
+    <div class="label">Portfolios</div>
+
+  </div>
+
+  <div class="counter-item">
+
+    <div class="number" data-target="3">0</div>
+
+    <div class="label">Game Styles</div>
+
+  </div>
+
+  <div class="counter-item">
+
+    <div class="number" data-target="2">0</div>
+
+    <div class="label">Territories</div>
+
+  </div>
+
+  <div class="counter-item">
+
+    <div class="number" data-target="1">0</div>
+
+    <div class="label">Master System</div>
+
+  </div>
+
+</div>
+
+<!-- ===================== MANIFESTO ===================== -->
+
+<div id="manifesto">
+
+  <div class="section-label">Manifesto</div>
+
+  <div class="manifesto-line">TWO PORTFOLIOS.</div>
+
+  <div class="manifesto-line accent">TWO AUDIENCES.</div>
+
+  <div class="manifesto-line teal">TOTAL CONTROL.</div>
+
+  <div class="manifesto-line" style="font-size: clamp(1.5rem, 4vw, 3.5rem); color: rgba(255,255,255,0.04);">You decide who gets how deep.</div>
+
+  <div class="manifesto-line hot">THE MACHINE RUNS</div>
+
+  <div class="manifesto-line hot">ON YOU MOVING.</div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- ===================== PORTFOLIOS ===================== -->
+
+<section id="portfolios">
+
+  <div class="section-label">The Two Worlds</div>
+
+  <div class="section-title">Your <span class="outline">Dual</span> Empire</div>
+
+  <p style="color:rgba(255,255,255,0.4); font-size:0.75rem; margin-top:0.5rem; margin-bottom:0; line-height:1.8; max-width:600px;">
+
+    Employers see the craft. The world eventually sees the vision. You control the narrative at every layer.
+
+  </p>
+
+  <div class="cards-grid" style="margin-top:3rem;">
+
+    <div class="card gold-card">
+
+      <div class="card-corner"></div>
+
+      <div class="card-icon">⚡</div>
+
+      <div class="card-title">Transparency Interactive</div>
+
+      <p class="card-body">
+
+        The tech-facing portfolio. Polished, purposeful, undeniable. This is what employers see — a living ecosystem built to demonstrate range, precision, and vision. Astro Beats lives here. Your proof of work lives here.
+
+      </p>
+
+      <span class="card-tag">Tech World ↗</span>
+
+    </div>
+
+    <div class="card teal-card">
+
+      <div class="card-corner"></div>
+
+      <div class="card-icon">🎤</div>
+
+      <div class="card-title">Freestyle King</div>
+
+      <p class="card-body">
+
+        The culture-facing universe. A living soap opera with music videos, rhythm games — Parappa + Street Fighter energy — and a rap AI you get to <em>be the hype man for</em>. Fortnite model: one container, endless longevity.
+
+      </p>
+
+      <span class="card-tag">Culture World ↗</span>
+
+    </div>
+
+    <div class="card hot-card">
+
+      <div class="card-corner"></div>
+
+      <div class="card-icon">📱</div>
+
+      <div class="card-title">The Android Play</div>
+
+      <p class="card-body">
+
+        JavaScript + AI-built. Starts accessible, scales up. More people have Androids than PS5s — you go wide, then you flex up to PlayStation with 3D graphics and rhythm game mastery when you're ready. Port up, never down.
+
+      </p>
+
+      <span class="card-tag">Game Engine ↗</span>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ===================== DAILY SYSTEM ===================== -->
+
+<div id="system">
+
+  <div class="inner">
+
+    <div class="section-label">The Blueprint</div>
+
+    <div class="section-title">Daily <span class="outline">System</span></div>
+
+    <p style="color:rgba(255,255,255,0.4); font-size:0.75rem; margin-top:0.5rem; line-height:1.8; max-width:600px;">
+
+      This isn't a schedule. It's a productivity engine where every block feeds the next.
+
+    </p>
+
+    <div class="timeline">
+
+      <div class="t-item">
+
+        <div class="t-time">5AM</div>
+
+        <div class="t-content">
+
+          <div class="t-title">The Grind Block</div>
+
+          <p class="t-desc">Uber and DoorDash from 5AM to 2PM — not survival mode, <em>scouting mode</em>. You're positioning near WeWorks, Planet Fitnesses, college campuses. Every drive is intelligence gathering. Music discovery happens here too. Cardio feeds the ears.</p>
+
+          <div class="t-pills">
+
+            <span class="pill">Uber / DoorDash</span>
+
+            <span class="pill">Job Applications</span>
+
+            <span class="pill">Vehicle Strategy</span>
+
+            <span class="pill">Music Discovery</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="t-item">
+
+        <div class="t-time">2PM</div>
+
+        <div class="t-content">
+
+          <div class="t-title">The Move Block</div>
+
+          <p class="t-desc">Park. Gym. Soccer. Basketball. Then college campus → storage unit → bike. The city opens up. Social life unlocks. You're not just productive — you're magnetic, moving through the world with intention and presence.</p>
+
+          <div class="t-pills">
+
+            <span class="pill">Park / Gym</span>
+
+            <span class="pill">Campus Base</span>
+
+            <span class="pill">Bike Loop</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="t-item">
+
+        <div class="t-time">EVE</div>
+
+        <div class="t-content">
+
+          <div class="t-title">The Flow Block</div>
+
+          <p class="t-desc">Music discovery flows into Astro Beats, Astro Beats feeds the set list, set list feeds the stream. Transparency animations. Guitar VFX sets. Game streaming. The productivity engine runs hot because you built it to.</p>
+
+          <div class="t-pills">
+
+            <span class="pill">Astro Beats</span>
+
+            <span class="pill">Set Prep</span>
+
+            <span class="pill">Beat Remakes</span>
+
+            <span class="pill">Game Stream</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="t-item">
+
+        <div class="t-time">LOCK</div>
+
+        <div class="t-content">
+
+          <div class="t-title">The Fortress</div>
+
+          <p class="t-desc">Van life as architecture. Multiple garage vans = multiple cities, multiple bases, maximum flexibility. Two vehicles is a fortress with a stage in between. Nobody finds you in familiar spots. You move like water.</p>
+
+          <div class="t-pills">
+
+            <span class="pill">Milwaukee Base</span>
+
+            <span class="pill">Chicago Satellite</span>
+
+            <span class="pill">Fortress Mode</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ===================== TERRITORIES ===================== -->
+
+<section id="territories" style="padding-top:6rem; padding-bottom:6rem; max-width:1100px; margin:0 auto; padding-left:2rem; padding-right:2rem;">
+
+  <div class="section-label">American Foundation</div>
+
+  <div class="section-title"><span class="outline">Territory</span> Map</div>
+
+  <p style="color:rgba(255,255,255,0.4); font-size:0.75rem; margin-top:0.5rem; margin-bottom:0; line-height:1.8; max-width:600px;">
+
+    Two highest-density corridors for WeWork + Planet Fitness + National Parks. This isn't geography, it's lifestyle architecture.
+
+  </p>
+
+  <div class="territories" style="margin-top:3rem;">
+
+    <div class="territory">
+
+      <span class="territory-flag">🏔️</span>
+
+      <div class="territory-season">Summer Base</div>
+
+      <div class="territory-name">Colorado</div>
+
+      <p class="territory-desc">Mountains. Density. Culture. Scenic routes for the move. National parks on demand. Your summer is built for momentum.</p>
+
+    </div>
+
+    <div class="territory">
+
+      <span class="territory-flag">☀️</span>
+
+      <div class="territory-season">Winter Base</div>
+
+      <div class="territory-name">Arizona</div>
+
+      <p class="territory-desc">Sun. Space. Flow state weather. When the cold kills productivity everywhere else, you're locked in and thriving under perpetual warmth.</p>
+
+    </div>
+
+    <div class="territory">
+
+      <span class="territory-flag">🏙️</span>
+
+      <div class="territory-season">Current HQ</div>
+
+      <div class="territory-name">Milwaukee</div>
+
+      <p class="territory-desc">WM campus. Summerfest energy. Bike loops. Storage unit combos. Underrated launchpad with real cultural infrastructure beneath the surface.</p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ===================== TECH STACK ===================== -->
+
+<div style="background:var(--panel); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+
+  <section id="stack" style="padding-top:5rem; padding-bottom:5rem;">
+
+    <div class="section-label">Arsenal</div>
+
+    <div class="section-title">The <span class="outline">Stack</span></div>
+
+    <div class="stack-grid">
+
+      <div class="stack-item" data-hover="Game dev with AI assist. Fast. Portable. The right call.">
+
+        <div class="stack-icon">🎮</div>
+
+        <div class="stack-name">JavaScript</div>
+
+      </div>
+
+      <div class="stack-item" data-hover="Animation engine. Unity as a creative weapon, not a game engine.">
+
+        <div class="stack-icon">🌀</div>
+
+        <div class="stack-name">Unity</div>
+
+      </div>
+
+      <div class="stack-item" data-hover="Utility tool feeding Unity. The invisible backbone.">
+
+        <div class="stack-icon">🔷</div>
+
+        <div class="stack-name">Blender</div>
+
+      </div>
+
+      <div class="stack-item" data-hover="Rhythm timing. Syllable drops. The secret sauce for Freestyle King.">
+
+        <div class="stack-icon">🎵</div>
+
+        <div class="stack-name">Tone.js</div>
+
+      </div>
+
+      <div class="stack-item" data-hover="Stitch + image effects for rapid UI prototyping. Maximum AI leverage.">
+
+        <div class="stack-icon">✨</div>
+
+        <div class="stack-name">AI Studio</div>
+
+      </div>
+
+      <div class="stack-item" data-hover="API bridges between Freestyle King and Transparency Interactive.">
+
+        <div class="stack-icon">🔗</div>
+
+        <div class="stack-name">REST APIs</div>
+
+      </div>
+
+      <div class="stack-item" data-hover="Save states. Persistent data. Your game remembers everything.">
+
+        <div class="stack-icon">💾</div>
+
+        <div class="stack-name">Data Persist</div>
+
+      </div>
+
+      <div class="stack-item" data-hover="Marvel for prototyping. Show the vision before you build it.">
+
+        <div class="stack-icon">📐</div>
+
+        <div class="stack-name">Marvel App</div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+<!-- ===================== CLOSING ===================== -->
+
+<div id="closing">
+
+  <p class="closing-quote">
+
+    "You've got the map. You've got the tools. You've got the instinct. Now it's just execution — and you were built for that."
+
+  </p>
+
+  <p class="closing-sub">Transparency Interactive — Empire Blueprint — 2025</p>
+
+  <div style="margin-top:3rem;">
+
+    <div class="closing-badge" onclick="this.textContent='🔥 LET\'S GO.'">
+
+      <span class="pulse-dot"></span>
+
+      ACTIVATE THE SYSTEM
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+  // Progress bar
+
+  const progress = document.getElementById('progress');
+
+  window.addEventListener('scroll', () => {
+
+    const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+
+    progress.style.width = pct + '%';
+
+  });
+
+  // Cursor dot
+
+  const cursor = document.getElementById('cursor');
+
+  document.addEventListener('mousemove', e => {
+
+    cursor.style.left = e.clientX - 3 + 'px';
+
+    cursor.style.top = e.clientY - 3 + 'px';
+
+  });
+
+  // Scroll reveal for timeline items
+
+  const observer = new IntersectionObserver(entries => {
+
+    entries.forEach((entry, i) => {
+
+      if (entry.isIntersecting) {
+
+        setTimeout(() => entry.target.classList.add('visible'), i * 120);
+
+      }
+
+    });
+
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.t-item').forEach(el => observer.observe(el));
+
+  // Animated counters
+
+  const counterObserver = new IntersectionObserver(entries => {
+
+    entries.forEach(entry => {
+
+      if (entry.isIntersecting) {
+
+        const el = entry.target;
+
+        const target = parseInt(el.dataset.target);
+
+        let current = 0;
+
+        const step = target / 20;
+
+        const timer = setInterval(() => {
+
+          current += step;
+
+          if (current >= target) { el.textContent = target; clearInterval(timer); }
+
+          else el.textContent = Math.floor(current);
+
+        }, 60);
+
+        counterObserver.unobserve(el);
+
+      }
+
+    });
+
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+
+  // Manifesto hover activation
+
+  const manifestoObserver = new IntersectionObserver(entries => {
+
+    entries.forEach(entry => {
+
+      if (entry.isIntersecting) {
+
+        entry.target.style.transition = 'color 0.6s, transform 0.4s';
+
+      }
+
+    });
+
+  });
+
+  document.querySelectorAll('.manifesto-line').forEach(el => manifestoObserver.observe(el));
+
+  // Smooth scroll for nav links
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+
+    a.addEventListener('click', e => {
+
+      e.preventDefault();
+
+      const target = document.querySelector(a.getAttribute('href'));
+
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+
+    });
+
+  });
+
+  // Card tilt effect
+
+  document.querySelectorAll('.card').forEach(card => {
+
+    card.addEventListener('mousemove', e => {
+
+      const rect = card.getBoundingClientRect();
+
+      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+
+      const y = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
+
+      card.style.transform = `translateY(-4px) rotateX(${y}deg) rotateY(${x}deg)`;
+
+      card.style.transformOrigin = 'center';
+
+    });
+
+    card.addEventListener('mouseleave', () => {
+
+      card.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
+
+    });
+
+  });
+
+</script>
+
+</body>
+
+</html>
+
