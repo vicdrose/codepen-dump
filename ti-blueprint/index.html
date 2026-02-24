@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRANSPARENCY INTERACTIVE — The Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --cream: #f5f0e8;
+    --gold: #d4a843;
+    --rust: #c2501e;
+    --teal: #1a6b6b;
+    --sky: #7ec8d4;
+    --ghost: rgba(245,240,232,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'DM Mono', monospace;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.25s ease-out, width 0.3s, height 0.3s;
+    opacity: 0.5;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 9000;
+  }
+
+  /* ─── INTRO SPLASH ─── */
+  #splash {
+    position: fixed; inset: 0;
+    background: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 8000;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #splash.hidden { opacity: 0; visibility: hidden; }
+
+  .splash-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 15vw, 12rem);
+    letter-spacing: 0.05em;
+    line-height: 0.85;
+    text-align: center;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--rust) 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: shimmer 3s linear infinite;
+  }
+  @keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+  .splash-sub {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--sky);
+    margin-top: 1.5rem;
+    text-transform: uppercase;
+    animation: blink 1.5s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .splash-enter {
+    margin-top: 3rem;
+    padding: 0.8rem 3rem;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s, color 0.3s;
+  }
+  .splash-enter:hover {
+    background: var(--gold);
+    color: var(--ink);
+  }
+
+  /* ─── MAIN APP ─── */
+  #app {
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  #app.visible { opacity: 1; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 2.5rem;
+    border-bottom: 1px solid var(--ghost);
+    backdrop-filter: blur(12px);
+    background: rgba(10,10,10,0.7);
+  }
+  .nav-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+  .nav-links {
+    display: flex; gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold); }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(10rem, 30vw, 28rem);
+    letter-spacing: -0.02em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(212,168,67,0.07);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    animation: floatBg 8s ease-in-out infinite;
+  }
+  @keyframes floatBg {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -52%) scale(1.02); }
+  }
+
+  .hero-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 10vw, 9rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-title span { color: var(--gold); }
+  .hero-title em {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.6em;
+    color: var(--sky);
+    display: block;
+  }
+
+  .hero-body {
+    max-width: 500px;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    color: rgba(245,240,232,0.6);
+    margin-top: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-scroll {
+    margin-top: 4rem;
+    display: flex; align-items: center; gap: 1rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .scroll-line {
+    width: 60px; height: 1px;
+    background: var(--gold);
+    position: relative; overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: white;
+    animation: scanLine 2s linear infinite;
+  }
+  @keyframes scanLine { to { left: 200%; } }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── PILLARS SECTION ─── */
+  #pillars {
+    padding: 6rem 3rem;
+    position: relative;
+  }
+  .section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1;
+    margin-bottom: 4rem;
+  }
+  .section-title span { color: var(--rust); }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5px;
+    background: rgba(212,168,67,0.1);
+    border: 1px solid rgba(212,168,67,0.1);
+  }
+  .pillar {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+    transition: background 0.3s;
+  }
+  .pillar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  .pillar:hover::before { transform: translateX(0); }
+  .pillar:hover { background: rgba(212,168,67,0.04); }
+
+  .pillar-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: rgba(212,168,67,0.15);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+  .pillar-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .pillar-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+    color: var(--cream);
+    margin-bottom: 0.8rem;
+  }
+  .pillar-title span { color: var(--gold); }
+  .pillar-desc {
+    font-size: 0.72rem;
+    line-height: 1.8;
+    color: rgba(245,240,232,0.55);
+  }
+  .pillar-tag {
+    display: inline-block;
+    margin-top: 1.2rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid;
+    border-radius: 1px;
+  }
+  .pillar-tag.green { border-color: var(--teal); color: var(--teal); }
+  .pillar-tag.blue { border-color: var(--sky); color: var(--sky); }
+  .pillar-tag.gold { border-color: var(--gold); color: var(--gold); }
+  .pillar-tag.rust { border-color: var(--rust); color: var(--rust); }
+
+  /* ─── DAILY STACK SECTION ─── */
+  #stack {
+    padding: 6rem 3rem;
+    background: rgba(26,107,107,0.05);
+    border-top: 1px solid var(--ghost);
+    border-bottom: 1px solid var(--ghost);
+  }
+  .timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 5rem;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 5rem 2rem 1fr;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    align-items: start;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+    cursor: none;
+  }
+  .timeline-item:hover { opacity: 1; }
+  .timeline-time {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    text-align: right;
+    padding-top: 0.2rem;
+  }
+  .timeline-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin-top: 0.35rem;
+    position: relative; left: -4px;
+    box-shadow: 0 0 12px var(--gold);
+    flex-shrink: 0;
+    transition: transform 0.3s;
+  }
+  .timeline-item:hover .timeline-dot { transform: scale(1.5); }
+  .timeline-content {}
+  .timeline-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    color: var(--cream);
+  }
+  .timeline-detail {
+    font-size: 0.7rem;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.5);
+    margin-top: 0.3rem;
+  }
+
+  /* ─── VISION MAP ─── */
+  #vision {
+    padding: 6rem 3rem;
+  }
+  .vision-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    max-width: 1100px;
+  }
+  @media (max-width: 768px) { .vision-grid { grid-template-columns: 1fr; } }
+
+  .vision-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--sky);
+    border-left: 2px solid var(--rust);
+    padding-left: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .vision-body {
+    font-size: 0.75rem;
+    line-height: 2;
+    color: rgba(245,240,232,0.6);
+  }
+
+  .destinations {
+    display: flex; flex-direction: column; gap: 1px;
+    background: var(--ghost);
+  }
+  .destination {
+    background: var(--ink);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    cursor: none;
+    transition: background 0.2s, padding-left 0.3s;
+    border-left: 2px solid transparent;
+  }
+  .destination:hover {
+    background: rgba(126,200,212,0.06);
+    padding-left: 2rem;
+    border-left-color: var(--sky);
+  }
+  .dest-flag { font-size: 1.6rem; }
+  .dest-info { flex: 1; }
+  .dest-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+  }
+  .dest-cost {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .dest-bar {
+    width: 80px; height: 2px;
+    background: rgba(245,240,232,0.1);
+    position: relative;
+  }
+  .dest-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--sky));
+    transition: width 1s ease;
+  }
+
+  /* ─── INCOME ENGINE ─── */
+  #income {
+    padding: 6rem 3rem;
+    background: rgba(194,80,30,0.04);
+    border-top: 1px solid var(--ghost);
+  }
+  .income-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2px;
+    background: var(--ghost);
+    margin-top: 3rem;
+  }
+  .income-card {
+    background: var(--ink);
+    padding: 2rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .income-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 0;
+    background: var(--rust);
+    transition: height 0.4s ease;
+    opacity: 0.08;
+  }
+  .income-card:hover::after { height: 100%; }
+  .income-emoji { font-size: 1.8rem; margin-bottom: 1rem; display: block; }
+  .income-stream {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+  .income-note {
+    font-size: 0.65rem;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.5);
+  }
+  .income-potential {
+    margin-top: 1rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  /* ─── MANIFESTO TICKER ─── */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid rgba(212,168,67,0.2);
+    border-bottom: 1px solid rgba(212,168,67,0.2);
+    padding: 1rem 0;
+    background: rgba(212,168,67,0.03);
+  }
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker 30s linear infinite;
+  }
+  .ticker-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    padding: 0 3rem;
+    white-space: nowrap;
+    color: var(--cream);
+    opacity: 0.4;
+  }
+  .ticker-item span { color: var(--gold); opacity: 1; }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ─── INTERACTIVE QUOTE MACHINE ─── */
+  #quotes {
+    padding: 6rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .quote-machine {
+    max-width: 750px;
+  }
+  .quote-display {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 3.5vw, 2rem);
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--cream);
+    min-height: 8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s;
+  }
+  .quote-author {
+    margin-top: 1.5rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .quote-btn {
+    margin-top: 3rem;
+    padding: 0.9rem 2.5rem;
+    background: transparent;
+    border: 1px solid var(--cream);
+    color: var(--cream);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.3s;
+  }
+  .quote-btn:hover {
+    background: var(--cream);
+    color: var(--ink);
+  }
+  .quote-dots {
+    display: flex; gap: 0.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  .qdot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(245,240,232,0.2);
+    transition: background 0.3s, transform 0.3s;
+    cursor: none;
+  }
+  .qdot.active {
+    background: var(--gold);
+    transform: scale(1.5);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 4rem 3rem 2rem;
+    border-top: 1px solid var(--ghost);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 0.05em;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .footer-tagline {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.3);
+    margin-top: 0.5rem;
+  }
+  .footer-right {
+    text-align: right;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,240,232,0.25);
+    line-height: 2;
+  }
+
+  /* ─── PROGRESS BARS ─── */
+  .progress-section {
+    padding: 6rem 3rem;
+    border-top: 1px solid var(--ghost);
+  }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin-top: 3rem;
+  }
+  .skill-item { margin-bottom: 1.5rem; }
+  .skill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .skill-name {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .skill-pct {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--gold);
+  }
+  .skill-bar {
+    height: 3px;
+    background: rgba(245,240,232,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--rust), var(--gold));
+    width: 0;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ─── MANIFESTO WALL ─── */
+  #manifesto {
+    padding: 6rem 3rem;
+    background: linear-gradient(180deg, rgba(26,107,107,0.06) 0%, transparent 100%);
+    border-top: 1px solid var(--ghost);
+  }
+  .manifesto-text {
+    max-width: 850px;
+    font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+    line-height: 2.2;
+    color: rgba(245,240,232,0.7);
+  }
+  .manifesto-text .highlight {
+    color: var(--cream);
+    font-weight: 500;
+  }
+  .manifesto-text .gold { color: var(--gold); }
+  .manifesto-text .sky { color: var(--sky); }
+
+  /* Utility */
+  .spacer { height: 1px; background: var(--ghost); margin: 0 3rem; }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Animated counter */
+  .counter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    padding: 3rem;
+    border: 1px solid var(--ghost);
+  }
+  .counter-item { text-align: center; }
+  .counter-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .counter-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    margin-top: 0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">TRANSPARENCY<br>INTERACTIVE</div>
+  <div class="splash-sub">The Blueprint — Stream of Consciousness</div>
+  <button class="splash-enter" onclick="enterApp()">ENTER THE VISION</button>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-brand">T / I</div>
+    <ul class="nav-links">
+      <li><a href="#pillars">Pillars</a></li>
+      <li><a href="#stack">Daily Stack</a></li>
+      <li><a href="#vision">The Vision</a></li>
+      <li><a href="#income">Income</a></li>
+      <li><a href="#manifesto">Manifesto</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg-text">BLUEPRINT</div>
+    <div class="hero-eyebrow">Transparency Interactive — The Blueprint</div>
+    <h1 class="hero-title">
+      <em>The Vision is</em>
+      <span>MASSIVE</span><br>CLARITY
+    </h1>
+    <p class="hero-body">
+      A stream-of-consciousness revelation. One man's blueprint for radical freedom — 
+      built on hustle, discipline, beats, code, and the courage to build something 
+      bigger than any tech job ever could be.
+    </p>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll to explore the blueprint
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker-track">
+      <span class="ticker-item">TRANSPARENCY INTERACTIVE <span>✦</span></span>
+      <span class="ticker-item">ASTRO BEATS <span>✦</span></span>
+      <span class="ticker-item">FREESTYLE KING <span>✦</span></span>
+      <span class="ticker-item">BURPATHON <span>✦</span></span>
+      <span class="ticker-item">ASIA BOUND <span>✦</span></span>
+      <span class="ticker-item">GIG FREEDOM <span>✦</span></span>
+      <span class="ticker-item">VAN LIFE <span>✦</span></span>
+      <span class="ticker-item">CODE BY VOICE <span>✦</span></span>
+      <span class="ticker-item">DATE FOR LOCATION <span>✦</span></span>
+      <span class="ticker-item">MAXIMIZE POTENTIAL <span>✦</span></span>
+      <span class="ticker-item">TRANSPARENCY INTERACTIVE <span>✦</span></span>
+      <span class="ticker-item">ASTRO BEATS <span>✦</span></span>
+      <span class="ticker-item">FREESTYLE KING <span>✦</span></span>
+      <span class="ticker-item">BURPATHON <span>✦</span></span>
+      <span class="ticker-item">ASIA BOUND <span>✦</span></span>
+      <span class="ticker-item">GIG FREEDOM <span>✦</span></span>
+      <span class="ticker-item">VAN LIFE <span>✦</span></span>
+      <span class="ticker-item">CODE BY VOICE <span>✦</span></span>
+      <span class="ticker-item">DATE FOR LOCATION <span>✦</span></span>
+      <span class="ticker-item">MAXIMIZE POTENTIAL <span>✦</span></span>
+    </div>
+  </div>
+
+  <!-- PILLARS -->
+  <section id="pillars" style="padding: 6rem 3rem;">
+    <div class="reveal">
+      <div class="section-label">Core Architecture</div>
+      <div class="section-title">The <span>Three</span><br>Pillars</div>
+    </div>
+    <div class="pillars-grid reveal">
+      <div class="pillar">
+        <div class="pillar-num">01</div>
+        <div class="pillar-icon">💻</div>
+        <div class="pillar-title">Computer <span>Productivity</span></div>
+        <p class="pillar-desc">
+          AI-powered development through spoken language. Marvel App for UI/UX storyboarding, 
+          AI Studio and Stitch for rapid prototyping. JavaScript refactoring, asset replacement, 
+          and storyboarding are the three specializations. This is the career path.
+        </p>
+        <span class="pillar-tag gold">Active</span>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">02</div>
+        <div class="pillar-icon">💪</div>
+        <div class="pillar-title">The <span>Body</span></div>
+        <p class="pillar-desc">
+          Burpathon as the warm-up stream cornerstone. Reverse treadmill, kettlebell halos, 
+          shoulder baby weights. The body is the sweet spot in the trifecta — where music 
+          discovery happens and stage presence is built. Body is where conversions happen.
+        </p>
+        <span class="pillar-tag rust">Foundation</span>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">03</div>
+        <div class="pillar-icon">🏗️</div>
+        <div class="pillar-title">The <span>Assets</span></div>
+        <p class="pillar-desc">
+          Honda Element + van life. Storage unit on the east side. Bike for Freestyle King 
+          deployments. Asia trips as the replacement for assets not yet acquired. Build the 
+          asset base that renders the gig economy optional — not necessary.
+        </p>
+        <span class="pillar-tag blue">Building</span>
+      </div>
+    </div>
+
+    <!-- Counters -->
+    <div class="counter-grid reveal">
+      <div class="counter-item">
+        <div class="counter-num" data-target="30">0</div>
+        <div class="counter-label">Uber Airport / Day ($)</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-num" data-target="200">0</div>
+        <div class="counter-label">Monthly Cost in Thailand ($)</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-num" data-target="3">0</div>
+        <div class="counter-label">Specializations</div>
+      </div>
+      <div class="counter-item">
+        <div class="counter-num" data-target="7">0</div>
+        <div class="counter-label">Income Streams</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <!-- DAILY STACK -->
+  <section id="stack">
+    <div class="reveal" style="margin-bottom:0">
+      <div class="section-label">The Operating System</div>
+      <div class="section-title">Daily<br><span>Stack</span></div>
+    </div>
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <div class="timeline-time">0 DAWN</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-label">Uber Airport Run</div>
+          <div class="timeline-detail">$30/day. Early morning airport pickups. The cleanest, most reliable gig income. Premium riders, no promotions, just clean airport money before the city wakes up.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">1 MORNING</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-label">Burpathon Warm-Up Stream</div>
+          <div class="timeline-detail">The key. Fitness content creation that builds audience, builds body, builds stage presence. Kettlebell halos and reverse treadmill. This is where the fitness creator persona takes shape.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">2 MIDDAY</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-label">College Stream — Astro Beats</div>
+          <div class="timeline-detail">Guitar set list prep. The "throw shocker freedom space." Astro Beats platform building, music discovery integrated with body work. Sweet spot territory.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">3 AFTERNOON</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-label">Freestyle King — Virtual Networking</div>
+          <div class="timeline-detail">DJs, bartenders, events. Virtual study hall. Bike to location, freestyle on site. East side storage unit play. The bike makes it mobile and untethered.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">4 EVENING</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-label">Astro Beats in Virtual Space</div>
+          <div class="timeline-detail">DJ run by WebSocket. The tech play that connects music platform to real-time interaction. Where Transparency Interactive competes with Epic Games in its own lane.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-time">5 NIGHT</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-label">DoorDash — If Needed</div>
+          <div class="timeline-detail">Variable, not anchor. Luxury service clientele means lower risk. Avoid free-trial riders. If Uber airport is enough, skip this. This is the fail-safe, not the foundation.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <!-- VISION / ASIA PLAY -->
+  <section id="vision" style="padding: 6rem 3rem;">
+    <div class="vision-grid reveal">
+      <div>
+        <div class="section-label">The Asia Play</div>
+        <div class="section-title" style="font-size: clamp(2rem,5vw,4rem);">Freedom<br>by <span>Location</span></div>
+        <div class="vision-quote">
+          "Once you're already across the water, you can go to Germany, Ethiopia, Australia. The whole planet opens."
+        </div>
+        <p class="vision-body">
+          The calculus is simple: make gig money in America, live like royalty in Asia. A kitchen, a beach, a $200/month life 
+          in Thailand or the Philippines. The asset you don't have yet — the kitchen, the stability — 
+          Asia provides it cheaper and better. Date for location. Learn the language. Go often. 
+          This isn't exile. This is arbitrage.
+          <br><br>
+          Transparency Interactive runs from anywhere. The WebSocket DJ set, the Marvel App UI pipeline, 
+          the spoken code sessions — none of this requires a specific zip code. That's the whole point.
+        </p>
+      </div>
+      <div>
+        <div style="font-size:0.6rem; letter-spacing:0.4em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem;">Target Destinations</div>
+        <div class="destinations">
+          <div class="destination">
+            <div class="dest-flag">🇹🇭</div>
+            <div class="dest-info">
+              <div class="dest-name">Thailand</div>
+              <div class="dest-cost">~$200 / month beach life</div>
+            </div>
+            <div class="dest-bar"><div class="dest-fill" style="width:90%"></div></div>
+          </div>
+          <div class="destination">
+            <div class="dest-flag">🇵🇭</div>
+            <div class="dest-info">
+              <div class="dest-name">Philippines</div>
+              <div class="dest-cost">~$250 / month island life</div>
+            </div>
+            <div class="dest-bar"><div class="dest-fill" style="width:85%"></div></div>
+          </div>
+          <div class="destination">
+            <div class="dest-flag">🇩🇪</div>
+            <div class="dest-info">
+              <div class="dest-name">Germany</div>
+              <div class="dest-cost">Once across the water</div>
+            </div>
+            <div class="dest-bar"><div class="dest-fill" style="width:55%"></div></div>
+          </div>
+          <div class="destination">
+            <div class="dest-flag">🇪🇹</div>
+            <div class="dest-info">
+              <div class="dest-name">Ethiopia</div>
+              <div class="dest-cost">Cultural expansion</div>
+            </div>
+            <div class="dest-bar"><div class="dest-fill" style="width:45%"></div></div>
+          </div>
+          <div class="destination">
+            <div class="dest-flag">🇦🇺</div>
+            <div class="dest-info">
+              <div class="dest-name">Australia</div>
+              <div class="dest-cost">Possible from Asia hub</div>
+            </div>
+            <div class="dest-bar"><div class="dest-fill" style="width:38%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <!-- INCOME STREAMS -->
+  <section id="income">
+    <div class="reveal" style="padding: 0 0 0 0;">
+      <div class="section-label">Revenue Architecture</div>
+      <div class="section-title">Income<br><span>Engine</span></div>
+      <p style="font-size:0.75rem; color:rgba(245,240,232,0.5); max-width:500px; line-height:1.8;">
+        The tech job is only valuable if you need it. That alone is the epiphany. 
+        Build streams that eclipse the salary entirely — then the job becomes optional.
+      </p>
+    </div>
+    <div class="income-grid reveal">
+      <div class="income-card">
+        <span class="income-emoji">🚗</span>
+        <div class="income-stream">Uber Airport</div>
+        <p class="income-note">Dawn shift. $30/day baseline. Premium passengers, clean pickups. The most reliable anchor in the engine.</p>
+        <div class="income-potential">↑ Daily anchor</div>
+      </div>
+      <div class="income-card">
+        <span class="income-emoji">🎵</span>
+        <div class="income-stream">Astro Beats</div>
+        <p class="income-note">Music platform. DJ sets via WebSocket. Guitar sets and set prep. Content creation meets tech product.</p>
+        <div class="income-potential">↑ Platform scale</div>
+      </div>
+      <div class="income-card">
+        <span class="income-emoji">👑</span>
+        <div class="income-stream">Freestyle King</div>
+        <p class="income-note">Networking product. Happy hours, events, bartender and DJ relationships. Bike-deployed. Mobile and untethered.</p>
+        <div class="income-potential">↑ Network growth</div>
+      </div>
+      <div class="income-card">
+        <span class="income-emoji">💻</span>
+        <div class="income-stream">UI Dev (Voice)</div>
+        <p class="income-note">Speaking code to AI. Marvel App storyboarding. JavaScript refactoring and asset replacement. Highly marketable niche.</p>
+        <div class="income-potential">↑ Skill premium</div>
+      </div>
+      <div class="income-card">
+        <span class="income-emoji">🎮</span>
+        <div class="income-stream">Rhythm Game</div>
+        <p class="income-note">The product that competes with Epic Games — on its own terms. UI within UI, Marvel App pipelines, game storyboarding.</p>
+        <div class="income-potential">↑ Long-term bet</div>
+      </div>
+      <div class="income-card">
+        <span class="income-emoji">💪</span>
+        <div class="income-stream">Fitness Content</div>
+        <p class="income-note">Burpathon streaming builds audience. Body as content. Stage presence converts. The trifecta body pillar monetized.</p>
+        <div class="income-potential">↑ Audience build</div>
+      </div>
+      <div class="income-card">
+        <span class="income-emoji">🍔</span>
+        <div class="income-stream">DoorDash (Variable)</div>
+        <p class="income-note">Night variable only. Luxury service client base. Activated when Uber isn't enough. Not the plan — the backup.</p>
+        <div class="income-potential">↑ Safety net</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS PROGRESS -->
+  <section class="progress-section">
+    <div class="section-label reveal">Transparency Interactive — Skill Stack</div>
+    <div class="section-title reveal">Areas of <span>Dominance</span></div>
+    <div class="skills-grid reveal" id="skillsGrid">
+      <div>
+        <div class="skill-item">
+          <div class="skill-header">
+            <div class="skill-name">AI Voice Coding</div>
+            <div class="skill-pct">92%</div>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="92"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header">
+            <div class="skill-name">UI Storyboarding</div>
+            <div class="skill-pct">88%</div>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="88"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header">
+            <div class="skill-name">Music Production</div>
+            <div class="skill-pct">79%</div>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="79"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="skill-item">
+          <div class="skill-header">
+            <div class="skill-name">Freestyle / Performance</div>
+            <div class="skill-pct">85%</div>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header">
+            <div class="skill-name">Gig Economy Ops</div>
+            <div class="skill-pct">94%</div>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="94"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header">
+            <div class="skill-name">Geo-Arbitrage Strategy</div>
+            <div class="skill-pct">77%</div>
+          </div>
+          <div class="skill-bar"><div class="skill-fill" data-width="77"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <!-- QUOTE MACHINE -->
+  <section id="quotes">
+    <div class="section-label">From the Stream</div>
+    <div class="section-title" style="margin-bottom:3rem">Clarity<br><span>Moments</span></div>
+    <div class="quote-machine">
+      <div class="quote-display" id="quoteDisplay"></div>
+      <div class="quote-author" id="quoteAuthor">— The Blueprint</div>
+      <div class="quote-dots" id="quoteDots"></div>
+      <button class="quote-btn" onclick="nextQuote()">NEXT CLARITY ↓</button>
+    </div>
+  </section>
+
+  <div class="spacer"></div>
+
+  <!-- MANIFESTO -->
+  <section id="manifesto">
+    <div class="reveal">
+      <div class="section-label">The Core Thesis</div>
+      <div class="section-title">The <span>Manifesto</span></div>
+    </div>
+    <div class="manifesto-text reveal">
+      <p>
+        <span class="highlight">The tech job is not the absolute best solution.</span> It is only valuable if you need it — 
+        and that realization alone is an epiphany that most people never arrive at. The woman who just 
+        runs her own thing, makes her own money off her platform, and gets very good at AI — 
+        she is maximizing her human potential. 
+        <span class="gold">Why not that? Why not exactly that?</span>
+      </p>
+      <br>
+      <p>
+        <span class="highlight">You are making yourself the most versatile version of yourself.</span> Absolute dominance 
+        over your own life. The only variable is the people you pick up — and you're already filtering on that. 
+        Computer productivity. The body. The assets. These are the three. The body is the sweet spot 
+        because <span class="sky">that's where music discovery happens.</span> That's where stage presence lives. 
+        Stage presence is where conversions happen.
+      </p>
+      <br>
+      <p>
+        If you simply run <span class="highlight">Transparency Interactive</span> as if it's a competing corporation — 
+        not to Microsoft, not to Apple, but to Epic Games — and the better it's run, the more powerful 
+        it becomes. You have to maintain your body. Your muscles will fatigue. There's no way around it. 
+        But <span class="gold">the coding with speaking, the AI pipeline, the storyboarding</span> — this is what makes you 
+        a highly desired creative software developer. Asset replacement. JavaScript refactoring. Storyboarding. 
+        That is the career. That is the path.
+      </p>
+      <br>
+      <p style="font-family:'Bebas Neue',sans-serif; font-size:clamp(1.5rem,4vw,3rem); letter-spacing:0.05em; color:var(--cream); margin-top:1rem;">
+        There's your life right there.<br>
+        <span class="gold">Holy smokes.</span><br>
+        That is a lot to do.<br>
+        <span class="sky">This is the blueprint.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <div class="footer-brand">TRANSPARENCY<br>INTERACTIVE</div>
+      <div class="footer-tagline">The Blueprint — Stream of Consciousness to Living Vision</div>
+    </div>
+    <div class="footer-right">
+      ASTRO BEATS / FREESTYLE KING / BURPATHON<br>
+      VAN LIFE / ASIA PLAY / CODE BY VOICE<br>
+      HONDA ELEMENT / DATE FOR LOCATION<br>
+      <br>
+      <span style="color:rgba(245,240,232,0.15)">Competing with Epic Games. In our own lane.</span>
+    </div>
+  </footer>
+
+</div><!-- end #app -->
+
+<script>
+  // ── Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) *.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('button, a, .pillar, .destination, .income-card, .timeline-item').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      ring.style.width = '60px';
+      ring.style.height = '60px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+    });
+  });
+
+  // ── Splash
+  function enterApp() {
+    document.getElementById('splash').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    setTimeout(() => initAnimations(), 200);
+  }
+
+  // ── Scroll Reveal
+  function initAnimations() {
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          // Trigger counters
+          e.target.querySelectorAll('[data-target]').forEach(animateCounter);
+          // Trigger skill bars
+          e.target.querySelectorAll('.skill-fill').forEach(bar => {
+            bar.style.width = bar.dataset.width + '%';
+          });
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => io.observe(el));
+
+    // Skill bars outside .reveal
+    const skillIo = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.skill-fill').forEach(bar => {
+            bar.style.width = bar.dataset.width + '%';
+          });
+          e.target.querySelectorAll('[data-target]').forEach(animateCounter);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.skills-grid, .counter-grid').forEach(el => skillIo.observe(el));
+  }
+
+  // ── Counter Animation
+  function animateCounter(el) {
+    const target = +el.dataset.target;
+    let current = 0;
+    const duration = 1500;
+    const start = performance.now();
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      current = Math.round(eased * target);
+      el.textContent = current;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  // ── Quote Machine
+  const quotes = [
+    { text: "The tech job is only valuable if you need it — and that alone is an epiphany.", context: "on freedom" },
+    { text: "You are making yourself the most versatile version of yourself. Absolute dominance over your own life.", context: "on sovereignty" },
+    { text: "The body is the sweet spot in the trifecta. That's where stage presence is built. Stage presence is where conversions happen.", context: "on the body pillar" },
+    { text: "Come back to America to make your gig money, then go to Asia and just stay on the beach for $200.", context: "on the Asia play" },
+    { text: "Run Transparency Interactive as if it's a competing corporation to Epic Games — in our own lane.", context: "on the company" },
+    { text: "Coding with speaking is going to make me so productive. The AI makes it possible to build by talking.", context: "on the tech stack" },
+    { text: "The whole point: absolute clarity. Entrepreneurial spirit, hustle, discipline. The more disciplined you are, the more valuable the freedom becomes.", context: "on the blueprint" },
+    { text: "Once you're already across the water, the whole planet opens. Germany, Ethiopia, Australia. You can go to all of these places.", context: "on travel" },
+    { text: "There's going to be no denying whether I'm getting stuff done or not. No question about it. It's going to be obvious as hell.", context: "on accountability" },
+  ];
+  let qIdx = 0;
+  const qDisplay = document.getElementById('quoteDisplay');
+  const qAuthor = document.getElementById('quoteAuthor');
+  const qDots = document.getElementById('quoteDots');
+
+  function renderDots() {
+    qDots.innerHTML = '';
+    quotes.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'qdot' + (i === qIdx ? ' active' : '');
+      d.onclick = () => { qIdx = i; showQuote(); };
+      qDots.appendChild(d);
+    });
+  }
+
+  function showQuote() {
+    qDisplay.style.opacity = 0;
+    setTimeout(() => {
+      qDisplay.textContent = `"${quotes[qIdx].text}"`;
+      qAuthor.textContent = `— The Blueprint (${quotes[qIdx].context})`;
+      qDisplay.style.opacity = 1;
+      renderDots();
+    }, 400);
+  }
+
+  function nextQuote() {
+    qIdx = (qIdx + 1) % quotes.length;
+    showQuote();
+  }
+
+  // Init quote
+  qDisplay.textContent = `"${quotes[0].text}"`;
+  qAuthor.textContent = `— The Blueprint (${quotes[0].context})`;
+  renderDots();
+
+  // Auto-advance
+  setInterval(nextQuote, 7000);
+</script>
+</body>
+</html>
