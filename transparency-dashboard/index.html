@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transparency Interactive Dashboard</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #111;
+    color: #eee;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background: linear-gradient(90deg, #ff6a00, #ee0979);
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+  }
+  .tab {
+    padding: 0.8rem 1.5rem;
+    margin: 0 0.5rem;
+    background: #222;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .tab:hover {
+    background: #333;
+    transform: scale(1.05);
+  }
+  .tab.active {
+    background: #ff6a00;
+    color: #fff;
+    font-weight: bold;
+  }
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+    background: #1a1a1a;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 106, 0, 0.3);
+    min-height: 400px;
+  }
+  .section {
+    display: none;
+    animation: fadeIn 0.6s ease-in-out;
+  }
+  .section.active {
+    display: block;
+  }
+  h2 {
+    color: #ff6a00;
+    margin-top: 0;
+  }
+  p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .layer {
+    border-left: 4px solid #ee0979;
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+  }
+  .layer:hover {
+    background: #222;
+    border-left-color: #ff6a00;
+    transition: 0.3s;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<header>Transparency Interactive Dashboard</header>
+
+<div class="tabs">
+  <div class="tab active" data-target="philosophy">Philosophy</div>
+  <div class="tab" data-target="routine">Routine & Foundations</div>
+  <div class="tab" data-target="freestyle">Freestyle King</div>
+  <div class="tab" data-target="tools">Tools & Workflow</div>
+  <div class="tab" data-target="vanlife">Van Life Strategy</div>
+</div>
+
+<div class="content">
+  <!-- Philosophy Section -->
+  <div id="philosophy" class="section active">
+    <h2>Philosophy & Core Ideas</h2>
+    <div class="layer">
+      <strong>Transparency Interactive:</strong> Next-gen social media + courses + community.
+    </div>
+    <div class="layer">
+      <strong>Astro Beats:</strong> Astrology AI, journaling, procedural inspiration.
+    </div>
+    <div class="layer">
+      <strong>Burpy Thon:</strong> Exercise + music discovery as warm-up for creativity.
+    </div>
+    <div class="layer">
+      <strong>Creative Philosophy:</strong> Blend nostalgia, personal identity, & immersive experiences.
+    </div>
+  </div>
+
+  <!-- Routine Section -->
+  <div id="routine" class="section">
+    <h2>Daily Routine & Success Layer</h2>
+    <div class="layer">
+      <strong>Foundation Tier:</strong> Astro Beats → Burpy Thon → Setlist
+    </div>
+    <div class="layer">
+      <strong>Success Tier:</strong> Tech Job for Location / Uber-DoorDash alternative
+    </div>
+    <div class="layer">
+      <strong>Fantasy Layer:</strong> Freestyle King → rhythm games → city-based procedural gameplay
+    </div>
+  </div>
+
+  <!-- Freestyle King Section -->
+  <div id="freestyle" class="section">
+    <h2>Freestyle King & Creative Output</h2>
+    <div class="layer">
+      <strong>Music Videos:</strong> Procedurally generated using shaders + assets
+    </div>
+    <div class="layer">
+      <strong>Rhythm Games:</strong> Syllable-based fighting game mechanics
+    </div>
+    <div class="layer">
+      <strong>Gameplay Philosophy:</strong> Personal immersive game; public segments city-specific
+    </div>
+    <div class="layer">
+      <strong>Social Filter:</strong> Crowd reactions naturally filter supportive collaborators
+    </div>
+  </div>
+
+  <!-- Tools Section -->
+  <div id="tools" class="section">
+    <h2>Tools & Workflow</h2>
+    <div class="layer">
+      <strong>Main Tools:</strong> Marvel App + Image Effects
+    </div>
+    <div class="layer">
+      <strong>Optional Tools:</strong> Canva, Spline, Stitch, AI Studio, Anti-Gravity
+    </div>
+    <div class="layer">
+      <strong>Storyboarding Workflow:</strong> Sketch → Marvel → AI Studio → Anti-Gravity
+    </div>
+    <div class="layer">
+      <strong>Purpose:</strong> Menus, pause, settings, music videos, rhythm game storyboards
+    </div>
+  </div>
+
+  <!-- Van Life Section -->
+  <div id="vanlife" class="section">
+    <h2>Van Life & Life Integration</h2>
+    <div class="layer">
+      <strong>Vehicle Strategy:</strong> Camry + parking in AZ → Honda Element for van life
+    </div>
+    <div class="layer">
+      <strong>Freedom Philosophy:</strong> Enable all creative projects without external approval
+    </div>
+    <div class="layer">
+      <strong>Dream Outcome:</strong> Immersive play, creative freedom, and community filtering
+    </div>
+  </div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const sections = document.querySelectorAll('.section');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      sections.forEach(sec => sec.classList.remove('active'));
+      document.getElementById(tab.dataset.target).classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
