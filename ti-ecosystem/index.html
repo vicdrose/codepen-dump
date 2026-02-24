@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TRANSPARENCY INTERACTIVE — The Ecosystem</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root {
+
+  --void: #04040a;
+
+  --deep: #080816;
+
+  --surface: #0f0f20;
+
+  --panel: #13132a;
+
+  --rim: #1c1c3a;
+
+  --cyan: #00e5ff;
+
+  --magenta: #ff006e;
+
+  --gold: #ffc300;
+
+  --green: #39ff14;
+
+  --purple: #9d4edd;
+
+  --white: #f0f0ff;
+
+  --dim: #505075;
+
+  --text: #c8c8e8;
+
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior:smooth; }
+
+body {
+
+  background: var(--void);
+
+  color: var(--text);
+
+  font-family: 'JetBrains Mono', monospace;
+
+  overflow-x: hidden;
+
+  cursor: none;
+
+}
+
+/* CURSOR */
+
+#dot { position:fixed; width:8px; height:8px; background:var(--cyan); border-radius:50%; pointer-events:none; z-index:9999; mix-blend-mode:screen; transition:transform .15s; }
+
+#ring { position:fixed; width:32px; height:32px; border:1px solid rgba(0,229,255,.5); border-radius:50%; pointer-events:none; z-index:9998; transition:left .12s, top .12s; }
+
+/* SHADER CANVAS */
+
+#shader { position:fixed; inset:0; z-index:0; opacity:.6; }
+
+/* NOISE */
+
+body::before {
+
+  content:''; position:fixed; inset:0; z-index:1; pointer-events:none;
+
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+
+  opacity:.5;
+
+}
+
+/* LAYOUT */
+
+.z { position:relative; z-index:2; }
+
+.wrap { max-width:1180px; margin:0 auto; padding:0 28px; }
+
+/* ─── HERO ─── */
+
+.hero {
+
+  min-height:100vh; display:flex; flex-direction:column;
+
+  justify-content:center; align-items:center; text-align:center;
+
+  padding:60px 24px; position:relative;
+
+}
+
+.hero-tag {
+
+  font-size:10px; letter-spacing:.6em; color:var(--cyan); text-transform:uppercase;
+
+  margin-bottom:28px; opacity:0; animation:up .8s .2s forwards;
+
+}
+
+.hero-logo {
+
+  font-family:'Orbitron',sans-serif; font-weight:900;
+
+  font-size:clamp(40px,9vw,130px); letter-spacing:-.02em; line-height:.9;
+
+  background:linear-gradient(135deg, var(--white) 0%, var(--cyan) 35%, var(--magenta) 65%, var(--purple) 100%);
+
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+
+  opacity:0; animation:up .9s .4s forwards;
+
+}
+
+.hero-sub {
+
+  font-family:'Crimson Pro',serif; font-style:italic; font-size:clamp(18px,3vw,32px);
+
+  color:var(--gold); margin-top:16px; margin-bottom:24px;
+
+  opacity:0; animation:up .8s .6s forwards;
+
+}
+
+.hero-body {
+
+  max-width:580px; font-size:12px; line-height:2; color:var(--dim);
+
+  opacity:0; animation:up .8s .8s forwards; margin-bottom:60px;
+
+}
+
+.hero-badges {
+
+  display:flex; gap:12px; flex-wrap:wrap; justify-content:center;
+
+  opacity:0; animation:up .8s 1s forwards;
+
+}
+
+.badge {
+
+  padding:6px 16px; border:1px solid; font-size:10px; letter-spacing:.25em;
+
+  text-transform:uppercase; transition:all .3s;
+
+}
+
+.badge:hover { background:rgba(0,229,255,.08); }
+
+.badge-c { border-color:var(--cyan); color:var(--cyan); }
+
+.badge-m { border-color:var(--magenta); color:var(--magenta); }
+
+.badge-g { border-color:var(--gold); color:var(--gold); }
+
+.badge-p { border-color:var(--purple); color:var(--purple); }
+
+/* SCROLLDOWN */
+
+.scrolldown { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); opacity:0; animation:up .8s 1.3s forwards; }
+
+.scrolldown span { display:block; font-size:9px; letter-spacing:.4em; color:var(--dim); text-transform:uppercase; margin-bottom:8px; }
+
+.scrolldown i { display:block; width:1px; height:48px; background:linear-gradient(to bottom,var(--cyan),transparent); margin:0 auto; animation:pulse 2s infinite; }
+
+/* ─── SECTION BASE ─── */
+
+.section { padding:100px 0; }
+
+.sec-eye { font-size:9px; letter-spacing:.55em; text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+
+.sec-eye::before { content:''; width:28px; height:1px; }
+
+.cyan-eye { color:var(--cyan); } .cyan-eye::before { background:var(--cyan); }
+
+.mag-eye { color:var(--magenta); } .mag-eye::before { background:var(--magenta); }
+
+.gold-eye { color:var(--gold); } .gold-eye::before { background:var(--gold); }
+
+.green-eye { color:var(--green); } .green-eye::before { background:var(--green); }
+
+.purple-eye { color:var(--purple); } .purple-eye::before { background:var(--purple); }
+
+.sec-title {
+
+  font-family:'Orbitron',sans-serif; font-size:clamp(24px,4.5vw,52px);
+
+  font-weight:900; line-height:1.05; margin-bottom:48px;
+
+}
+
+/* ─── ECOSYSTEM FLOW ─── */
+
+.eco-flow {
+
+  display:grid; grid-template-columns:1fr 48px 1fr 48px 1fr;
+
+  align-items:center; gap:0; margin-top:40px;
+
+}
+
+.eco-node {
+
+  background:var(--panel); border:1px solid var(--rim);
+
+  padding:28px 20px; text-align:center; position:relative;
+
+  transition:all .3s; cursor:default;
+
+}
+
+.eco-node:hover { transform:translateY(-4px); }
+
+.eco-node.cyan-n { border-top:2px solid var(--cyan); }
+
+.eco-node.mag-n { border-top:2px solid var(--magenta); }
+
+.eco-node.gold-n { border-top:2px solid var(--gold); }
+
+.eco-arrow { text-align:center; font-size:20px; color:var(--dim); }
+
+.eco-icon { font-size:36px; margin-bottom:12px; display:block; }
+
+.eco-label { font-size:9px; letter-spacing:.35em; text-transform:uppercase; margin-bottom:6px; }
+
+.eco-name { font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700; margin-bottom:8px; }
+
+.eco-desc { font-size:11px; color:var(--dim); line-height:1.7; }
+
+.eco-node.cyan-n .eco-label { color:var(--cyan); }
+
+.eco-node.mag-n .eco-label { color:var(--magenta); }
+
+.eco-node.gold-n .eco-label { color:var(--gold); }
+
+.eco-node.cyan-n .eco-name { color:var(--cyan); }
+
+.eco-node.mag-n .eco-name { color:var(--magenta); }
+
+.eco-node.gold-n .eco-name { color:var(--gold); }
+
+/* ─── ASTRO BEATS FEATURES ─── */
+
+.feat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:2px; margin-top:40px; }
+
+.feat {
+
+  background:var(--panel); border:1px solid var(--rim);
+
+  padding:28px; position:relative; overflow:hidden;
+
+  transition:all .3s; cursor:default;
+
+}
+
+.feat::before { content:''; position:absolute; left:0; top:0; width:2px; height:100%; background:var(--a,var(--cyan)); }
+
+.feat:hover { border-color:var(--a,var(--cyan)); box-shadow:0 0 24px rgba(0,0,0,.6); }
+
+.feat-num { font-family:'Orbitron',sans-serif; font-size:48px; color:var(--rim); line-height:1; margin-bottom:12px; }
+
+.feat-name { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; margin-bottom:8px; color:var(--a,var(--cyan)); }
+
+.feat-body { font-size:11px; color:var(--dim); line-height:1.8; }
+
+/* ─── SONIC vs MARIO ─── */
+
+.rivalry { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:40px; }
+
+.rival-card {
+
+  padding:36px; background:var(--panel); border:1px solid var(--rim);
+
+  position:relative; overflow:hidden;
+
+}
+
+.rival-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+
+.sonic-card::after { background:var(--cyan); }
+
+.mario-card::after { background:var(--magenta); }
+
+.rival-name {
+
+  font-family:'Orbitron',sans-serif; font-size:clamp(28px,4vw,52px);
+
+  font-weight:900; margin-bottom:4px;
+
+}
+
+.sonic-card .rival-name { color:var(--cyan); }
+
+.mario-card .rival-name { color:var(--magenta); }
+
+.rival-sub { font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--dim); margin-bottom:20px; }
+
+.rival-item { display:flex; gap:10px; padding:10px 0; border-bottom:1px solid var(--rim); font-size:12px; line-height:1.6; }
+
+.rival-item:last-child { border-bottom:none; }
+
+.rival-dot { width:5px; height:5px; border-radius:50%; margin-top:7px; flex-shrink:0; }
+
+.sonic-card .rival-dot { background:var(--cyan); }
+
+.mario-card .rival-dot { background:var(--magenta); }
+
+.rival-verdict {
+
+  font-family:'Crimson Pro',serif; font-style:italic; font-size:16px;
+
+  line-height:1.6; margin-top:20px; padding-top:20px; border-top:1px solid var(--rim);
+
+  color:var(--text);
+
+}
+
+/* ─── DAILY PIPELINE ─── */
+
+.pipeline { display:flex; flex-direction:column; gap:2px; margin-top:40px; }
+
+.pipe-row {
+
+  display:grid; grid-template-columns:60px 1fr; gap:0;
+
+  background:var(--panel); border:1px solid var(--rim);
+
+  overflow:hidden; transition:all .3s; cursor:default;
+
+}
+
+.pipe-row:hover { border-color:var(--a,var(--cyan)); }
+
+.pipe-num {
+
+  background:rgba(0,0,0,.3); display:flex; align-items:center; justify-content:center;
+
+  font-family:'Orbitron',sans-serif; font-size:20px; font-weight:900;
+
+  color:var(--a,var(--cyan)); border-right:1px solid var(--rim);
+
+}
+
+.pipe-content { padding:20px 24px; }
+
+.pipe-title { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:700; color:var(--a,var(--cyan)); margin-bottom:4px; }
+
+.pipe-body { font-size:11px; color:var(--dim); line-height:1.8; }
+
+.pipe-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+
+.pipe-tag { font-size:9px; padding:3px 8px; border:1px solid var(--rim); color:var(--dim); letter-spacing:.2em; text-transform:uppercase; }
+
+/* ─── FREESTYLE KING MECHANICS ─── */
+
+.fk-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:40px; }
+
+.fk-card { background:var(--panel); border:1px solid var(--rim); padding:28px; transition:all .3s; }
+
+.fk-card:hover { border-color:var(--green); }
+
+.fk-icon { font-size:40px; margin-bottom:14px; }
+
+.fk-title { font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700; color:var(--green); margin-bottom:10px; }
+
+.fk-text { font-size:11px; color:var(--dim); line-height:1.8; }
+
+/* ─── SURVIVAL NODE MAP ─── */
+
+.node-map { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-top:40px; }
+
+.node-item {
+
+  background:var(--panel); border:1px solid var(--rim);
+
+  padding:24px; position:relative; overflow:hidden;
+
+  transition:all .3s;
+
+}
+
+.node-item:hover { border-color:var(--gold); }
+
+.node-item.bonus { opacity:.6; }
+
+.node-item.bonus::after { content:'BONUS'; position:absolute; top:8px; right:8px; font-size:8px; letter-spacing:.3em; color:var(--dim); border:1px solid var(--rim); padding:2px 6px; }
+
+.node-emoji { font-size:28px; margin-bottom:10px; }
+
+.node-name { font-family:'Orbitron',sans-serif; font-size:12px; font-weight:700; color:var(--gold); margin-bottom:6px; }
+
+.node-desc { font-size:11px; color:var(--dim); line-height:1.7; }
+
+.node-item.pair { border-left:2px solid var(--gold); }
+
+/* ─── QUOTE FULL ─── */
+
+.bigquote {
+
+  padding:100px 24px; text-align:center; position:relative; overflow:hidden;
+
+}
+
+.bigquote::before {
+
+  content:'"'; font-family:'Orbitron',sans-serif; font-size:500px; font-weight:900;
+
+  position:absolute; top:-100px; left:50%; transform:translateX(-50%);
+
+  color:rgba(157,78,221,.04); line-height:1; pointer-events:none; z-index:0;
+
+}
+
+.bigquote-text {
+
+  font-family:'Crimson Pro',serif; font-size:clamp(22px,3.5vw,44px);
+
+  line-height:1.4; max-width:960px; margin:0 auto 24px; position:relative; z-index:1;
+
+  font-weight:300;
+
+}
+
+.bigquote-text em { font-style:italic; color:var(--cyan); }
+
+.bigquote-attr { font-size:10px; letter-spacing:.45em; color:var(--dim); text-transform:uppercase; }
+
+/* ─── TOOLS STACK ─── */
+
+.tools-row { display:flex; flex-wrap:wrap; gap:2px; margin-top:40px; }
+
+.tool-pill {
+
+  padding:10px 20px; background:var(--panel); border:1px solid var(--rim);
+
+  font-size:11px; letter-spacing:.15em; text-transform:uppercase;
+
+  color:var(--dim); transition:all .3s; cursor:default;
+
+}
+
+.tool-pill:hover { color:var(--white); border-color:var(--purple); background:rgba(157,78,221,.08); }
+
+.tool-pill.primary { color:var(--purple); border-color:var(--purple); }
+
+/* ─── ASIA PLAN ─── */
+
+.asia-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; margin-top:40px; }
+
+.asia-step { background:var(--panel); border:1px solid var(--rim); padding:24px; transition:all .3s; }
+
+.asia-step:hover { border-color:var(--magenta); transform:translateY(-3px); }
+
+.asia-step-n { font-family:'Orbitron',sans-serif; font-size:40px; font-weight:900; color:var(--rim); margin-bottom:10px; }
+
+.asia-step-title { font-family:'Orbitron',sans-serif; font-size:12px; font-weight:700; color:var(--magenta); margin-bottom:8px; }
+
+.asia-step-body { font-size:11px; color:var(--dim); line-height:1.7; }
+
+/* ─── FOOTER ─── */
+
+.footer { padding:80px 0 60px; border-top:1px solid var(--rim); text-align:center; }
+
+.footer-logo { font-family:'Orbitron',sans-serif; font-size:clamp(32px,6vw,80px); font-weight:900; background:linear-gradient(135deg,var(--cyan),var(--magenta)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:12px; }
+
+.footer-tagline { font-family:'Crimson Pro',serif; font-style:italic; font-size:18px; color:var(--dim); margin-bottom:48px; }
+
+.footer-mantras { display:flex; flex-wrap:wrap; justify-content:center; gap:16px; font-size:10px; letter-spacing:.3em; color:var(--dim); text-transform:uppercase; }
+
+.footer-mantras span { padding:6px 12px; border:1px solid var(--rim); }
+
+/* ─── ANIMATIONS ─── */
+
+@keyframes up { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:none; } }
+
+@keyframes pulse { 0%,100% { opacity:.3; } 50% { opacity:1; } }
+
+@keyframes orbit { from { transform:rotate(0deg) translateX(60px) rotate(0deg); } to { transform:rotate(360deg) translateX(60px) rotate(-360deg); } }
+
+.reveal { opacity:0; transform:translateY(32px); transition:opacity .7s ease, transform .7s ease; }
+
+.reveal.in { opacity:1; transform:none; }
+
+/* SCANLINE */
+
+.scan { position:fixed; left:0; width:100%; height:2px; background:linear-gradient(to right,transparent,rgba(0,229,255,.1),transparent); animation:scan 12s linear infinite; pointer-events:none; z-index:3; }
+
+@keyframes scan { 0% { top:-10%; } 100% { top:110%; } }
+
+/* RESPONSIVE */
+
+@media(max-width:768px) {
+
+  .eco-flow { grid-template-columns:1fr; }
+
+  .eco-arrow { transform:rotate(90deg); }
+
+  .rivalry { grid-template-columns:1fr; }
+
+  .fk-grid { grid-template-columns:1fr; }
+
+  .node-map { grid-template-columns:1fr 1fr; }
+
+  .asia-steps { grid-template-columns:1fr 1fr; }
+
+}
+
+@media(max-width:480px) {
+
+  .node-map { grid-template-columns:1fr; }
+
+  .asia-steps { grid-template-columns:1fr; }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="dot"></div>
+
+<div id="ring"></div>
+
+<div class="scan"></div>
+
+<canvas id="shader"></canvas>
+
+<!-- ══════════ HERO ══════════ -->
+
+<section class="hero z">
+
+  <div class="hero-tag">The Complete Ecosystem Architecture — Voice Journal Decoded</div>
+
+  <h1 class="hero-logo">TRANSPARENCY<br>INTERACTIVE</h1>
+
+  <div class="hero-sub">"The next step in social media."</div>
+
+  <p class="hero-body">
+
+    Gaming nostalgia → social platform. Astrology → beats. Freestyling → soap opera.
+
+    Van life → Asia. All connected. All building toward one singular, unstoppable creative life.
+
+  </p>
+
+  <div class="hero-badges">
+
+    <div class="badge badge-c">Astro Beats</div>
+
+    <div class="badge badge-m">Freestyle King</div>
+
+    <div class="badge badge-g">Rhythm Game</div>
+
+    <div class="badge badge-p">The Soap Opera</div>
+
+  </div>
+
+  <div class="scrolldown">
+
+    <span>Enter the system</span>
+
+    <i></i>
+
+  </div>
+
+</section>
+
+<!-- ══════════ ECOSYSTEM FLOW ══════════ -->
+
+<section class="section z">
+
+  <div class="wrap">
+
+    <div class="sec-eye cyan-eye reveal">The Three-Layer Engine</div>
+
+    <h2 class="sec-title reveal">How everything<br>feeds everything.</h2>
+
+    <div class="eco-flow reveal">
+
+      <div class="eco-node cyan-n">
+
+        <span class="eco-icon">🌌</span>
+
+        <div class="eco-label">Power Source</div>
+
+        <div class="eco-name">Astro Beats</div>
+
+        <div class="eco-desc">Astrology as creative fuel. Beat vault. Live streams. Crystal sessions. WebSocket-synced global state.</div>
+
+      </div>
+
+      <div class="eco-arrow">→</div>
+
+      <div class="eco-node mag-n">
+
+        <span class="eco-icon">🎤</span>
+
+        <div class="eco-label">Creative Engine</div>
+
+        <div class="eco-name">Freestyle King</div>
+
+        <div class="eco-desc">Rap bot. Music videos. Rhythm game episodes. The procedurally generated soap opera played in real life.</div>
+
+      </div>
+
+      <div class="eco-arrow">→</div>
+
+      <div class="eco-node gold-n">
+
+        <span class="eco-icon">🏛️</span>
+
+        <div class="eco-label">The Face</div>
+
+        <div class="eco-name">Transparency Interactive</div>
+
+        <div class="eco-desc">Portfolio. Sales funnel. Courses. App. YouTube. Discord. The brand that receives all the creative output.</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ══════════ SONIC vs MARIO ══════════ -->
+
+<section class="section z" style="padding-top:0;">
+
+  <div class="wrap">
+
+    <div class="sec-eye mag-eye reveal">The Identity Paradox</div>
+
+    <h2 class="sec-title reveal">Sonic vs. Mario —<br>why it matters.</h2>
+
+    <div class="rivalry reveal">
+
+      <div class="rival-card sonic-card">
+
+        <div class="rival-name">SONIC</div>
+
+        <div class="rival-sub">The Cool One · The Heckler</div>
+
+        <div class="rival-item"><div class="rival-dot"></div>Saving the whole world. Collecting gold rings.</div>
+
+        <div class="rival-item"><div class="rival-dot"></div>Cool as hell. Doesn't need anyone.</div>
+
+        <div class="rival-item"><div class="rival-dot"></div>Exists specifically to challenge the establishment.</div>
+
+        <div class="rival-item"><div class="rival-dot"></div>Culturally magnetic. Everyone roots for the underdog.</div>
+
+        <div class="rival-verdict">"Sonic is just so much better. But Sonic only exists because of Mario."</div>
+
+      </div>
+
+      <div class="rival-card mario-card">
+
+        <div class="rival-name">MARIO</div>
+
+        <div class="rival-sub">The Principled One · The Target</div>
+
+        <div class="rival-item"><div class="rival-dot"></div>Trying to live his best life and achieve his dreams.</div>
+
+        <div class="rival-item"><div class="rival-dot"></div>People pop up out of the woodwork to hate on him.</div>
+
+        <div class="rival-item"><div class="rival-dot"></div>Everyone supports the haters — until they crash and burn.</div>
+
+        <div class="rival-item"><div class="rival-dot"></div>Objectively more principled. Still loses the vibe war.</div>
+
+        <div class="rival-verdict">"That's the same problem I have in life. I am Mario. I love being Sonic."</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ══════════ ASTRO BEATS DEEP DIVE ══════════ -->
+
+<section class="section z">
+
+  <div class="wrap">
+
+    <div class="sec-eye cyan-eye reveal">Astro Beats — Full Spec</div>
+
+    <h2 class="sec-title reveal">The app that's also<br>a life routine.</h2>
+
+    <div class="feat-grid">
+
+      <div class="feat reveal" style="--a:var(--cyan)">
+
+        <div class="feat-num">01</div>
+
+        <div class="feat-name">Birth Chart System</div>
+
+        <div class="feat-body">Look up your chart. Journal on your placements. Compare to others. Run synastry reports. Compare to transits. Your chart = your personal API.</div>
+
+      </div>
+
+      <div class="feat reveal" style="--a:var(--cyan)">
+
+        <div class="feat-num">02</div>
+
+        <div class="feat-name">WebSocket Space</div>
+
+        <div class="feat-body">Everyone hears the same music at the same time. Everyone sees the same crystals. Group crystal sessions. Sprint-format astrology conversations. Group journal.</div>
+
+      </div>
+
+      <div class="feat reveal" style="--a:var(--cyan)">
+
+        <div class="feat-num">03</div>
+
+        <div class="feat-name">AI Card Reader</div>
+
+        <div class="feat-body">Pull cards live. AI responds filtered by specific rules — tangible, not generic. Plug-and-play houses, signs, celestial bodies. Then journal on what you received.</div>
+
+      </div>
+
+      <div class="feat reveal" style="--a:var(--cyan)">
+
+        <div class="feat-num">04</div>
+
+        <div class="feat-name">Dynamic Shader BG</div>
+
+        <div class="feat-body">Background shader changes per crystal pulled. Ruby → dark reds. Larimar → blues. Every session is visually unique. Crystals scanned via photogrammetry in person.</div>
+
+      </div>
+
+      <div class="feat reveal" style="--a:var(--cyan)">
+
+        <div class="feat-num">05</div>
+
+        <div class="feat-name">Beat Vault + Set Prep</div>
+
+        <div class="feat-body">5 beats made live per session. Vault builds over time. Set prep pulls from vault. Set list feeds Freestyle King. The pipeline is infinite.</div>
+
+      </div>
+
+      <div class="feat reveal" style="--a:var(--cyan)">
+
+        <div class="feat-num">06</div>
+
+        <div class="feat-name">Astro Glossary</div>
+
+        <div class="feat-body">Community-readable reference. Houses, signs, placements — all searchable. Educational layer that onboards new community members automatically.</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ══════════ QUOTE ══════════ -->
+
+<div class="bigquote z reveal">
+
+  <div class="bigquote-text">
+
+    "Throat chakra freedom is coding. This journal is going to make an app for me.
+
+    <em>The AI is going to turn this into an app.</em> I never would have thought that to be true, but it is."
+
+  </div>
+
+  <div class="bigquote-attr">— The Journal, ~01:01:50</div>
+
+</div>
+
+<!-- ══════════ FREESTYLE KING ══════════ -->
+
+<section class="section z">
+
+  <div class="wrap">
+
+    <div class="sec-eye green-eye reveal">Freestyle King — Game Architecture</div>
+
+    <h2 class="sec-title reveal">A rhythm game that's<br>also a real life skill.</h2>
+
+    <div class="fk-grid">
+
+      <div class="fk-card reveal">
+
+        <div class="fk-icon">🤖</div>
+
+        <div class="fk-title">The Rap Bot</div>
+
+        <div class="fk-text">Programmatically generated raps. Syllable-based algorithm — only certain syllables fit certain spaces. Bot raps in virtual spaces: VRChat, Fortnite. You're the hype man. Eventually interchangeable with the bot — learn to rap alongside it.</div>
+
+      </div>
+
+      <div class="fk-card reveal">
+
+        <div class="fk-icon">🎮</div>
+
+        <div class="fk-title">The Rhythm Game</div>
+
+        <div class="fk-text">Procedurally generated. Like a fighting game — pattern recognition, knowing when they'll attack based on your missed attacks. Syllable-based combat. Shaders as background. Algorithm stays dominant for 2–3 years before it gets solved.</div>
+
+      </div>
+
+      <div class="fk-card reveal">
+
+        <div class="fk-icon">🎬</div>
+
+        <div class="fk-title">Music Video Exports</div>
+
+        <div class="fk-text">Each song becomes a rhythm game AND a music video. The soap opera generates new episodes just by going out and freestyling. Meet camera people through vape sharing. Naturally filter in the most supportive people for your survival.</div>
+
+      </div>
+
+      <div class="fk-card reveal">
+
+        <div class="fk-icon">🌆</div>
+
+        <div class="fk-title">Procedural Cities</div>
+
+        <div class="fk-text">The personal version: procedurally generated cities to practice real-life freestyle situations. Model your favorite city sweet spots into the game. The public version: per-city playlists of music videos and rhythm games to play.</div>
+
+      </div>
+
+      <div class="fk-card reveal">
+
+        <div class="fk-icon">🎭</div>
+
+        <div class="fk-title">The Soap Opera</div>
+
+        <div class="fk-text">Go to happy hour. Bike with music playing. Start rapping. People love you or they challenge you. Learning what to do when they challenge you IS the soap opera. Heavily repeatable. New episodes generated just from existing.</div>
+
+      </div>
+
+      <div class="fk-card reveal">
+
+        <div class="fk-icon">🌐</div>
+
+        <div class="fk-title">Language Expansion</div>
+
+        <div class="fk-text">Export a rap session → memorize it → translate it. Express the same philosophy in Japanese, Portuguese, Spanish. Same algorithm, different language. A language learning tool born from the rap bot. Asia prep built in.</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ══════════ DAILY PIPELINE ══════════ -->
+
+<section class="section z">
+
+  <div class="wrap">
+
+    <div class="sec-eye gold-eye reveal">The Daily Operating Pipeline</div>
+
+    <h2 class="sec-title reveal">Music discovery<br>transforms step by step.</h2>
+
+    <div class="pipeline">
+
+      <div class="pipe-row reveal" style="--a:var(--gold)">
+
+        <div class="pipe-num">1</div>
+
+        <div class="pipe-content">
+
+          <div class="pipe-title">Music Discovery</div>
+
+          <div class="pipe-body">The source material. Build playlists while in motion. Feed these directly into Step 2. If you can't discover music, everything downstream stops — this is the single point of failure to protect.</div>
+
+          <div class="pipe-tags"><span class="pipe-tag">Burpethon</span><span class="pipe-tag">Basketball</span><span class="pipe-tag">Biking</span><span class="pipe-tag">Swimming</span><span class="pipe-tag">Treadmill</span><span class="pipe-tag">Uber/Doordash</span></div>
+
+        </div>
+
+      </div>
+
+      <div class="pipe-row reveal" style="--a:var(--cyan)">
+
+        <div class="pipe-num">2</div>
+
+        <div class="pipe-content">
+
+          <div class="pipe-title">Astro Beats Stream</div>
+
+          <div class="pipe-body">College campus. Fast WiFi. Pull cards live. Make 5 beats. Astrology posts drop to TikTok. Community grows. The beat vault expands with every session.</div>
+
+          <div class="pipe-tags"><span class="pipe-tag">Set Prep</span><span class="pipe-tag">Set List</span><span class="pipe-tag">Live Stream</span><span class="pipe-tag">Card Pull</span></div>
+
+        </div>
+
+      </div>
+
+      <div class="pipe-row reveal" style="--a:var(--magenta)">
+
+        <div class="pipe-num">3</div>
+
+        <div class="pipe-content">
+
+          <div class="pipe-title">Creative Outputs — 2 Posts/Day</div>
+
+          <div class="pipe-body">One Unity animation + one Blender/Resolume light output. These are your follower builders. Get good at the hard things so you just naturally do them.</div>
+
+          <div class="pipe-tags"><span class="pipe-tag">Unity Animation</span><span class="pipe-tag">Blender Output</span><span class="pipe-tag">Shader BG</span><span class="pipe-tag">VJ Practice</span></div>
+
+        </div>
+
+      </div>
+
+      <div class="pipe-row reveal" style="--a:var(--green)">
+
+        <div class="pipe-num">4</div>
+
+        <div class="pipe-content">
+
+          <div class="pipe-title">Freestyle King Performance</div>
+
+          <div class="pipe-body">Guitar transitions when people show up. Get booked for shows. Perform with visuals — huge. The rhythm game is also being played personally every day as your daily tracker game.</div>
+
+          <div class="pipe-tags"><span class="pipe-tag">Guitar Set List</span><span class="pipe-tag">Shader + Logo</span><span class="pipe-tag">Rap Bot</span><span class="pipe-tag">Live Crowd</span></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ══════════ SURVIVAL NODES ══════════ -->
+
+<section class="section z">
+
+  <div class="wrap">
+
+    <div class="sec-eye gold-eye reveal">Survival Node Map</div>
+
+    <h2 class="sec-title reveal">The physical infrastructure<br>that makes this work.</h2>
+
+    <p class="reveal" style="font-size:12px;color:var(--dim);max-width:600px;line-height:1.9;margin-bottom:0;">The closer you orient these together geographically, the better. Choose a big city. Find your evergreen social sweet spot. Everything else slots around it.</p>
+
+    <div class="node-map">
+
+      <div class="node-item pair reveal">
+
+        <div class="node-emoji">🚗</div>
+
+        <div class="node-name">Sleeper Vehicle</div>
+
+        <div class="node-desc">Park outside the gym. Sleep in the car. Social parking spot nearby. Paired with bike + tent. This is home base.</div>
+
+      </div>
+
+      <div class="node-item pair reveal">
+
+        <div class="node-emoji">📦</div>
+
+        <div class="node-name">Storage Unit</div>
+
+        <div class="node-desc">Everything that doesn't fit in the vehicle. Bike lives here too. Paired assets create freedom of movement.</div>
+
+      </div>
+
+      <div class="node-item reveal">
+
+        <div class="node-emoji">🏋️</div>
+
+        <div class="node-name">Gym Access</div>
+
+        <div class="node-desc">Overnight cardio. Shower. Burpethon. The most important consistent physical node in the whole system.</div>
+
+      </div>
+
+      <div class="node-item bonus reveal">
+
+        <div class="node-emoji">💼</div>
+
+        <div class="node-name">WeWork</div>
+
+        <div class="node-desc">Overnight work sessions. Fast internet. Professional environment. Access to community. Bonus node — have it if you can.</div>
+
+      </div>
+
+      <div class="node-item pair reveal">
+
+        <div class="node-emoji">🍳</div>
+
+        <div class="node-name">Cooking Access</div>
+
+        <div class="node-desc">The hardest node to solve. Paired with groceries nearby. Asia solves this — food is everywhere and cheap. The magical solution costs some freedom.</div>
+
+      </div>
+
+      <div class="node-item pair reveal">
+
+        <div class="node-emoji">✈️</div>
+
+        <div class="node-name">Airport Vehicle Parking</div>
+
+        <div class="node-desc">Camry stashed. Honda Element mobile. Airport runs for Uber AM income. Paired close to vehicle node.</div>
+
+      </div>
+
+      <div class="node-item reveal">
+
+        <div class="node-emoji">🌆</div>
+
+        <div class="node-name">Social Sweet Spot</div>
+
+        <div class="node-desc">Evergreen. Choose it consciously. Milwaukee: lakefront + east side. Big city essential — small cities cause comfort creep and rapport problems.</div>
+
+      </div>
+
+      <div class="node-item reveal">
+
+        <div class="node-emoji">🍺</div>
+
+        <div class="node-name">Nightlife Bars</div>
+
+        <div class="node-desc">Paired with WeWork + gym = never need to pay rent. The performance venue. The soap opera filming location. Happy hour is content.</div>
+
+      </div>
+
+      <div class="node-item reveal">
+
+        <div class="node-emoji">🎓</div>
+
+        <div class="node-name">College Campus</div>
+
+        <div class="node-desc">Fast WiFi for streams. Parking garage for two cars. Young community to grow with. Stream location for Astro Beats live sessions.</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ══════════ QUOTE 2 ══════════ -->
+
+<div class="bigquote z reveal">
+
+  <div class="bigquote-text">
+
+    "The only people that are going to fit into my daily routines are
+
+    <em>the people that I see while in them.</em> That's the most sophisticated filter possible."
+
+  </div>
+
+  <div class="bigquote-attr">— The Journal, ~end</div>
+
+</div>
+
+<!-- ══════════ ASIA PLAN ══════════ -->
+
+<section class="section z">
+
+  <div class="wrap">
+
+    <div class="sec-eye mag-eye reveal">The Asia Sequence</div>
+
+    <h2 class="sec-title reveal">When there's nowhere<br>left to be — go.</h2>
+
+    <div class="asia-steps">
+
+      <div class="asia-step reveal">
+
+        <div class="asia-step-n">01</div>
+
+        <div class="asia-step-title">Arizona Move</div>
+
+        <div class="asia-step-body">Right now decision. Stash Camry in paid parking. Buy Honda Element. Bring Element back to Milwaukee. Every piece clicks into place without needing anyone's approval.</div>
+
+      </div>
+
+      <div class="asia-step reveal">
+
+        <div class="asia-step-n">02</div>
+
+        <div class="asia-step-title">Tech Jobs — Spam Mode</div>
+
+        <div class="asia-step-body">Two or three jobs at a time if possible. Make them competitive with each other. Lose a job? Fine. Move to Asia. Tech conferences = job hunting arena. Present there.</div>
+
+      </div>
+
+      <div class="asia-step reveal">
+
+        <div class="asia-step-n">03</div>
+
+        <div class="asia-step-title">Get Remote or Leave</div>
+
+        <div class="asia-step-body">Push for remote. If they won't give it, get hired somewhere else while still employed. Leave the moment you have a better situation. Never stay where you don't want to be.</div>
+
+      </div>
+
+      <div class="asia-step reveal">
+
+        <div class="asia-step-n">04</div>
+
+        <div class="asia-step-title">Asia Permanently</div>
+
+        <div class="asia-step-body">When family obligations are done in Wisconsin, go. Not running — arriving. You'll know how to move by then. Moving for fun, not necessity. The astrology will confirm it.</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ══════════ TOOL STACK ══════════ -->
+
+<section class="section z">
+
+  <div class="wrap">
+
+    <div class="sec-eye purple-eye reveal">The Tool Stack</div>
+
+    <h2 class="sec-title reveal">Workflow: sketch → prototype<br>→ build → hire the rest.</h2>
+
+    <p class="reveal" style="font-size:12px;color:var(--dim);max-width:560px;line-height:1.9;margin-bottom:0;">Main tools handle 90% of the work. Hire a UI freelancer for what these tools can't do. Keep it minimal. Two phones if possible. One computer max.</p>
+
+    <div class="tools-row reveal">
+
+      <div class="tool-pill primary">Marvel App</div>
+
+      <div class="tool-pill primary">Image Effects</div>
+
+      <div class="tool-pill primary">Canva</div>
+
+      <div class="tool-pill primary">Spline</div>
+
+      <div class="tool-pill">Stitch / Figma / Balsamiq</div>
+
+      <div class="tool-pill">AI Studio</div>
+
+      <div class="tool-pill">Anti-Gravity</div>
+
+      <div class="tool-pill">Google Drawings</div>
+
+      <div class="tool-pill">Unity (3D outputs)</div>
+
+      <div class="tool-pill">Blender + Resolume</div>
+
+      <div class="tool-pill">VRChat / Three.js</div>
+
+      <div class="tool-pill">WebSockets</div>
+
+      <div class="tool-pill">Ionic Frontend</div>
+
+      <div class="tool-pill">JSON + CodePen</div>
+
+      <div class="tool-pill">UI Freelancer (hired)</div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+
+<footer class="footer z">
+
+  <div class="wrap">
+
+    <div class="footer-logo reveal">TRANSPARENCY</div>
+
+    <div class="footer-tagline reveal">The next step in social media. Built one journal at a time.</div>
+
+    <div class="footer-mantras reveal">
+
+      <span>Throat Chakra Freedom</span>
+
+      <span>Music Discovery</span>
+
+      <span>5 Beats / Day</span>
+
+      <span>2 Posts / Day</span>
+
+      <span>Always Applying</span>
+
+      <span>Asia Eventually</span>
+
+    </div>
+
+  </div>
+
+</footer>
+
+<script>
+
+// ── CURSOR ──
+
+const dot = document.getElementById('dot');
+
+const ring = document.getElementById('ring');
+
+let mx=0,my=0,rx=0,ry=0;
+
+document.addEventListener('mousemove',e=>{
+
+  mx=e.clientX; my=e.clientY;
+
+  dot.style.left=(mx-4)+'px'; dot.style.top=(my-4)+'px';
+
+});
+
+(function loop(){ rx+=(mx-rx-16)*.1; ry+=(my-ry-16)*.1;
+
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+
+  requestAnimationFrame(loop);
+
+})();
+
+document.querySelectorAll('.feat,.rival-card,.fk-card,.node-item,.asia-step,.pipe-row,.eco-node,.tool-pill').forEach(el=>{
+
+  el.addEventListener('mouseenter',()=>{ dot.style.transform='scale(2.5)'; dot.style.background='var(--magenta)'; });
+
+  el.addEventListener('mouseleave',()=>{ dot.style.transform='scale(1)'; dot.style.background='var(--cyan)'; });
+
+});
+
+// ── WEBGL SHADER BACKGROUND ──
+
+const canvas = document.getElementById('shader');
+
+const gl = canvas.getContext('webgl');
+
+function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; gl.viewport(0,0,canvas.width,canvas.height); }
+
+resize(); window.addEventListener('resize',resize);
+
+const vs = `attribute vec2 p; void main(){gl_Position=vec4(p,0,1);}`;
+
+const fs = `
+
+precision mediump float;
+
+uniform float t;
+
+uniform vec2 res;
+
+void main(){
+
+  vec2 uv=(gl_FragCoord.xy/res-.5)*2.;
+
+  float d=length(uv);
+
+  float a=atan(uv.y,uv.x);
+
+  float n=sin(a*3.+t*.4)*cos(d*6.-t*.3)*.5+.5;
+
+  float m=sin(d*8.-t*.5+a*2.)*.5+.5;
+
+  float ring=smoothstep(.02,0.,abs(d-(.5+sin(t*.2)*.2)));
+
+  vec3 c1=vec3(0.,0.9,1.); // cyan
+
+  vec3 c2=vec3(1.,0.,.43); // magenta
+
+  vec3 c3=vec3(1.,.76,0.); // gold
+
+  vec3 col=mix(c1,c2,n)*m+c3*ring*.5;
+
+  col*=smoothstep(1.2,.3,d)*0.5;
+
+  gl_FragColor=vec4(col,1.);
+
+}`;
+
+function mkShader(type,src){ const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s; }
+
+const prog=gl.createProgram();
+
+gl.attachShader(prog,mkShader(gl.VERTEX_SHADER,vs));
+
+gl.attachShader(prog,mkShader(gl.FRAGMENT_SHADER,fs));
+
+gl.linkProgram(prog); gl.useProgram(prog);
+
+const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+
+const pos=gl.getAttribLocation(prog,'p');
+
+gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+
+const tLoc=gl.getUniformLocation(prog,'t');
+
+const rLoc=gl.getUniformLocation(prog,'res');
+
+let start=Date.now();
+
+(function frame(){
+
+  const t=(Date.now()-start)*.001;
+
+  gl.uniform1f(tLoc,t);
+
+  gl.uniform2f(rLoc,canvas.width,canvas.height);
+
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+
+  requestAnimationFrame(frame);
+
+})();
+
+// ── SCROLL REVEAL ──
+
+const revEls=document.querySelectorAll('.reveal');
+
+const obs=new IntersectionObserver(entries=>{
+
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); }});
+
+},{threshold:.08});
+
+revEls.forEach(el=>obs.observe(el));
+
+// ── EASTER EGG: KONAMI-STYLE — click footer logo 5x ──
+
+let fc=0;
+
+document.querySelector('.footer-logo').addEventListener('click',()=>{
+
+  fc++;
+
+  if(fc===5){
+
+    fc=0;
+
+    const msg=document.createElement('div');
+
+    msg.innerHTML='🌌 ASTRO BEATS → FREESTYLE KING → TRANSPARENCY INTERACTIVE 🌌<br><small style="font-size:12px;font-style:italic;font-family:Crimson Pro,serif">The AI turned this into an app. Just like you said.</small>';
+
+    msg.style.cssText=`position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(4,4,10,.95);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:Orbitron,sans-serif;font-size:clamp(14px,2.5vw,28px);font-weight:900;text-align:center;padding:40px;background:linear-gradient(135deg,rgba(4,4,10,.97),rgba(13,13,26,.97));color:var(--cyan);line-height:1.5;animation:up .5s forwards;cursor:pointer;`;
+
+    document.body.appendChild(msg);
+
+    msg.addEventListener('click',()=>msg.remove());
+
+    setTimeout(()=>msg&&msg.remove(),5000);
+
+  }
+
+});
+
+</script>
+
+</body>
+
+</html>
+
