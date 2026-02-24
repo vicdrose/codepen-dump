@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRANSPARENCY INTERACTIVE — Blueprint v2 (Operational)</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070a0f;
+  --surface: #0d1117;
+  --border: rgba(255,255,255,0.07);
+  --cream: #e8e4d8;
+  --gold: #c9a84c;
+  --teal: #2dd4bf;
+  --red: #ef4444;
+  --muted: rgba(232,228,216,0.4);
+  --accent: #3b82f6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--cream); font-family:'DM Mono',monospace; overflow-x:hidden; }
+
+/* CURSOR */
+.cur { position:fixed; width:8px;height:8px;background:var(--teal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen; }
+.cur-r { position:fixed;width:28px;height:28px;border:1px solid var(--teal);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:0.4;transition:all 0.18s ease-out; }
+
+/* NAV */
+nav {
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2rem;
+  border-bottom:1px solid var(--border);
+  background:rgba(7,10,15,0.9);
+  backdrop-filter:blur(16px);
+}
+.n-brand { font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.12em;color:var(--gold); }
+.n-right { display:flex;gap:1.5rem;align-items:center; }
+.n-tag { font-size:0.55rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--muted); }
+.play-btn {
+  padding:0.45rem 1.2rem;
+  background:var(--teal);
+  color:#000;
+  border:none;
+  font-family:'DM Mono',monospace;
+  font-size:0.6rem;
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-block;
+  font-weight:700;
+  transition:opacity 0.2s;
+}
+.play-btn:hover { opacity:0.8; }
+
+/* HERO */
+#hero {
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:8rem 2.5rem 4rem;
+  position:relative;overflow:hidden;
+}
+.hero-grid-bg {
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(45,212,191,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45,212,191,0.03) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+.hero-gradient { position:absolute;inset:0;background:radial-gradient(ellipse at 20% 60%, rgba(45,212,191,0.06) 0%, transparent 60%); }
+.version-badge {
+  display:inline-flex;align-items:center;gap:0.5rem;
+  border:1px solid var(--teal);
+  padding:0.3rem 0.8rem;
+  font-size:0.55rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--teal);
+  margin-bottom:2rem;
+  width:fit-content;
+}
+.vdot { width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+.hero-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,11vw,10rem);
+  line-height:0.88;
+  letter-spacing:0.02em;
+}
+.hero-title .t { color:var(--teal); }
+.hero-title .g { color:var(--gold); }
+.hero-title .m { color:var(--muted);font-size:0.45em; }
+.hero-sub {
+  max-width:540px;
+  font-size:0.72rem;line-height:1.9;
+  color:var(--muted);
+  margin-top:1.5rem;
+  border-left:2px solid var(--teal);
+  padding-left:1.2rem;
+}
+.hero-sub strong { color:var(--cream); }
+.hero-cta {
+  margin-top:2.5rem;
+  display:flex;gap:1rem;flex-wrap:wrap;align-items:center;
+}
+.cta-note { font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted); }
+
+/* DIVIDER */
+.divider {
+  display:flex;align-items:center;gap:1rem;
+  padding:0 2.5rem;
+  margin:3rem 0;
+  font-size:0.55rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--muted);
+}
+.divider::before,.divider::after { content:'';flex:1;height:1px;background:var(--border); }
+
+/* SECTIONS */
+section { padding:5rem 2.5rem; }
+
+.s-label { font-size:0.55rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--teal);margin-bottom:0.8rem; }
+.s-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.2rem,5vw,4.5rem);
+  line-height:0.95;
+  margin-bottom:2.5rem;
+}
+.s-title .g { color:var(--gold); }
+.s-title .t { color:var(--teal); }
+.s-title .r { color:var(--red); }
+
+/* REALITY STACK */
+.stack-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  margin-bottom:2rem;
+}
+.stack-card {
+  background:var(--surface);
+  padding:2rem 1.8rem;
+  position:relative;
+  transition:background 0.25s;
+}
+.stack-card:hover { background:#111820; }
+.card-status {
+  position:absolute;top:1.2rem;right:1.5rem;
+  font-size:0.5rem;letter-spacing:0.3em;text-transform:uppercase;
+  padding:0.2rem 0.6rem;border:1px solid;
+}
+.status-live { border-color:var(--teal);color:var(--teal); }
+.status-build { border-color:var(--gold);color:var(--gold); }
+.status-buffer { border-color:var(--muted);color:var(--muted); }
+.card-icon { font-size:2rem;margin-bottom:1rem; }
+.card-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.6rem;letter-spacing:0.04em;
+  margin-bottom:0.6rem;
+}
+.card-title .t { color:var(--teal); }
+.card-title .g { color:var(--gold); }
+.card-body { font-size:0.68rem;line-height:1.85;color:var(--muted); }
+.card-body strong { color:var(--cream); }
+.card-metric {
+  margin-top:1.2rem;
+  font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--gold);
+  display:flex;align-items:center;gap:0.5rem;
+}
+.card-metric::before { content:'→'; }
+
+/* DAILY OPS TABLE */
+.ops-table { width:100%;border-collapse:collapse;font-size:0.68rem; }
+.ops-table thead tr { border-bottom:1px solid var(--border); }
+.ops-table th { padding:0.7rem 1rem;text-align:left;font-size:0.5rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);font-weight:normal; }
+.ops-table td { padding:1.1rem 1rem;border-bottom:1px solid var(--border);line-height:1.6;vertical-align:top; }
+.ops-table tr:hover td { background:var(--surface); }
+.ops-table tr:last-child td { border-bottom:none; }
+.time-col { color:var(--teal);font-weight:700;white-space:nowrap;width:80px; }
+.stream-col { font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.04em;color:var(--cream); }
+.note-col { color:var(--muted); }
+.tag {
+  display:inline-block;padding:0.15rem 0.5rem;
+  font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;
+  border:1px solid;margin-left:0.5rem;vertical-align:middle;
+}
+.tag-teal { border-color:var(--teal);color:var(--teal); }
+.tag-gold { border-color:var(--gold);color:var(--gold); }
+.tag-red { border-color:var(--red);color:var(--red); }
+
+/* ASIA SECTION */
+.asia-layout { display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start; }
+@media(max-width:700px){.asia-layout{grid-template-columns:1fr;}}
+.asia-reasoning { font-size:0.72rem;line-height:2;color:var(--muted); }
+.asia-reasoning strong { color:var(--cream); }
+.asia-reasoning .highlight { color:var(--teal); }
+.asia-list { list-style:none;border:1px solid var(--border); }
+.asia-list li {
+  padding:1.1rem 1.5rem;
+  border-bottom:1px solid var(--border);
+  font-size:0.68rem;
+  display:flex;gap:1rem;align-items:center;
+  transition:background 0.2s,padding-left 0.3s;
+}
+.asia-list li:last-child { border-bottom:none; }
+.asia-list li:hover { background:var(--surface);padding-left:2rem; }
+.asia-flag { font-size:1.4rem;flex-shrink:0; }
+.asia-name { font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.04em; }
+.asia-cost { font-size:0.55rem;letter-spacing:0.15em;color:var(--gold);text-transform:uppercase;margin-top:0.15rem; }
+.asia-why { font-size:0.6rem;color:var(--muted);margin-top:0.2rem; }
+
+/* CORPORATE SECTION */
+.corp-split { display:grid;grid-template-columns:1.3fr 1fr;gap:4rem; }
+@media(max-width:700px){.corp-split{grid-template-columns:1fr;}}
+.pipeline-steps { display:flex;flex-direction:column;gap:1px;background:var(--border); }
+.pipe-step {
+  background:var(--surface);
+  padding:1.2rem 1.5rem;
+  display:grid;grid-template-columns:2rem 1fr;gap:1rem;align-items:center;
+}
+.pipe-num { font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--border); }
+.pipe-content {}
+.pipe-name { font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.05em; }
+.pipe-name .t { color:var(--teal); }
+.pipe-detail { font-size:0.62rem;color:var(--muted);margin-top:0.2rem;line-height:1.6; }
+.arrow-connector { text-align:center;color:var(--teal);font-size:0.7rem;padding:0.3rem 0;background:var(--bg); }
+
+/* GAME TEASER */
+.game-teaser {
+  border:1px solid rgba(45,212,191,0.3);
+  background:rgba(45,212,191,0.03);
+  padding:3rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.game-teaser::before {
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    45deg,
+    transparent,transparent 10px,
+    rgba(45,212,191,0.02) 10px, rgba(45,212,191,0.02) 11px
+  );
+}
+.gt-label { font-size:0.55rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--teal);margin-bottom:1rem; }
+.gt-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2rem,6vw,5rem);
+  letter-spacing:0.05em;
+  line-height:0.9;
+  margin-bottom:1rem;
+}
+.gt-title .g { color:var(--gold); }
+.gt-sub { font-size:0.68rem;color:var(--muted);line-height:1.8;margin-bottom:2rem; }
+.gt-tags { display:flex;flex-wrap:wrap;gap:0.5rem;justify-content:center;margin-bottom:2rem; }
+.gt-tag {
+  font-size:0.5rem;letter-spacing:0.25em;text-transform:uppercase;
+  padding:0.3rem 0.8rem;border:1px solid var(--gold);color:var(--gold);
+}
+
+/* FANTASY STRUCK */
+.fantasy-box {
+  border:1px solid rgba(239,68,68,0.2);
+  background:rgba(239,68,68,0.03);
+  padding:2rem;
+  margin-bottom:3rem;
+}
+.fantasy-label { font-size:0.5rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--red);margin-bottom:1rem; }
+.fantasy-items { display:flex;flex-wrap:wrap;gap:0.5rem; }
+.fantasy-item {
+  font-size:0.62rem;
+  padding:0.3rem 0.8rem;
+  border:1px solid rgba(239,68,68,0.3);
+  color:rgba(239,68,68,0.7);
+  text-decoration:line-through;
+  text-decoration-color:rgba(239,68,68,0.4);
+}
+.arrow-game {
+  margin-top:1rem;
+  font-size:0.62rem;
+  color:var(--teal);
+  letter-spacing:0.1em;
+}
+
+/* FOOTER */
+footer {
+  padding:3rem 2.5rem 2rem;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;
+}
+.f-brand { font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.05em;color:var(--gold);line-height:1; }
+.f-sub { font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-top:0.3rem; }
+.f-right { font-size:0.55rem;letter-spacing:0.1em;color:var(--muted);line-height:2;text-align:right; }
+
+.reveal { opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease; }
+.reveal.in { opacity:1;transform:none; }
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="curR"></div>
+
+<nav>
+  <div class="n-brand">T / I — Blueprint v2</div>
+  <div class="n-right">
+    <span class="n-tag">Operational Reality Only</span>
+    <a class="play-btn" href="freestyle-king-game.html">▶ PLAY THE GAME</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-gradient"></div>
+  <div class="version-badge"><div class="vdot"></div>v2 — Fantasy Stripped. Game Launched.</div>
+  <h1 class="hero-title">
+    <span class="t">TRANS</span><span class="g">PAR</span>ENCY<br>
+    <span class="m">OPERATIONAL</span><br>
+    INTER<span class="t">ACT</span>IVE
+  </h1>
+  <p class="hero-sub">
+    <strong>What's real ships. What's fantasy plays.</strong> This document is the operational stack — 
+    grounded, executable, sustainable. The dream stuff? That lives in the game. 
+    Everything here can happen next week.
+  </p>
+  <div class="hero-cta">
+    <a class="play-btn" href="freestyle-king-game.html">▶ PLAY FREESTYLE KING</a>
+    <span class="cta-note">Fantasy lives in the game. This doc stays real.</span>
+  </div>
+</section>
+
+<div class="divider">Fantasy Audit</div>
+
+<section>
+  <div class="fantasy-box reveal">
+    <div class="fantasy-label">⛔ Removed from Blueprint — Moved to Game</div>
+    <div class="fantasy-items">
+      <div class="fantasy-item">Freestyle King performance networking</div>
+      <div class="fantasy-item">Date4Location × Vanlife</div>
+      <div class="fantasy-item">Honda Element dream life</div>
+      <div class="fantasy-item">Tourist / college student targeting</div>
+      <div class="fantasy-item">Polyamorous location dating</div>
+      <div class="fantasy-item">Bike freestyle deployments</div>
+    </div>
+    <div class="arrow-game">↓ All of this is now in Freestyle King: The Game. Play it. Earn it as a real goal.</div>
+  </div>
+</section>
+
+<div class="divider">The Real Stack</div>
+
+<section id="pillars">
+  <div class="s-label">What's Actually Executable</div>
+  <div class="s-title">Operational <span class="g">Pillars</span></div>
+  <div class="stack-grid reveal">
+    <div class="stack-card">
+      <div class="card-status status-live">Live Now</div>
+      <div class="card-icon">🚗</div>
+      <div class="card-title">Gig Econ <span class="t">Sandwich</span></div>
+      <p class="card-body">
+        <strong>Uber airport mornings</strong> — the cleanest, most predictable anchor. Premium passengers, 
+        airport zone only, done by 10am. DoorDash as the <strong>variable layer at night</strong> — 
+        activated only when needed, not as identity. This sandwiches the creative day inside two income bookends.
+      </p>
+      <div class="card-metric">~$30–60/day baseline, zero meetings</div>
+    </div>
+    <div class="stack-card">
+      <div class="card-status status-live">Live Now</div>
+      <div class="card-icon">💪</div>
+      <div class="card-title"><span class="t">Burpathon</span> Warmup</div>
+      <p class="card-body">
+        Daily streaming warmup. <strong>Burpees, kettlebell halos, reverse treadmill.</strong> 
+        This is the content anchor — builds body, builds audience, builds stage presence. 
+        Not a fantasy fitness brand. A <strong>real morning ritual that happens to be content.</strong>
+        No performance. Just the work, on camera.
+      </p>
+      <div class="card-metric">Body is the sweet spot of the trifecta</div>
+    </div>
+    <div class="stack-card">
+      <div class="card-status status-build">Building</div>
+      <div class="card-icon">🤖</div>
+      <div class="card-title">Rapbot <span class="g">Networking</span></div>
+      <p class="card-body">
+        AI-powered rap/beat networking tool. <strong>Not performance — infrastructure.</strong> 
+        Connects you to DJs, producers, event promoters through the bot interface. 
+        This is the Transparency Interactive product in the music vertical. 
+        WebSocket-driven, virtual, <strong>no van required.</strong>
+      </p>
+      <div class="card-metric">Replaces in-person hustle with scalable tool</div>
+    </div>
+    <div class="stack-card">
+      <div class="card-status status-build">Building</div>
+      <div class="card-icon">🎵</div>
+      <div class="card-title">Astrobeats <span class="t">Virtual</span></div>
+      <p class="card-body">
+        <strong>Virtual networking community</strong> for beats and music. 
+        Not a record label. Not a performance brand. A community product — 
+        think Discord meets DJ set, WebSocket-synced. Drop song experiences 
+        per location as a <strong>digital product, not a physical gig.</strong>
+      </p>
+      <div class="card-metric">Platform scale, not gig scale</div>
+    </div>
+    <div class="stack-card">
+      <div class="card-status status-build">Building</div>
+      <div class="card-icon">🏢</div>
+      <div class="card-title">Transparency <span class="g">Tech</span></div>
+      <p class="card-body">
+        <strong>Corporate AI-powered design agency.</strong> Canva + Marvel App pipeline. 
+        JavaScript refactoring, asset replacement, UI storyboarding. 
+        Spoken code → AI → refined output. Marketable as a <strong>creative dev specialization.</strong>
+        This competes with design agencies, not Epic Games (that's the game talking).
+      </p>
+      <div class="card-metric">3 specializations: refactor, assets, storyboard</div>
+    </div>
+    <div class="stack-card">
+      <div class="card-status status-buffer">Buffer Strategy</div>
+      <div class="card-icon">🌏</div>
+      <div class="card-title">Asia <span class="t">Kitchen</span> Access</div>
+      <p class="card-body">
+        <strong>Not a fantasy escape — a functional asset buffer.</strong> 
+        When American setup costs spike (no van, no kitchen, no stability), 
+        Thailand/Philippines at $200–300/month provides: kitchen access, 
+        low burn rate, digital work continuity. <strong>Travel as cost optimization, not lifestyle flex.</strong>
+      </p>
+      <div class="card-metric">Activated when domestic costs > $1200/mo</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">Daily Operating System</div>
+
+<section id="daily">
+  <div class="s-label">The Executable Day</div>
+  <div class="s-title">Daily <span class="t">Ops</span></div>
+  <div class="reveal">
+  <table class="ops-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Stream</th>
+        <th>What Actually Happens</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="time-col">5–9 AM</td>
+        <td class="stream-col">Uber Airport</td>
+        <td class="note-col">Airport zone only. Premium fares. Done before city traffic. Cash flow anchor for the day.</td>
+        <td><span class="tag tag-teal">Income</span></td>
+      </tr>
+      <tr>
+        <td class="time-col">9–11 AM</td>
+        <td class="stream-col">Burpathon Stream</td>
+        <td class="note-col">Morning warmup on camera. Burpees, reverse treadmill, kettlebell halos. Body work that is content.</td>
+        <td><span class="tag tag-gold">Content</span></td>
+      </tr>
+      <tr>
+        <td class="time-col">11 AM–2 PM</td>
+        <td class="stream-col">Transparency Tech</td>
+        <td class="note-col">Spoken code sessions. AI Studio → Stitch → Marvel App pipeline. Client work or portfolio builds.</td>
+        <td><span class="tag tag-teal">Build</span></td>
+      </tr>
+      <tr>
+        <td class="time-col">2–5 PM</td>
+        <td class="stream-col">Astrobeats / Rapbot</td>
+        <td class="note-col">Virtual community work. WebSocket DJ sets. Rapbot networking module development. Music vertical product.</td>
+        <td><span class="tag tag-gold">Build</span></td>
+      </tr>
+      <tr>
+        <td class="time-col">5–8 PM</td>
+        <td class="stream-col">Freestyle King Game</td>
+        <td class="note-col">Play the game. This is your fantasy zone. Van life, date4location, beat drops — in pixels, not in person.</td>
+        <td><span class="tag tag-teal">Game</span></td>
+      </tr>
+      <tr>
+        <td class="time-col">8 PM+</td>
+        <td class="stream-col">DoorDash (Variable)</td>
+        <td class="note-col">Night variable only if needed. Luxury platform clientele. Not the plan — the override when needed.</td>
+        <td><span class="tag tag-red">Optional</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<div class="divider">Asia Strategy</div>
+
+<section id="asia">
+  <div class="s-label">Digital Empire Buffer</div>
+  <div class="s-title">Asia <span class="t">Kitchen</span> Strategy</div>
+  <div class="asia-layout reveal">
+    <div>
+      <p class="asia-reasoning">
+        The missing American asset is the <strong>kitchen.</strong> Not freedom. Not adventure. The kitchen.
+        Van life sounds romantic but the hard part is food preparation infrastructure.
+        Asia solves this <span class="highlight">as a cost-optimization move,</span> not a personality statement.
+        <br><br>
+        <strong>The calculus:</strong> If domestic burn rate exceeds $1,200/month without a stable kitchen,
+        Thailand or Philippines delivers more stability for $300/month — with kitchen, WiFi, and a lower-stress
+        environment to build Transparency Tech deliverables.
+        <br><br>
+        <strong>Learn the language.</strong> If you go, commit to at least conversational Thai or Tagalog.
+        This transforms it from tourism to genuine cost arbitrage. The digital work (Transparency Tech,
+        Astrobeats, Rapbot) runs identically from Chiang Mai as it does from an American city.
+        <br><br>
+        <span class="highlight">Asia is not the dream. Asia is the buffer that protects the dream</span>
+        while assets are still being built domestically.
+      </p>
+    </div>
+    <div>
+      <ul class="asia-list">
+        <li>
+          <div class="asia-flag">🇹🇭</div>
+          <div>
+            <div class="asia-name">Thailand</div>
+            <div class="asia-cost">$200–350 / month</div>
+            <div class="asia-why">Best kitchen access + digital infra. Chiang Mai is builder-focused.</div>
+          </div>
+        </li>
+        <li>
+          <div class="asia-flag">🇵🇭</div>
+          <div>
+            <div class="asia-name">Philippines</div>
+            <div class="asia-cost">$250–400 / month</div>
+            <div class="asia-why">English-speaking. Strong internet. Good for community product building.</div>
+          </div>
+        </li>
+        <li>
+          <div class="asia-flag">🇯🇵</div>
+          <div>
+            <div class="asia-name">Japan (stretch)</div>
+            <div class="asia-cost">$600–900 / month</div>
+            <div class="asia-why">Once Transparency Tech has clients. Cultural input for product aesthetics.</div>
+          </div>
+        </li>
+        <li>
+          <div class="asia-flag">🇩🇪</div>
+          <div>
+            <div class="asia-name">Germany (from Asia hub)</div>
+            <div class="asia-cost">Once already crossing</div>
+            <div class="asia-why">EU access. Tech agency clientele. From Asia base, not from US base.</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider">Transparency Tech Pipeline</div>
+
+<section id="tech">
+  <div class="s-label">Corporate AI Design Agency</div>
+  <div class="s-title">The <span class="g">Pipeline</span></div>
+  <div class="corp-split reveal">
+    <div>
+      <p style="font-size:0.72rem;line-height:1.9;color:var(--muted);margin-bottom:2rem;">
+        Three marketable specializations. One pipeline. Spoken to AI, refined in Marvel App,
+        delivered as production-grade UI. This is the <strong style="color:var(--cream)">career path</strong> 
+        that replaces the tech job — not by quitting, but by making the tech job unnecessary.
+      </p>
+      <div class="pipeline-steps">
+        <div class="pipe-step">
+          <div class="pipe-num">01</div>
+          <div class="pipe-content">
+            <div class="pipe-name">Voice → <span class="t">AI Studio</span></div>
+            <div class="pipe-detail">Speak requirements. Generate component code. Iterate verbally. Zero keyboard bottleneck.</div>
+          </div>
+        </div>
+        <div class="arrow-connector">↓</div>
+        <div class="pipe-step">
+          <div class="pipe-num">02</div>
+          <div class="pipe-content">
+            <div class="pipe-name">Stitch <span class="t">UX Refinement</span></div>
+            <div class="pipe-detail">AI UX tooling. Responsive layouts, component variants, accessibility pass.</div>
+          </div>
+        </div>
+        <div class="arrow-connector">↓</div>
+        <div class="pipe-step">
+          <div class="pipe-num">03</div>
+          <div class="pipe-content">
+            <div class="pipe-name">Canva → <span class="t">Asset Layer</span></div>
+            <div class="pipe-detail">Image effects pipeline. Brand assets, icon systems, visual language baked in.</div>
+          </div>
+        </div>
+        <div class="arrow-connector">↓</div>
+        <div class="pipe-step">
+          <div class="pipe-num">04</div>
+          <div class="pipe-content">
+            <div class="pipe-name">Marvel App <span class="t">Storyboard</span></div>
+            <div class="pipe-detail">Full UI within UI prototyping. Main menu → game screen → pause screen hierarchy. Client-presentable.</div>
+          </div>
+        </div>
+        <div class="arrow-connector">↓</div>
+        <div class="pipe-step">
+          <div class="pipe-num">05</div>
+          <div class="pipe-content">
+            <div class="pipe-name"><span class="t">JS Refactor</span> + Deliver</div>
+            <div class="pipe-detail">Asset replacement, refactored code, storyboard export. Three billable specializations in one pipeline.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:0.55rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Next Asset Target</div>
+      <div style="border:1px solid var(--border);padding:2rem;margin-bottom:1.5rem;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--teal);line-height:1;margin-bottom:0.5rem;">HONDA ELEMENT</div>
+        <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">The Game Boss. Real Life Goal.</div>
+        <p style="font-size:0.65rem;line-height:1.8;color:var(--muted);">
+          The Honda Element is the next physical asset target. Van life with kitchen access in America.
+          In the game, you unlock it by completing runs. In real life, you fund it through the gig sandwich
+          and Transparency Tech revenue.<br><br>
+          <strong style="color:var(--cream)">Target: $6,000–8,000 saved from Uber + design agency revenue.</strong>
+          The game tracks it. The ops fund it.
+        </p>
+      </div>
+      <div style="border:1px solid var(--border);padding:1.5rem;">
+        <div style="font-size:0.5rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">Asset Maintenance Stack</div>
+        <div style="font-size:0.65rem;line-height:2;color:var(--muted);">
+          East side storage unit → bike storage<br>
+          East side parking strategy<br>
+          Insurance + gas optimization<br>
+          Kitchen access via Asia buffer OR Element build-out<br>
+          <strong style="color:var(--cream)">Asset maintenance IS the game loop.</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider">The Game</div>
+
+<section id="game">
+  <div class="game-teaser reveal">
+    <div class="gt-label">Fantasy Lives Here — Playable, Not Planned</div>
+    <div class="gt-title">FREESTYLE KING<br><span class="g">THE GAME</span></div>
+    <p class="gt-sub">
+      Date4Location. Van Life Cooking. Beat drops per location. No More Heroes energy. WarioWare chaos.<br>
+      Everything that got cut from the blueprint lives here — fully playable, genuinely fun.
+    </p>
+    <div class="gt-tags">
+      <div class="gt-tag">Freestyle King Performance</div>
+      <div class="gt-tag">Date4Location</div>
+      <div class="gt-tag">Van Life Cooking</div>
+      <div class="gt-tag">Rhythm Battles</div>
+      <div class="gt-tag">Element Unlock</div>
+      <div class="gt-tag">Beat Drop Zones</div>
+    </div>
+    <a class="play-btn" href="freestyle-king-game.html" style="font-size:0.75rem;padding:0.9rem 3rem;">▶ LAUNCH GAME</a>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="f-brand">TRANSPARENCY<br>INTERACTIVE</div>
+    <div class="f-sub">Blueprint v2 — Operational Reality</div>
+  </div>
+  <div class="f-right">
+    GIG ECON SANDWICH / BURPATHON / RAPBOT<br>
+    ASTROBEATS VIRTUAL / TRANSPARENCY TECH<br>
+    ASIA KITCHEN BUFFER / HONDA ELEMENT TARGET<br>
+    <br>
+    <span style="color:rgba(232,228,216,0.15)">Fantasy ships as code. Reality ships as execution.</span>
+  </div>
+</footer>
+
+<script>
+// Cursor
+const cur = document.getElementById('cur'), curR = document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*0.14;ry+=(my-ry)*0.14;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
+
+// Reveal
+const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
