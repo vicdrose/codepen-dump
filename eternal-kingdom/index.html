@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👑 KINGDOM DOMINATION v4 👑</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Impact', Arial Black, sans-serif; 
+      background: radial-gradient(circle at center, #1a0033, #ff1493, #ffd700, #000); 
+      color: #ffd700; overflow: hidden; height: 100vh;
+      text-shadow: 0 0 30px #ff1493;
+    }
+    #coliseum { position: relative; width: 100vw; height: 100vh; }
+    #throne-room { 
+      position: absolute; top: 30px; left: 30px; z-index: 100; 
+      background: linear-gradient(135deg, rgba(255,20,147,0.95), rgba(255,215,0,0.9)); 
+      padding: 35px; border-radius: 25px; border: 5px solid #ffd700; 
+      max-width: 550px; box-shadow: 0 0 100px #ff1493;
+    }
+    #victory-scroll { 
+      position: absolute; bottom: 30px; right: 30px; z-index: 100; 
+      background: rgba(0,0,0,0.9); padding: 30px; border-radius: 25px; 
+      max-height: 350px; overflow-y: auto; font-size: 16px; border: 4px solid #ffd700;
+      backdrop-filter: blur(15px);
+    }
+    .domination-btn { 
+      background: linear-gradient(45deg, #ffd700, #ff1493, #ff6b35); 
+      border: 4px solid #fff; color: #000; padding: 20px 35px; margin: 12px; 
+      border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 20px;
+      transition: all 0.5s; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      text-transform: uppercase; letter-spacing: 4px;
+    }
+    .domination-btn:hover { 
+      transform: scale(1.2) translateY(-10px) rotate(3deg); 
+      box-shadow: 0 30px 80px #ffd700; 
+    }
+    .domination-btn.pulse { 
+      animation: throne-pulse 2s infinite alternate; 
+      box-shadow: 0 0 100px #ffd700, 0 0 150px #ff1493 !important;
+    }
+    @keyframes throne-pulse { 0% { box-shadow: 0 0 50px #ffd700; } 100% { box-shadow: 0 0 120px #ff1493; } }
+    .gate-portal { padding: 22px; margin: 15px 0; border-radius: 20px; cursor: pointer; font-size: 18px; transition: all 0.4s; }
+    .tech-portal { background: linear-gradient(45deg, rgba(138,43,226,0.85), rgba(0,255,255,0.7)); border: 4px solid #9370db; }
+    .king-portal { background: linear-gradient(45deg, rgba(255,20,147,0.95), rgba(255,107,53,0.85)); border: 4px solid #ff1493; }
+    .gate-portal:hover { transform: scale(1.08); box-shadow: 0 0 60px #ffd700; }
+    .legend-arc { width: 100%; height: 25px; background: rgba(0,0,0,0.8); margin: 25px 0; border-radius: 20px; overflow: hidden; border: 3px solid #ffd700; }
+    .strike-blaze { height: 100%; background: linear-gradient(90deg, #ffd700, #ff1493 40%, #ff6b35 80%, #ffd700); transition: width 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+    h1 { font-size: 36px; text-align: center; margin-bottom: 25px; background: linear-gradient(45deg, #ffd700, #fff, #ff1493, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: crown-glow 4s infinite; }
+    @keyframes crown-glow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    .eternal-crown { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 500px; border: 6px solid #ffd700; border-radius: 50%; opacity: 0.5; animation: eternal-spin 15s linear infinite; z-index: 8; box-shadow: 0 0 150px #ffd700; }
+    .nova-core { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0; height: 0; background: radial-gradient(circle, #ffd700, #ff1493, #ff6b35, transparent); border-radius: 50%; opacity: 0; transition: all 0.8s; z-index: 20; }
+    @keyframes eternal-spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+    .throne-victory { animation: throne-victory 1.5s infinite; color: #ffd700 !important; text-shadow: 0 0 80px #ffd700 !important; }
+    @keyframes throne-victory { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+  </style>
+</head>
+<body>
+  <div id="coliseum">
+    <canvas id="cosmic-throne"></canvas>
+    <div class="eternal-crown"></div>
+    <div class="nova-core" id="supernova"></div>
+    
+    <div id="throne-room">
+      <h1>👑 ETERNAL KINGDOM v4 👑</h1>
+      <h2>Reign <span id="reign-day">1</span> | COSMIC POWER: <span id="cosmic-power">75</span>%</h2>
+      
+      <div class="legend-arc"><div class="strike-blaze" id="eternal-arc" style="width: 0%"></div></div>
+      
+      <h2>🌌 PORTAL GATES</h2>
+      <div class="gate-portal tech-portal" onclick="openPortal('tech')">🔮 TRANSPARENCY FORGE<br><small>Unity/Blender/VJ Galaxy Forge</small></div>
+      <div class="gate-portal king-portal" onclick="openPortal('king')">⚔️ FREESTYLE COLISEUM<br><small>Rhythm/Rapbot/Empire Arena</small></div>
+      
+      <h2>💎 CORE REACTOR</h2>
+      <button class="domination-btn" onclick="engageReactor()" id="reactor-core">🌟 BURPEETHON REACTOR (0/125)</button>
+      <div id="reactor-status">REACTOR: 0%</div>
+      
+      <h2>🎯 DOMINATION ZONE</h2>
+      <div id="target-zone">ACTIVATE A PORTAL TO BEGIN ETERNAL REIGN</div>
+      
+      <button class="domination-btn pulse" id="reign-btn" onclick="triggerReign()" disabled>🌠 TRIGGER ETERNAL REIGN</button>
+    </div>
+    
+    <div id="victory-scroll">
+      <div>🏛️ VICTORY SCROLL: Freestyle King LIVE ACCESS ACTIVATED. Reality bends to your will! 🔥</div>
+    </div>
+  </div>
+
+  <script>
+    let cosmicEmpire = {
+      reign: 1,
+      power: 75,
+      reactorCharge: 0,
+      reignCount: 0,
+      portal: null,
+      victories: []
+    };
+    
+    const portals = {
+      tech: ['Cosmic Beat Alchemy', 'Infinite Shader Empire', 'VJ Halo Dominion', 'Portfolio Eternity'],
+      king: ['Rhythm Apocalypse', 'Rapbot Dynasty Saga', 'Freestyle Godmode', 'Total Empire Conquest']
+    };
+    
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2500);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('cosmic-throne'), alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    
+    const particleCount = 5000;
+    const particleGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+    const sizes = new Float32Array(particleCount);
+    
+    for (let i = 0; i < particleCount; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 5000;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 5000;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 5000;
+      
+      const hue = 0.12 + Math.random() * 0.08;
+      colors[i * 3] = hue;
+      colors[i * 3 + 1] = hue * 0.6;
+      colors[i * 3 + 2] = 1;
+      sizes[i] = Math.random() * 6 + 2;
+    }
+    
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    
+    const particleMaterial = new THREE.PointsMaterial({ 
+      size: 5, vertexColors: true, transparent: true, opacity: 0.85,
+      sizeAttenuation: true
+    });
+    const throneParticles = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(throneParticles);
+    
+    camera.position.z = 20;
+    
+    function cosmicThrone() {
+      requestAnimationFrame(cosmicThrone);
+      throneParticles.rotation.y += 0.001;
+      throneParticles.rotation.x += 0.0005;
+      const time = Date.now() * 0.0005;
+      throneParticles.rotation.z += Math.sin(time) * 0.0003;
+      renderer.render(scene, camera);
+    }
+    cosmicThrone();
+    
+    function updateThrone() {
+      document.getElementById('reign-day').textContent = cosmicEmpire.reign;
+      document.getElementById('cosmic-power').textContent = cosmicEmpire.power;
+      document.getElementById('eternal-arc').style.width = (cosmicEmpire.reignCount * 25) + '%';
+      document.getElementById('reactor-status').textContent = `REACTOR: ${Math.floor(cosmicEmpire.reactorCharge/125*100)}%`;
+      document.getElementById('reactor-core').textContent = `🌟 REACTOR PRIME (${cosmicEmpire.reactorCharge}/125)`;
+    }
+    
+    function carveVictory(message) {
+      cosmicEmpire.victories.push(message);
+      const scroll = document.getElementById('victory-scroll');
+      scroll.innerHTML = cosmicEmpire.victories.slice(-8).map(v => `<div class="throne-victory">${v}</div>`).join('') + 
+                        '<div>🏛️ VICTORY SCROLL: Freestyle King LIVE ACCESS ACTIVATED. Reality bends to your will! 🔥</div>';
+      updateThrone();
+    }
+    
+    function openPortal(type) {
+      cosmicEmpire.portal = type;
+      cosmicEmpire.reignCount = 0;
+      document.querySelectorAll('.gate-portal').forEach(p => p.classList.remove('pulse'));
+      event.target.classList.add('pulse');
+      
+      document.getElementById('target-zone').innerHTML = `
+        <strong style="color: #ffd700; font-size: 22px;">⚡ ${type.toUpperCase()} PORTAL OPENED</strong><br>
+        <small>Target Sequence: ${portals[type][0]}</small>
+      `;
+      document.getElementById('reign-btn').disabled = false;
+      carveVictory(type === 'tech' ? '🔮 TECH PORTAL BREACHED! Cosmic forge ignites...' : '⚔️ KING PORTAL BREACHED! Eternal coliseum awakens!');
+    }
+    
+    let reactorPulse;
+    function engageReactor() {
+      if (reactorPulse) clearInterval(reactorPulse);
+      cosmicEmpire.reactorCharge = 0;
+      const supernova = document.getElementById('supernova');
+      supernova.style.width = '400px';
+      supernova.style.height = '400px';
+      supernova.style.opacity = '1';
+      
+      reactorPulse = setInterval(() => {
+        cosmicEmpire.reactorCharge++;
+        cosmicEmpire.power = Math.min(100, cosmicEmpire.power + 5);
+        updateThrone();
+        
+        if (cosmicEmpire.reactorCharge >= 125) {
+          clearInterval(reactorPulse);
+          supernova.style.width = '0';
+          supernova.style.height = '0';
+          supernova.style.opacity = '0';
+          document.getElementById('reactor-core').classList.add('pulse');
+          carveVictory('🌠 REACTOR OVERLOAD! +45 COSMIC POWER! Empire transcends dimensions!');
+          cosmicEmpire.power += 45;
+          cosmicEmpire.reignCount++;
+        }
+      }, 120);
+      carveVictory('⚛️ REACTOR ENGAGED! Converting existence into pure empire energy!');
+    }
+    
+    function triggerReign() {
+      if (!cosmicEmpire.portal) return;
+      
+      const reignIndex = cosmicEmpire.reignCount % portals[cosmicEmpire.portal].length;
+      const target = portals[cosmicEmpire.portal][reignIndex];
+      
+      document.getElementById('target-zone').innerHTML = `
+        🎯 <strong style="color: #ffd700; font-size: 24px;">${target}</strong><br>
+        <small>Reign ${cosmicEmpire.reignCount + 1}/4 - EXECUTING ETERNAL DOMINATION...</small>
+      `;
+      
+      const supernova = document.getElementById('supernova');
+      supernova.style.width = '700px';
+      supernova.style.height = '700px';
+      supernova.style.opacity = '1';
+      
+      setTimeout(() => {
+        cosmicEmpire.reignCount++;
+        cosmicEmpire.power = Math.min(100, cosmicEmpire.power + 15);
+        supernova.style.width = '0';
+        supernova.style.height = '0';
+        supernova.style.opacity = '0';
+        
+        if (cosmicEmpire.reignCount >= 4) {
+          cosmicEmpire.reign++;
+          cosmicEmpire.reignCount = 0;
+          carveVictory(`👑 TOTAL COSMIC DOMINATION! Reign ${cosmicEmpire.reign} unlocked. ARIZONA/ASIA in crosshairs!`);
+          if (cosmicEmpire.power >= 95) carveVictory('🌟 TRANSCENDENT: Eternal crown + infinite shader dominion activated!');
+        } else {
+          const nextTarget = portals[cosmicEmpire.portal][(reignIndex + 1) % portals[cosmicEmpire.portal].length];
+          carveVictory(`${target} ANNIHILATED! +15 Power. Next: ${nextTarget}`);
+        }
+        
+        updateThrone();
+      }, 2200);
+    }
+    
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    
+    document.addEventListener('keydown', (e) => {
+      if (e.key === ' ') engageReactor();
+      if (e.key === 'Enter') triggerReign();
+      if (e.key.toLowerCase() === 't') openPortal('tech');
+      if (e.key.toLowerCase() === 'k') openPortal('king');
+    });
+    
+    updateThrone();
+    carveVictory('⚡ ETERNAL KINGDOM v4 ACTIVATED. 4 cosmic strikes = total transcendence. REIGN ETERNAL.');
+  </script>
+</body>
+</html>
