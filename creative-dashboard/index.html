@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live-Build Creative Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      overflow: hidden;
+    }
+    header {
+      padding: 1rem 2rem;
+      background: linear-gradient(90deg, #ff6b6b, #f7d794);
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+    }
+    .container {
+      display: flex;
+      height: calc(100vh - 72px);
+    }
+    .panel {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      border-right: 2px solid #222;
+    }
+    .panel:last-child {
+      border-right: none;
+    }
+    h2 {
+      color: #ff6b6b;
+      margin-bottom: 0.5rem;
+    }
+    button {
+      background: #1e1e1e;
+      border: 2px solid #ff6b6b;
+      color: #ff6b6b;
+      padding: 0.5rem 1rem;
+      margin: 0.3rem 0;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s all;
+    }
+    button:hover {
+      background: #ff6b6b;
+      color: #0a0a0a;
+    }
+    .output {
+      background: #111;
+      padding: 1rem;
+      margin-top: 1rem;
+      min-height: 150px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+    canvas {
+      width: 100%;
+      height: 200px;
+      display: block;
+      margin-top: 1rem;
+      border-radius: 8px;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+
+<header>🔥 Live-Build Creative Dashboard 🔥</header>
+
+<div class="container">
+  <!-- Transparency Tech Panel -->
+  <div class="panel">
+    <h2>Astro Beats Lab</h2>
+    <button onclick="discoverMusic()">🎵 Discover Music</button>
+    <button onclick="remakeBeat()">🥁 Remake Beat</button>
+    <button onclick="buildVisual()">🎨 Build Visuals</button>
+      <canvas id="techCanvas"></canvas>
+    <div class="output" id="techOutput">Output log:</div>
+  
+  </div>
+
+  <!-- Freestyle King Panel -->
+  <div class="panel">
+    <h2>Freestyle King Arena</h2>
+    <button onclick="startRhythmGame()">🎮 Play Rhythm Game</button>
+    <button onclick="freestyleRap()">🎤 Freestyle Rap</button>
+    <button onclick="vJSet()">💿 Update VJ Set</button>
+     <canvas id="freestyleCanvas"></canvas>
+    <div class="output" id="freestyleOutput">Output log:</div>
+  </div>
+</div>
+
+<script>
+  const techOutput = document.getElementById('techOutput');
+  const freestyleOutput = document.getElementById('freestyleOutput');
+
+  // Placeholder: Music Discovery
+  function discoverMusic() {
+    const track = ["Cosmic Pulse", "Neon Dreams", "Starlight Loop", "Quantum Flow"][Math.floor(Math.random()*4)];
+    techOutput.innerHTML += `\n🪐 Discovered track: ${track}`;
+    animateCanvas('techCanvas', '#ff6b6b');
+  }
+
+  // Placeholder: Beat Remake
+  function remakeBeat() {
+    const style = ["Drum & Bass", "Shoegaze Hip-Hop", "Futuristic Trap", "Synthwave"][Math.floor(Math.random()*4)];
+    techOutput.innerHTML += `\n🥁 Remade beat in style: ${style}`;
+    animateCanvas('techCanvas', '#f7d794');
+  }
+
+  // Placeholder: Visual Build
+  function buildVisual() {
+    const effect = ["3D Shaders", "Particle Burst", "Color Wave", "Abstract Geometry"][Math.floor(Math.random()*4)];
+    techOutput.innerHTML += `\n🎨 Visual built: ${effect}`;
+    animateCanvas('techCanvas', '#1dd1a1');
+  }
+
+  // Placeholder: Rhythm Game
+  function startRhythmGame() {
+    const song = ["Turbo Spin", "Arcade Pulse", "Lightning Rush"][Math.floor(Math.random()*3)];
+    freestyleOutput.innerHTML += `\n🎮 Rhythm game started: ${song}`;
+    animateCanvas('freestyleCanvas', '#ff9ff3');
+  }
+
+  // Placeholder: Freestyle Rap
+  function freestyleRap() {
+    const line = ["Flow like fire", "Beat drops heavy", "Lights in sync", "Crowd goes wild"][Math.floor(Math.random()*4)];
+    freestyleOutput.innerHTML += `\n🎤 Freestyle: ${line}`;
+    animateCanvas('freestyleCanvas', '#feca57');
+  }
+
+  // Placeholder: VJ Set
+  function vJSet() {
+    const set = ["Neon Pulse", "Laser Rain", "Cosmic Loop", "Electric Horizon"][Math.floor(Math.random()*4)];
+    freestyleOutput.innerHTML += `\n💿 VJ set updated: ${set}`;
+    animateCanvas('freestyleCanvas', '#ff6b6b');
+  }
+
+  // Simple canvas animation
+  function animateCanvas(id, color) {
+    const canvas = document.getElementById(id);
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.3;
+    ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 50, 50);
+  }
+</script>
+
+</body>
+</html>
