@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>THE MANSION — ASTRO BEATS × FREESTYLE KING</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+
+    --gold: #FFD166;
+
+    --cyan: #06D6A0;
+
+    --purple: #9B5DE5;
+
+    --orange: #F77F00;
+
+    --dark: #06060E;
+
+    --mid: #0D0D1A;
+
+    --glass: rgba(255,255,255,0.04);
+
+    --border: rgba(255,255,255,0.08);
+
+  }
+
+  html, body {
+
+    width: 100%; height: 100%;
+
+    background: var(--dark);
+
+    color: #fff;
+
+    font-family: 'DM Sans', sans-serif;
+
+    overflow-x: hidden;
+
+    cursor: none;
+
+  }
+
+  /* CUSTOM CURSOR */
+
+  .cursor {
+
+    position: fixed; width: 12px; height: 12px;
+
+    background: var(--gold); border-radius: 50%;
+
+    pointer-events: none; z-index: 9999;
+
+    transform: translate(-50%, -50%);
+
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+
+    mix-blend-mode: difference;
+
+  }
+
+  .cursor-ring {
+
+    position: fixed; width: 36px; height: 36px;
+
+    border: 1px solid var(--gold); border-radius: 50%;
+
+    pointer-events: none; z-index: 9998;
+
+    transform: translate(-50%, -50%);
+
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+
+    opacity: 0.5;
+
+  }
+
+  /* STAR FIELD */
+
+  canvas#stars {
+
+    position: fixed; inset: 0;
+
+    width: 100%; height: 100%;
+
+    z-index: 0; pointer-events: none;
+
+  }
+
+  /* HEADER */
+
+  header {
+
+    position: relative; z-index: 10;
+
+    padding: 3rem 4rem 0;
+
+    display: flex; align-items: flex-start; justify-content: space-between;
+
+  }
+
+  .logo {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: clamp(3rem, 8vw, 7rem);
+
+    line-height: 0.9;
+
+    letter-spacing: 0.02em;
+
+    background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 50%, var(--purple) 100%);
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+
+    animation: shimmer 4s ease-in-out infinite;
+
+    background-size: 200% 200%;
+
+  }
+
+  @keyframes shimmer {
+
+    0%, 100% { background-position: 0% 50%; }
+
+    50% { background-position: 100% 50%; }
+
+  }
+
+  .tagline {
+
+    font-family: 'Space Mono', monospace;
+
+    font-size: 0.65rem;
+
+    letter-spacing: 0.3em;
+
+    color: var(--cyan);
+
+    text-transform: uppercase;
+
+    margin-top: 0.5rem;
+
+    opacity: 0;
+
+    animation: fadeUp 1s ease forwards 0.8s;
+
+  }
+
+  .status-badge {
+
+    font-family: 'Space Mono', monospace;
+
+    font-size: 0.6rem;
+
+    letter-spacing: 0.2em;
+
+    color: var(--cyan);
+
+    border: 1px solid var(--cyan);
+
+    padding: 0.4rem 0.8rem;
+
+    border-radius: 2rem;
+
+    position: relative;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    animation: fadeUp 1s ease forwards 1s;
+
+  }
+
+  .status-badge::before {
+
+    content: ''; position: absolute;
+
+    left: -100%; top: 0; width: 100%; height: 100%;
+
+    background: linear-gradient(90deg, transparent, rgba(6,214,160,0.2), transparent);
+
+    animation: scan 2s linear infinite;
+
+  }
+
+  @keyframes scan { to { left: 100%; } }
+
+  /* HERO */
+
+  .hero {
+
+    position: relative; z-index: 10;
+
+    padding: 4rem 4rem 2rem;
+
+    max-width: 900px;
+
+  }
+
+  .hero p {
+
+    font-size: clamp(1rem, 2.2vw, 1.35rem);
+
+    line-height: 1.75;
+
+    color: rgba(255,255,255,0.75);
+
+    font-weight: 300;
+
+    opacity: 0;
+
+    animation: fadeUp 1s ease forwards 1.2s;
+
+  }
+
+  .hero p span.highlight {
+
+    color: var(--gold);
+
+    font-weight: 500;
+
+  }
+
+  .hero p span.cyan { color: var(--cyan); font-weight: 500; }
+
+  .hero p span.purple { color: var(--purple); font-weight: 500; }
+
+  /* MANSION GRID */
+
+  .mansion {
+
+    position: relative; z-index: 10;
+
+    padding: 2rem 4rem 4rem;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    grid-template-rows: auto auto;
+
+    gap: 1.5rem;
+
+    max-width: 1200px;
+
+  }
+
+  .room {
+
+    position: relative;
+
+    border: 1px solid var(--border);
+
+    border-radius: 1.5rem;
+
+    padding: 2.5rem;
+
+    background: var(--glass);
+
+    backdrop-filter: blur(12px);
+
+    overflow: hidden;
+
+    cursor: none;
+
+    opacity: 0;
+
+    transform: translateY(30px);
+
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+
+  }
+
+  .room.visible {
+
+    opacity: 1;
+
+    transform: translateY(0);
+
+  }
+
+  .room:hover {
+
+    transform: translateY(-4px);
+
+  }
+
+  .room-astro {
+
+    grid-column: 1;
+
+    grid-row: 1;
+
+    border-color: rgba(255,209,102,0.25);
+
+    animation: roomIn 0.8s ease forwards 1.5s;
+
+  }
+
+  .room-astro:hover {
+
+    border-color: var(--gold);
+
+    box-shadow: 0 0 60px rgba(255,209,102,0.15), inset 0 0 40px rgba(255,209,102,0.05);
+
+  }
+
+  .room-freestyle {
+
+    grid-column: 2;
+
+    grid-row: 1;
+
+    border-color: rgba(155,93,229,0.25);
+
+    animation: roomIn 0.8s ease forwards 1.7s;
+
+  }
+
+  .room-freestyle:hover {
+
+    border-color: var(--purple);
+
+    box-shadow: 0 0 60px rgba(155,93,229,0.15), inset 0 0 40px rgba(155,93,229,0.05);
+
+  }
+
+  .room-stack {
+
+    grid-column: 1;
+
+    grid-row: 2;
+
+    border-color: rgba(6,214,160,0.25);
+
+    animation: roomIn 0.8s ease forwards 1.9s;
+
+  }
+
+  .room-stack:hover {
+
+    border-color: var(--cyan);
+
+    box-shadow: 0 0 60px rgba(6,214,160,0.15), inset 0 0 40px rgba(6,214,160,0.05);
+
+  }
+
+  .room-life {
+
+    grid-column: 2;
+
+    grid-row: 2;
+
+    border-color: rgba(247,127,0,0.25);
+
+    animation: roomIn 0.8s ease forwards 2.1s;
+
+  }
+
+  .room-life:hover {
+
+    border-color: var(--orange);
+
+    box-shadow: 0 0 60px rgba(247,127,0,0.15), inset 0 0 40px rgba(247,127,0,0.05);
+
+  }
+
+  @keyframes roomIn {
+
+    from { opacity: 0; transform: translateY(30px); }
+
+    to { opacity: 1; transform: translateY(0); }
+
+  }
+
+  /* Room glow orb */
+
+  .room::before {
+
+    content: ''; position: absolute;
+
+    width: 200px; height: 200px;
+
+    border-radius: 50%;
+
+    filter: blur(80px);
+
+    opacity: 0.15;
+
+    top: -50px; right: -50px;
+
+    pointer-events: none;
+
+    transition: opacity 0.3s;
+
+  }
+
+  .room:hover::before { opacity: 0.3; }
+
+  .room-astro::before { background: var(--gold); }
+
+  .room-freestyle::before { background: var(--purple); }
+
+  .room-stack::before { background: var(--cyan); }
+
+  .room-life::before { background: var(--orange); }
+
+  .room-number {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: 5rem;
+
+    line-height: 1;
+
+    opacity: 0.07;
+
+    position: absolute;
+
+    top: 1rem; right: 1.5rem;
+
+    pointer-events: none;
+
+  }
+
+  .room-label {
+
+    font-family: 'Space Mono', monospace;
+
+    font-size: 0.6rem;
+
+    letter-spacing: 0.3em;
+
+    text-transform: uppercase;
+
+    margin-bottom: 0.75rem;
+
+    opacity: 0.6;
+
+  }
+
+  .room-title {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: 2.5rem;
+
+    line-height: 1;
+
+    margin-bottom: 1rem;
+
+  }
+
+  .room-astro .room-title { color: var(--gold); }
+
+  .room-freestyle .room-title { color: var(--purple); }
+
+  .room-stack .room-title { color: var(--cyan); }
+
+  .room-life .room-title { color: var(--orange); }
+
+  .room-body {
+
+    font-size: 0.88rem;
+
+    line-height: 1.7;
+
+    color: rgba(255,255,255,0.6);
+
+    font-weight: 300;
+
+  }
+
+  /* TAGS */
+
+  .tags {
+
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+
+    margin-top: 1.25rem;
+
+  }
+
+  .tag {
+
+    font-family: 'Space Mono', monospace;
+
+    font-size: 0.58rem;
+
+    letter-spacing: 0.1em;
+
+    padding: 0.3rem 0.7rem;
+
+    border-radius: 100px;
+
+    border: 1px solid currentColor;
+
+    opacity: 0.6;
+
+    transition: opacity 0.2s;
+
+  }
+
+  .room:hover .tag { opacity: 1; }
+
+  .room-astro .tag { color: var(--gold); }
+
+  .room-freestyle .tag { color: var(--purple); }
+
+  .room-stack .tag { color: var(--cyan); }
+
+  .room-life .tag { color: var(--orange); }
+
+  /* WEBSOCKET PULSE LINE */
+
+  .ws-line {
+
+    position: absolute;
+
+    top: 50%; left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 1px;
+
+    height: 100%;
+
+    pointer-events: none;
+
+    overflow: visible;
+
+    z-index: 5;
+
+  }
+
+  /* BUILD ORDER */
+
+  .build-order {
+
+    position: relative; z-index: 10;
+
+    padding: 0 4rem 4rem;
+
+    max-width: 1200px;
+
+  }
+
+  .section-label {
+
+    font-family: 'Space Mono', monospace;
+
+    font-size: 0.6rem;
+
+    letter-spacing: 0.4em;
+
+    text-transform: uppercase;
+
+    color: rgba(255,255,255,0.3);
+
+    margin-bottom: 2rem;
+
+  }
+
+  .steps {
+
+    display: flex; gap: 1rem;
+
+  }
+
+  .step {
+
+    flex: 1;
+
+    padding: 1.5rem;
+
+    border: 1px solid var(--border);
+
+    border-radius: 1rem;
+
+    background: var(--glass);
+
+    position: relative;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    animation: fadeUp 0.8s ease forwards;
+
+  }
+
+  .step:nth-child(1) { animation-delay: 2.3s; }
+
+  .step:nth-child(2) { animation-delay: 2.5s; }
+
+  .step:nth-child(3) { animation-delay: 2.7s; }
+
+  .step:nth-child(4) { animation-delay: 2.9s; }
+
+  .step-num {
+
+    font-family: 'Bebas Neue', sans-serif;
+
+    font-size: 3rem;
+
+    opacity: 0.1;
+
+    line-height: 1;
+
+    margin-bottom: 0.5rem;
+
+  }
+
+  .step-title {
+
+    font-family: 'Space Mono', monospace;
+
+    font-size: 0.7rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+
+    margin-bottom: 0.4rem;
+
+    color: var(--gold);
+
+  }
+
+  .step-desc {
+
+    font-size: 0.8rem;
+
+    color: rgba(255,255,255,0.45);
+
+    line-height: 1.6;
+
+  }
+
+  /* WEBSOCKET ANIMATION BANNER */
+
+  .ws-banner {
+
+    position: relative; z-index: 10;
+
+    margin: 0 4rem 4rem;
+
+    border: 1px solid var(--border);
+
+    border-radius: 1rem;
+
+    padding: 1.5rem 2rem;
+
+    background: var(--glass);
+
+    display: flex; align-items: center; gap: 1.5rem;
+
+    overflow: hidden;
+
+  }
+
+  .ws-dot {
+
+    width: 10px; height: 10px;
+
+    border-radius: 50%;
+
+    background: var(--cyan);
+
+    flex-shrink: 0;
+
+    animation: pulse 1.5s ease-in-out infinite;
+
+  }
+
+  @keyframes pulse {
+
+    0%, 100% { box-shadow: 0 0 0 0 rgba(6,214,160,0.6); }
+
+    50% { box-shadow: 0 0 0 12px rgba(6,214,160,0); }
+
+  }
+
+  .ws-text {
+
+    font-family: 'Space Mono', monospace;
+
+    font-size: 0.65rem;
+
+    letter-spacing: 0.15em;
+
+    color: var(--cyan);
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+  }
+
+  .ws-ticker {
+
+    display: inline-block;
+
+    animation: ticker 20s linear infinite;
+
+  }
+
+  @keyframes ticker {
+
+    from { transform: translateX(0); }
+
+    to { transform: translateX(-50%); }
+
+  }
+
+  /* FOOTER */
+
+  footer {
+
+    position: relative; z-index: 10;
+
+    padding: 2rem 4rem 3rem;
+
+    font-family: 'Space Mono', monospace;
+
+    font-size: 0.6rem;
+
+    letter-spacing: 0.2em;
+
+    color: rgba(255,255,255,0.2);
+
+    text-transform: uppercase;
+
+    border-top: 1px solid var(--border);
+
+    display: flex; justify-content: space-between;
+
+  }
+
+  @keyframes fadeUp {
+
+    from { opacity: 0; transform: translateY(20px); }
+
+    to { opacity: 1; transform: translateY(0); }
+
+  }
+
+  /* RESPONSIVE */
+
+  @media (max-width: 768px) {
+
+    header, .hero, .mansion, .build-order, .ws-banner, footer {
+
+      padding-left: 1.5rem; padding-right: 1.5rem;
+
+    }
+
+    .mansion { grid-template-columns: 1fr; }
+
+    .room-freestyle, .room-life { grid-column: 1; }
+
+    .room-freestyle { grid-row: 2; }
+
+    .room-stack { grid-row: 3; }
+
+    .room-life { grid-row: 4; }
+
+    .steps { flex-direction: column; }
+
+  }
+
+  /* SCANLINE OVERLAY */
+
+  body::after {
+
+    content: ''; position: fixed; inset: 0;
+
+    background: repeating-linear-gradient(
+
+      0deg, transparent, transparent 2px,
+
+      rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
+
+    );
+
+    pointer-events: none; z-index: 1000;
+
+  }
+
+  /* NOISE GRAIN */
+
+  body::before {
+
+    content: ''; position: fixed; inset: -50%;
+
+    width: 200%; height: 200%;
+
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+
+    opacity: 0.4;
+
+    pointer-events: none; z-index: 999;
+
+    animation: grain 0.5s steps(2) infinite;
+
+  }
+
+  @keyframes grain {
+
+    0% { transform: translate(0,0); }
+
+    25% { transform: translate(-1%,-2%); }
+
+    50% { transform: translate(2%,1%); }
+
+    75% { transform: translate(-1%,2%); }
+
+    100% { transform: translate(1%,-1%); }
+
+  }
+
+</style>
+
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="cursor" id="cursor"></div>
+
+<div class="cursor-ring" id="cursorRing"></div>
+
+<header>
+
+  <div>
+
+    <div class="logo">Digital<br>MANSION</div>
+
+    <div class="tagline">Astro Beats × Freestyle King — Virtual Space</div>
+
+  </div>
+
+  <div class="status-badge">⬤ &nbsp; WebSockets Live</div>
+
+</header>
+
+<section class="hero">
+
+  <p>
+
+    <span class="highlight">Unity and 3JS is the foundation.</span> A virtual mansion — 
+
+    <span class="cyan">Astro Beats</span> in one room, <span class="purple">Freestyle King</span> in the other — 
+
+    both synced live via WebSockets, asset URLs preloaded, clean and fast. 
+
+    No asset store garbage. Only original assets that port anywhere — 
+
+    <span class="highlight">VR Chat, Fortnite, Roblox — wherever we want to go.</span>
+
+  </p>
+
+</section>
+
+<div class="ws-banner">
+
+  <div class="ws-dot"></div>
+
+  <div class="ws-text">
+
+    <span class="ws-ticker">
+
+      WEBSOCKET_SYNC :: ASTRO_ROOM → CARD_PULL → BIRTH_CHART → SYNASTRY → ASSET_URL_SET → BROADCAST_ALL ···· FREESTYLE_ROOM → RAP_BOT → BURPEETHON → HYPE_SET → BROADCAST_ALL ···· WEBSOCKET_SYNC :: ASTRO_ROOM → CARD_PULL → BIRTH_CHART → SYNASTRY → ASSET_URL_SET → BROADCAST_ALL ···· FREESTYLE_ROOM → RAP_BOT → BURPEETHON → HYPE_SET → BROADCAST_ALL ····&nbsp;&nbsp;&nbsp;&nbsp;
+
+    </span>
+
+  </div>
+
+</div>
+
+<div class="mansion">
+
+  <div class="room room-astro">
+
+    <div class="room-number">01</div>
+
+    <div class="room-label">Room One</div>
+
+    <div class="room-title">Astro Beats</div>
+
+    <div class="room-body">
+
+      The creative nucleus. Birth charts, synastry, cards pulled in real time — 
+
+      everyone in the room seeing the same sky. Daytime is sacred here. 
+
+      This is the work. This is the stream. This is the reason.
+
+    </div>
+
+    <div class="tags">
+
+      <span class="tag">Birth Chart</span>
+
+      <span class="tag">Synastry</span>
+
+      <span class="tag">TikTok Live</span>
+
+      <span class="tag">3JS</span>
+
+      <span class="tag">Crystal Cards</span>
+
+    </div>
+
+  </div>
+
+  <div class="room room-freestyle">
+
+    <div class="room-number">02</div>
+
+    <div class="room-label">Room Two</div>
+
+    <div class="room-title">Freestyle King</div>
+
+    <div class="room-body">
+
+      The party built into the work. The break that's actually a performance. 
+
+      Rap Bot in the background, Ionic UI up front — 
+
+      train daily, then let the crowd in. This is the hype. 
+
+      This is the release valve. This is the break that doesn't break your rhythm.
+
+    </div>
+
+    <div class="tags">
+
+      <span class="tag">Rap Bot</span>
+
+      <span class="tag">Ionic UI</span>
+
+      <span class="tag">Burpeethon</span>
+
+      <span class="tag">Tone.js</span>
+
+      <span class="tag">Party Mode</span>
+
+    </div>
+
+  </div>
+
+  <div class="room room-stack">
+
+    <div class="room-number">03</div>
+
+    <div class="room-label">The Stack</div>
+
+    <div class="room-title">Build Order</div>
+
+    <div class="room-body">
+
+      Blender + Unity animations first. Then Astro Beats live on TikTok. 
+
+      Then Burpeethon goes wide. Freestyle King waits in the wings — 
+
+      already designed, already has its room — goes live when it's time. 
+
+      No asset store. No shortcuts. Pure, portable, yours.
+
+    </div>
+
+    <div class="tags">
+
+      <span class="tag">Unity</span>
+
+      <span class="tag">Blender</span>
+
+      <span class="tag">3JS Shaders</span>
+
+      <span class="tag">WebSockets</span>
+
+      <span class="tag">Proximity Chat</span>
+
+    </div>
+
+  </div>
+
+  <div class="room room-life">
+
+    <div class="room-number">04</div>
+
+    <div class="room-label">The Life</div>
+
+    <div class="room-title">The Machine</div>
+
+    <div class="room-body">
+
+      Daytime: Astro Beats — create, stream, build. 
+
+      Night: WeWork session, burpees, shower, sleep, repeat. 
+
+      WeWork + Planet Fitness + College Campus + Happy Hours. 
+
+      That's the whole real-world infrastructure. Everything else lives in the mansion.
+
+    </div>
+
+    <div class="tags">
+
+      <span class="tag">WeWork</span>
+
+      <span class="tag">Planet Fitness</span>
+
+      <span class="tag">Happy Hours</span>
+
+      <span class="tag">Self-Contained</span>
+
+      <span class="tag">No Excuses</span>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="build-order">
+
+  <div class="section-label">// Build Sequence</div>
+
+  <div class="steps">
+
+    <div class="step">
+
+      <div class="step-num">01</div>
+
+      <div class="step-title">Blender + Unity</div>
+
+      <div class="step-desc">Animations. Assets. Pure originals. Cross-platform from day one.</div>
+
+    </div>
+
+    <div class="step">
+
+      <div class="step-num">02</div>
+
+      <div class="step-title">Astro Beats Live</div>
+
+      <div class="step-desc">TikTok. The stream. Birth charts in real time. Daytime is sacred.</div>
+
+    </div>
+
+    <div class="step">
+
+      <div class="step-num">03</div>
+
+      <div class="step-title">Burpeethon</div>
+
+      <div class="step-desc">Cardio as content. Fitness as performance. Night mode activated.</div>
+
+    </div>
+
+    <div class="step">
+
+      <div class="step-num">04</div>
+
+      <div class="step-title">Freestyle King</div>
+
+      <div class="step-desc">The party goes live. Rap Bot ready. The mansion opens its second room.</div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+
+  <span>The Mansion — Built in 3JS × Unity</span>
+
+  <span>WebSocket Synced — All Rooms Live</span>
+
+  <span>Self-Contained Ecosystem — 2025</span>
+
+</footer>
+
+<script>
+
+  // CURSOR
+
+  const cursor = document.getElementById('cursor');
+
+  const ring = document.getElementById('cursorRing');
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+
+    mx = e.clientX; my = e.clientY;
+
+    cursor.style.left = mx + 'px';
+
+    cursor.style.top = my + 'px';
+
+  });
+
+  function animateRing() {
+
+    rx += (mx - rx) * 0.12;
+
+    ry += (my - ry) * 0.12;
+
+    ring.style.left = rx + 'px';
+
+    ring.style.top = ry + 'px';
+
+    requestAnimationFrame(animateRing);
+
+  }
+
+  animateRing();
+
+  document.querySelectorAll('.room').forEach(r => {
+
+    r.addEventListener('mouseenter', () => {
+
+      cursor.style.width = '20px';
+
+      cursor.style.height = '20px';
+
+    });
+
+    r.addEventListener('mouseleave', () => {
+
+      cursor.style.width = '12px';
+
+      cursor.style.height = '12px';
+
+    });
+
+  });
+
+  // STAR FIELD
+
+  const canvas = document.getElementById('stars');
+
+  const ctx = canvas.getContext('2d');
+
+  let stars = [];
+
+  let W, H;
+
+  function resize() {
+
+    W = canvas.width = window.innerWidth;
+
+    H = canvas.height = window.innerHeight;
+
+  }
+
+  resize();
+
+  window.addEventListener('resize', resize);
+
+  function initStars() {
+
+    stars = [];
+
+    for (let i = 0; i < 200; i++) {
+
+      stars.push({
+
+        x: Math.random() * W,
+
+        y: Math.random() * H,
+
+        r: Math.random() * 1.5,
+
+        speed: Math.random() * 0.15 + 0.02,
+
+        opacity: Math.random(),
+
+        twinkle: Math.random() * Math.PI * 2
+
+      });
+
+    }
+
+  }
+
+  initStars();
+
+  // A few colored accent stars
+
+  const colors = ['#FFD166','#06D6A0','#9B5DE5','#F77F00'];
+
+  function drawStars(t) {
+
+    ctx.clearRect(0, 0, W, H);
+
+    stars.forEach((s, i) => {
+
+      s.twinkle += 0.01;
+
+      const op = (Math.sin(s.twinkle) * 0.4 + 0.6) * s.opacity;
+
+      ctx.beginPath();
+
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+
+      ctx.fillStyle = i < 20 ? colors[i % 4] : `rgba(255,255,255,${op})`;
+
+      ctx.globalAlpha = op;
+
+      ctx.fill();
+
+      ctx.globalAlpha = 1;
+
+      s.y -= s.speed;
+
+      if (s.y < 0) { s.y = H; s.x = Math.random() * W; }
+
+    });
+
+    requestAnimationFrame(drawStars);
+
+  }
+
+  drawStars();
+
+  // PARALLAX on mouse
+
+  document.addEventListener('mousemove', e => {
+
+    const xRatio = (e.clientX / window.innerWidth - 0.5) * 20;
+
+    const yRatio = (e.clientY / window.innerHeight - 0.5) * 10;
+
+    document.querySelector('.logo').style.transform = `translate(${xRatio * 0.3}px, ${yRatio * 0.3}px)`;
+
+  });
+
+</script>
+
+</body>
+
+</html>
+
