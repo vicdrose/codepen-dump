@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital MANSION</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #FFD700;
+    --orange: #FF6B00;
+    --deep: #0A0A0F;
+    --mid: #12121A;
+    --panel: #16161F;
+    --teal: #00FFD4;
+    --purple: #9B00FF;
+    --text: #E8E8F0;
+    --dim: #666680;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* STAR FIELD */
+  #stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--dur) ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.1; transform: scale(1); }
+    to { opacity: 1; transform: scale(1.4); }
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 800px; height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,165,0,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+    50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+  }
+
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+
+  .hero-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(48px, 10vw, 120px);
+    line-height: 0.9;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 40%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.5s;
+    text-shadow: none;
+    filter: drop-shadow(0 0 40px rgba(255,165,0,0.3));
+  }
+
+  .hero-sub {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(18px, 4vw, 36px);
+    letter-spacing: 8px;
+    color: var(--dim);
+    margin-bottom: 50px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.7s;
+  }
+
+  .hero-quote {
+    max-width: 600px;
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--text);
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1s;
+    border-left: 2px solid var(--gold);
+    padding-left: 20px;
+    text-align: left;
+    margin-bottom: 60px;
+    font-style: italic;
+  }
+
+  .scroll-cue {
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1.4s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--dim);
+    font-size: 10px;
+    letter-spacing: 4px;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollDrop 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollDrop {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTIONS */
+  .section {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--teal), transparent);
+  }
+
+  /* MANSION ROOMS */
+  .rooms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 80px;
+  }
+
+  @media (max-width: 600px) {
+    .rooms-grid { grid-template-columns: 1fr; }
+  }
+
+  .room {
+    background: var(--panel);
+    padding: 48px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .room:hover {
+    transform: scale(1.02);
+    z-index: 2;
+  }
+
+  .room::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .room.astro::before {
+    background: linear-gradient(to right, var(--gold), var(--orange));
+  }
+
+  .room.freestyle::before {
+    background: linear-gradient(to right, var(--purple), var(--teal));
+  }
+
+  .room-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .room.freestyle .room-icon {
+    animation-delay: -1.5s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .room h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+  }
+
+  .room.astro h2 { color: var(--gold); }
+  .room.freestyle h2 { color: var(--teal); }
+
+  .room p {
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--dim);
+  }
+
+  .room-tag {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 4px 12px;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 1px solid;
+  }
+
+  .room.astro .room-tag { border-color: var(--gold); color: var(--gold); }
+  .room.freestyle .room-tag { border-color: var(--teal); color: var(--teal); }
+
+  /* WEBSOCKET BRIDGE */
+  .ws-bridge {
+    background: var(--mid);
+    border: 1px solid rgba(255,215,0,0.15);
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    margin-bottom: 80px;
+  }
+
+  .ws-bridge h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .ws-bridge p {
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.8;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .ping-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+    margin: 0 4px;
+    animation: ping 1.5s ease-in-out infinite;
+  }
+
+  .ping-dot:nth-child(2) { animation-delay: 0.3s; background: var(--gold); }
+  .ping-dot:nth-child(3) { animation-delay: 0.6s; background: var(--purple); }
+
+  @keyframes ping {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.5); opacity: 1; }
+  }
+
+  /* BUILD ORDER */
+  .build-order {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 80px;
+  }
+
+  .build-step {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 28px 32px;
+    background: var(--panel);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+  }
+
+  .build-step:hover {
+    background: #1E1E2A;
+  }
+
+  .build-step::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--step-color, var(--gold));
+  }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--step-color, var(--gold));
+    opacity: 0.4;
+    min-width: 60px;
+  }
+
+  .step-content h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .step-content p {
+    font-size: 11px;
+    color: var(--dim);
+    line-height: 1.7;
+  }
+
+  /* DAILY RHYTHM */
+  .rhythm {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2px;
+    margin-bottom: 80px;
+  }
+
+  .rhythm-block {
+    background: var(--panel);
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .rhythm-time {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: var(--dim);
+    margin-bottom: 12px;
+  }
+
+  .rhythm-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+
+  .rhythm-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: var(--gold);
+  }
+
+  /* CLOSING */
+  .closing {
+    text-align: center;
+    padding: 100px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .closing h2 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(32px, 6vw, 72px);
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 24px;
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from { filter: drop-shadow(0 0 20px rgba(255,165,0,0.2)); }
+    to { filter: drop-shadow(0 0 60px rgba(255,165,0,0.6)); }
+  }
+
+  .closing p {
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    font-style: italic;
+  }
+
+  .build-btn {
+    display: inline-block;
+    margin-top: 48px;
+    padding: 18px 48px;
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+    color: var(--deep);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 0 rgba(255,165,0,0);
+  }
+
+  .build-btn:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 20px 60px rgba(255,165,0,0.4);
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 0 auto;
+    opacity: 0.3;
+  }
+
+  /* PLATFORMS */
+  .platforms {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 40px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .platform-tag {
+    padding: 8px 20px;
+    border: 1px solid rgba(255,215,0,0.2);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--dim);
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+
+  .platform-tag:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(255,215,0,0.05);
+  }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="eyebrow">The Blueprint &nbsp;·&nbsp; Est. Now</p>
+  <h1 class="hero-title">Digital Mansion</h1>
+  <p class="hero-sub">Astro Beats &nbsp;·&nbsp; Freestyle King</p>
+  <blockquote class="hero-quote">
+    You were built to go big and you know it. This isn't a side project — this is a stage. 
+    And the blueprint already exists. The only thing left is to build it.
+  </blockquote>
+  <div class="scroll-cue">
+    <div class="scroll-line"></div>
+    <span>Enter</span>
+  </div>
+</section>
+
+<!-- ROOMS -->
+<section class="section">
+  <p class="section-label">The Virtual Mansion</p>
+  <div class="rooms-grid">
+    <div class="room astro">
+      <span class="room-icon">✦</span>
+      <h2>Astro Beats</h2>
+      <p>The broadcast room. Where the vision lives, breathes, and gets shared with the world. Birth charts, synastry, crystal cards, and the stream — all of it synchronized in real time.</p>
+      <span class="room-tag">Live on TikTok</span>
+    </div>
+    <div class="room freestyle">
+      <span class="room-icon">⚡</span>
+      <h2>Freestyle King</h2>
+      <p>The party room. The break built directly into the work. A stage within a stage — the rap bot, the hype, the rhythm game, the soap opera. Patient. Ready. Waiting for its moment.</p>
+      <span class="room-tag">Coming Live</span>
+    </div>
+  </div>
+
+  <!-- WEBSOCKET BRIDGE -->
+  <div class="ws-bridge">
+    <h3>WebSocket Sync</h3>
+    <p>Both rooms share one nervous system. Every participant sees the same state — assets preloaded, URLs synced, zero lag. One signal. Everyone moves together.</p>
+    <br>
+    <span class="ping-dot"></span>
+    <span class="ping-dot"></span>
+    <span class="ping-dot"></span>
+  </div>
+
+  <!-- PLATFORMS -->
+  <div style="text-align:center; margin-bottom: 80px;">
+    <p class="section-label">Deploy Anywhere</p>
+    <div class="platforms" style="padding: 0;">
+      <span class="platform-tag">VR Chat</span>
+      <span class="platform-tag">Fortnite</span>
+      <span class="platform-tag">Roblox</span>
+      <span class="platform-tag">3JS Web</span>
+      <span class="platform-tag">Unity</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- BUILD ORDER -->
+<section class="section">
+  <p class="section-label">Build Sequence</p>
+  <div class="build-order">
+    <div class="build-step" style="--step-color: #FFD700;">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <h3>Unity & Blender Animations</h3>
+        <p>Original assets only. No asset store. Pure, portable, platform-agnostic. This is the foundation of the mansion.</p>
+      </div>
+    </div>
+    <div class="build-step" style="--step-color: #00FFD4;">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <h3>Astro Beats Goes Live</h3>
+        <p>TikTok. Daytime hours. The creative work gets an audience. Because what you're building deserves to be seen.</p>
+      </div>
+    </div>
+    <div class="build-step" style="--step-color: #FF6B00;">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <h3>Burpeethon Launches</h3>
+        <p>Fitness meets broadcast. The body of work and the body, together.</p>
+      </div>
+    </div>
+    <div class="build-step" style="--step-color: #9B00FF;">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <h3>Freestyle King Goes Live</h3>
+        <p>When it's time. Not a moment before. The party room opens its doors.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DAILY RHYTHM -->
+<section class="section">
+  <p class="section-label">Daily Rhythm</p>
+  <div class="rhythm">
+    <div class="rhythm-block">
+      <span class="rhythm-time">Daytime</span>
+      <span class="rhythm-icon">✦</span>
+      <div class="rhythm-label">Astro Beats</div>
+    </div>
+    <div class="rhythm-block">
+      <span class="rhythm-time">Evening</span>
+      <span class="rhythm-icon">🏢</span>
+      <div class="rhythm-label">WeWork Session</div>
+    </div>
+    <div class="rhythm-block">
+      <span class="rhythm-time">Night</span>
+      <span class="rhythm-icon">⚡</span>
+      <div class="rhythm-label">Burpees & Shower</div>
+    </div>
+    <div class="rhythm-block">
+      <span class="rhythm-time">Recovery</span>
+      <span class="rhythm-icon">🌊</span>
+      <div class="rhythm-label">Morning Swim</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CLOSING -->
+<div class="closing">
+  <h2>So Build It.</h2>
+  <p>The blueprint exists. The mansion is designed. The only variable left is momentum.</p>
+  <button class="build-btn" onclick="handleBuild()">INITIATE BUILD</button>
+</div>
+
+<script>
+  // STARS
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 180; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    star.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      top: ${Math.random() * 100}%;
+      left: ${Math.random() * 100}%;
+      --dur: ${Math.random() * 3 + 2}s;
+      animation-delay: ${Math.random() * 4}s;
+    `;
+    container.appendChild(star);
+  }
+
+  // SCROLL REVEAL
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.build-step, .room, .rhythm-block, .ws-bridge').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+
+  // BUILD BUTTON
+  function handleBuild() {
+    const btn = document.querySelector('.build-btn');
+    btn.textContent = 'BUILDING...';
+    btn.style.background = 'linear-gradient(135deg, #00FFD4, #9B00FF)';
+
+    let dots = 0;
+    const interval = setInterval(() => {
+      dots = (dots + 1) % 4;
+      btn.textContent = 'BUILDING' + '.'.repeat(dots);
+    }, 400);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      btn.textContent = '✦ THE MANSION IS LIVE ✦';
+      btn.style.background = 'linear-gradient(135deg, #FFD700, #FF6B00)';
+      btn.style.transform = 'scale(1.05)';
+      // shoot stars
+      for (let i = 0; i < 40; i++) {
+        setTimeout(() => spawnStar(), i * 50);
+      }
+    }, 3000);
+  }
+
+  function spawnStar() {
+    const s = document.createElement('div');
+    s.style.cssText = `
+      position: fixed;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: ${['#FFD700','#00FFD4','#FF6B00','#9B00FF'][Math.floor(Math.random()*4)]};
+      top: ${Math.random() * 100}vh;
+      left: ${Math.random() * 100}vw;
+      pointer-events: none;
+      z-index: 9999;
+      animation: spawnFade 1.2s ease forwards;
+    `;
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 1200);
+  }
+
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes spawnFade {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(3); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+</body>
+</html>
