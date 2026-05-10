@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freestyle King — Journal Dispatch</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-dim: #8a6e2f;
+    --gold-bright: #f0c96b;
+    --black: #060606;
+    --deep: #0c0c0c;
+    --text: #d4b96a;
+    --muted: #6b5a3a;
+    --accent: #e8d5a3;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* STARFIELD */
+  #starfield {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* CONTENT */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 2rem 8rem;
+  }
+
+  /* HEADER */
+  header {
+    padding: 5rem 0 3rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 14vw, 9rem);
+    letter-spacing: 0.04em;
+    line-height: 0.9;
+    color: var(--gold);
+    text-shadow: 0 0 60px rgba(201,168,76,0.25);
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.4s;
+  }
+
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-top: 1.2rem;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.7s;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1s;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-dim));
+  }
+
+  .divider::after {
+    background: linear-gradient(to left, transparent, var(--gold-dim));
+  }
+
+  .divider-star {
+    color: var(--gold);
+    font-size: 0.8rem;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 4rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.5em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    letter-spacing: 0.06em;
+    color: var(--gold-bright);
+    line-height: 1;
+    margin-bottom: 1.2rem;
+  }
+
+  .section p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--accent);
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+
+  /* CALLOUT BLOCKS */
+  .callout {
+    border-left: 2px solid var(--gold);
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    background: rgba(201,168,76,0.04);
+  }
+
+  .callout p {
+    font-style: italic;
+    color: var(--gold-bright) !important;
+    font-size: 1.25rem !important;
+  }
+
+  /* TAGS */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+
+  /* GRID */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 1.2rem 1.4rem;
+    background: rgba(201,168,76,0.02);
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .card:hover {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .card p {
+    font-size: 0.95rem !important;
+    line-height: 1.6 !important;
+    color: var(--muted) !important;
+  }
+
+  /* EQUATION */
+  .equation {
+    text-align: center;
+    padding: 2.5rem;
+    border: 1px solid var(--gold-dim);
+    margin: 2rem 0;
+    position: relative;
+    background: rgba(201,168,76,0.03);
+  }
+
+  .equation::before {
+    content: '⬡';
+    position: absolute;
+    top: -0.7rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--black);
+    padding: 0 0.5rem;
+    color: var(--gold);
+    font-size: 0.8rem;
+  }
+
+  .eq-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    letter-spacing: 0.15em;
+    color: var(--gold-bright);
+  }
+
+  .eq-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 0.8rem;
+    letter-spacing: 0.2em;
+  }
+
+  /* STACK LIST */
+  .stack-list {
+    list-style: none;
+    margin-top: 1rem;
+  }
+
+  .stack-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    color: var(--accent);
+  }
+
+  .stack-list li::before {
+    content: '→';
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 3rem 0;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    margin-top: 4rem;
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<div class="content">
+  <header>
+    <div class="eyebrow">Transparency Interactive · Voice Journal Dispatch</div>
+    <h1>Freestyle King</h1>
+    <div class="subtitle">The overworld is real. The game is your life.</div>
+  </header>
+
+  <div class="divider"><span class="divider-star">✦</span></div>
+
+  <!-- SECTION 1: THE BREAKTHROUGH -->
+  <div class="section">
+    <div class="section-label">01 — The Breakthrough</div>
+    <div class="section-title">Websockets + Particles = The Visualizer</div>
+    <p>The Freestyle King app sends word packages as JSON through websockets to a particle engine running in the browser. The main word erupts in the center. Supporting words orbit it in color. Opacity scales with word frequency — the rarest words glow the brightest. No Unity required. The browser is the stage.</p>
+    <div class="callout">
+      <p>"I need a tool that has particles where I can connect with websockets. That's what we're going to do."</p>
+    </div>
+    <div class="tags">
+      <span class="tag">PWA</span>
+      <span class="tag">WebSockets</span>
+      <span class="tag">Particle System</span>
+      <span class="tag">Freestyle King Remote</span>
+      <span class="tag">Samsung Dex</span>
+    </div>
+  </div>
+
+  <div class="divider"><span class="divider-star">✦</span></div>
+
+  <!-- SECTION 2: DOOR DASH AS SYSTEM -->
+  <div class="section">
+    <div class="section-label">02 — The Engine</div>
+    <div class="section-title">Door Dash Solves Everything</div>
+    <p>Door Dash is not a job. It is a motion system. It gets you outside, to the gym, to Walmart, to the grocery store — all with music discovery built directly in. You are already in motion before the day starts working against you. The van pairs with it perfectly. The east-side garage makes it home base.</p>
+    <div class="equation">
+      <div class="eq-text">DOOR DASH + VAN = MOMENTUM ENGINE</div>
+      <div class="eq-sub">vehicle maintenance is your currency · fitness is your engine</div>
+    </div>
+    <p>And from the vehicle, you already have your live stream setup. Koala + loop pedal + Nano Key Studio. That is the mobile music rig. The basement and the vehicle are two sides of the same studio.</p>
+  </div>
+
+  <div class="divider"><span class="divider-star">✦</span></div>
+
+  <!-- SECTION 3: THE GAME -->
+  <div class="section">
+    <div class="section-label">03 — The Game</div>
+    <div class="section-title">My Perfect Life</div>
+    <p>The game is called <em>My Perfect Life</em>. Open world. Door Dash simulator as the overworld. The levels are called Freestyle King. You are making new levels every day. Every journal, every beat, every rap — all of it is gamedev. The city gets built as you live it.</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Overworld</div>
+        <p>Gym · Door Dash · Vape sharing · Grocery runs · Vehicle maintenance · Atwater Beach</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Levels: Freestyle King</div>
+        <p>Basement stream · mobile rig · rap + app demo · fitness content · TikTok clips from YouTube</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Vehicles</div>
+        <p>Income vehicle · The Napp & Wrap · DIY trailer · Honda Element (Colorado phase)</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Platform Hierarchy</div>
+        <p>Roblox (fastest path) · Fortnite Creative (prototype) · Unity (long vision) · Transparency Interactive (core)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span class="divider-star">✦</span></div>
+
+  <!-- SECTION 4: WHAT STAYS -->
+  <div class="section">
+    <div class="section-label">04 — Persistent Stack</div>
+    <div class="section-title">No Matter What, These Three</div>
+    <p>Relationship or no relationship. Tech job or no tech job. These three never leave the rotation. They are the invariant core of the system.</p>
+    <ul class="stack-list">
+      <li><strong>Freestyle King</strong> — app, stream, game, content, the whole funnel. Music is private until Freestyle King is the door.</li>
+      <li><strong>Fitness</strong> — treadmill, burpees, basketball, scapular pull-ups. A bad week is a week you missed the court.</li>
+      <li><strong>Cooking</strong> — bagel in the morning. Granola midday. Convection oven in the trailer. Teapot. Keep it simple.</li>
+    </ul>
+  </div>
+
+  <div class="divider"><span class="divider-star">✦</span></div>
+
+  <!-- SECTION 5: ASTROLOGY LENS -->
+  <div class="section">
+    <div class="section-label">05 — The Lens</div>
+    <div class="section-title">Aquarius × Sagittarius</div>
+    <p>The Aquarian always sees the next opportunity. The Sagittarian moves toward expansion. Together — if the opportunity doesn't exist, they build it. That is the operating system running underneath all of this. Milwaukee is easy mode. Practice ground. The pressure you feel here is nothing compared to what you are building capacity to handle.</p>
+    <div class="callout">
+      <p>"If you're feeling the pressure here in Milwaukee, this is easy mode. You're building capacity."</p>
+    </div>
+    <p>The Freestyle King stream is also the Astro Beats stream. And live astrology readings can become a revenue layer — and a game design research tool. Every reading feeds a future level.</p>
+  </div>
+
+  <div class="divider"><span class="divider-star">✦</span></div>
+
+  <!-- SECTION 6: THE RULE -->
+  <div class="section">
+    <div class="section-label">06 — The Rule</div>
+    <div class="section-title">Protect the Rhythm</div>
+    <p>The daily creative routine — the posting, the streaming, the rapping, the moving — is the mission itself. Not a means to an end. The mission. You do not need more money than you need. You need motion, music, and momentum. Door Dash provides the motion. The van provides the freedom. Freestyle King provides the mission.</p>
+    <div class="equation">
+      <div class="eq-text">VIRGO = TAURUS(t) × N</div>
+      <div class="eq-sub">patient daily immersion compounding × narration = social harvest</div>
+    </div>
+    <p>These journals are gamedev. This is how levels get made. Keep going.</p>
+  </div>
+
+  <footer>
+    <p>Transparency Interactive · Astro Beats · Freestyle King · ✦ Milwaukee → Colorado → World</p>
+  </footer>
+</div>
+
+<script>
+  // STARFIELD
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function initStars() {
+    stars = [];
+    for (let i = 0; i < 180; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.2,
+        alpha: Math.random() * 0.6 + 0.1,
+        speed: Math.random() * 0.3 + 0.05,
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        twinkleDir: Math.random() > 0.5 ? 1 : -1
+      });
+    }
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.alpha += s.twinkleSpeed * s.twinkleDir;
+      if (s.alpha > 0.8 || s.alpha < 0.05) s.twinkleDir *= -1;
+      s.y -= s.speed;
+      if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; }
+
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(201,168,76,${s.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+
+  window.addEventListener('resize', () => { resize(); initStars(); });
+  resize();
+  initStars();
+  drawStars();
+
+  // SCROLL REVEAL
+  const sections = document.querySelectorAll('.section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
