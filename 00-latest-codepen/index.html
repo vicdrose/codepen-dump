@@ -1,0 +1,222 @@
+<body cz-shortcut-listen="true">
+  <div id="overlay">
+  <div>Press T to trigger word cloud</div>
+</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.180.0/three.tsl.js"></script>
+    <script id="rendered-js">
+// SCENE
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+
+camera.position.z = 40;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true
+});
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// ------------------------------------
+// WORD ARRAYS
+// ------------------------------------
+
+const arrays = [
+
+[
+"cosmic","dream","signal","future","echo",
+"neon","pulse","vision","mirror","void",
+"rhythm","light","gravity","motion","glass",
+"orbit","angel","electric","night","energy",
+"portal","memory","velocity","frequency","soul",
+"shadow","glitch","machine","moon","gold",
+"starlight","dust","wave","silence","nova",
+"forest","code","flame","magnet","spirit",
+"crystal","shape","storm","digital","infinite",
+"ghost","time","breath","horizon","desire"
+],
+
+[
+"venus","mars","pluto","aries","taurus",
+"gemini","cancer","leo","virgo","libra",
+"scorpio","sagittarius","capricorn","aquarius","pisces",
+"tarot","sun","moon","mercury","jupiter",
+"saturn","uranus","neptune","destiny","karma",
+"oracle","dreamscape","ritual","alignment","energy",
+"frequency","symbol","vision","transit","synchronicity",
+"constellation","mystic","eclipse","awakening","spirit",
+"intuition","alchemy","manifest","cosmos","vibration",
+"divine","astral","fate","portal","celestial"
+],
+
+[
+"freestyle","808","snare","reverb","delay",
+"hook","verse","chorus","bass","kick",
+"sample","loop","mic","studio","tempo",
+"melody","harmony","cadence","flow","bars",
+"rhythm","cypher","vocal","ambient","distortion",
+"glitch","shoegaze","emo","punk","hiphop",
+"drumnbass","synth","echo","performance","crowd",
+"energy","improv","guitar","beat","stream",
+"visual","obs","unity","threejs","shader",
+"camera","lights","motion","stage","performance"
+]
+
+];
+
+// ------------------------------------
+// WORD OBJECT STORAGE
+// ------------------------------------
+
+let activeWords = [];
+let currentArray = 0;
+
+// ------------------------------------
+// CREATE TEXT SPRITE
+// ------------------------------------
+
+function createTextSprite(text) {
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = 512;
+  canvas.height = 128;
+
+  ctx.fillStyle = "white";
+  ctx.font = "48px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(text, 256, 64);
+
+  const texture = new THREE.CanvasTexture(canvas);
+
+  const material = new THREE.SpriteMaterial({
+    map: texture,
+    transparent: true,
+    opacity: 0
+  });
+
+  const sprite = new THREE.Sprite(material);
+
+  sprite.position.set(
+    (Math.random() - 0.5) * 60,
+    (Math.random() - 0.5) * 40,
+    (Math.random() - 0.5) * 30
+  );
+
+  sprite.scale.set(8, 2, 1);
+
+  scene.add(sprite);
+
+  return sprite;
+}
+
+// ------------------------------------
+// SPAWN WORDS
+// ------------------------------------
+
+function spawnWords(wordArray) {
+
+  // remove old words
+  activeWords.forEach(word => {
+    scene.remove(word);
+  });
+
+  activeWords = [];
+
+  wordArray.forEach(word => {
+
+    const sprite = createTextSprite(word);
+
+    activeWords.push({
+      mesh: sprite,
+      opacity: 0,
+      targetOpacity: 1
+    });
+
+  });
+
+}
+
+// ------------------------------------
+// KEY PRESS
+// ------------------------------------
+
+window.addEventListener("keydown", (e) => {
+
+  if (e.key.toLowerCase() === "t") {
+
+    spawnWords(arrays[currentArray]);
+
+    currentArray++;
+
+    if (currentArray >= arrays.length) {
+      currentArray = 0;
+    }
+  }
+
+});
+
+// ------------------------------------
+// ANIMATE
+// ------------------------------------
+
+const fadeDuration = 0.25;
+
+const clock = new THREE.Clock();
+
+function animate() {
+
+  requestAnimationFrame(animate);
+
+  const delta = clock.getDelta();
+
+  activeWords.forEach(obj => {
+
+    if (obj.opacity < obj.targetOpacity) {
+
+      obj.opacity += delta / fadeDuration;
+
+      if (obj.opacity > 1) {
+        obj.opacity = 1;
+      }
+
+      obj.mesh.material.opacity = obj.opacity;
+    }
+
+  });
+
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// ------------------------------------
+// RESIZE
+// ------------------------------------
+
+window.addEventListener("resize", () => {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+  );
+
+});
+  </script>
+
+  
+
+
+
+</body>
