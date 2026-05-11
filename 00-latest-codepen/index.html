@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Three.js Word Cloud</title>
 
   <style>
@@ -27,6 +27,16 @@
       letter-spacing: 1px;
     }
   </style>
+
+  <!-- IMPORT MAP -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.161/build/three.module.js"
+    }
+  }
+  </script>
+
 </head>
 
 <body>
@@ -37,7 +47,7 @@
 
 <script type="module">
 
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.161/build/three.module.js';
+import * as THREE from 'three';
 
 // ------------------------------------
 // SCENE
@@ -166,7 +176,6 @@ function createTextSprite(text) {
 
 function spawnWords(wordArray) {
 
-  // remove previous words
   activeWords.forEach(obj => {
     scene.remove(obj.mesh);
   });
