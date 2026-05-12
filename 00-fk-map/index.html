@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FREESTYLE KING — Life System</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dim: #7a6230;
+    --black: #050505;
+    --dark: #0d0d0d;
+    --panel: #111008;
+    --text: #d4c07a;
+    --muted: #5a4f2a;
+    --white: #f5f0e0;
+    --glow: 0 0 20px rgba(201,168,76,0.4);
+    --glow-strong: 0 0 40px rgba(201,168,76,0.7);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    overflow: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  #cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+    mix-blend-mode: screen;
+  }
+  #cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid var(--gold-dim); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.3s, height 0.3s;
+  }
+
+  /* STAR CANVAS */
+  #stars { position: fixed; inset: 0; z-index: 0; }
+
+  /* SCREENS */
+  .screen {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+  .screen.active { opacity: 1; pointer-events: all; }
+
+  /* =================== INTRO SCREEN =================== */
+  #intro {
+    background: radial-gradient(ellipse at center, #1a1200 0%, #050505 70%);
+  }
+  #intro .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 10vw, 120px);
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-shadow: var(--glow-strong);
+    line-height: 0.9;
+    text-align: center;
+    animation: pulseGold 3s ease-in-out infinite;
+  }
+  @keyframes pulseGold {
+    0%,100% { text-shadow: 0 0 30px rgba(201,168,76,0.5); }
+    50% { text-shadow: 0 0 60px rgba(201,168,76,0.9), 0 0 100px rgba(201,168,76,0.3); }
+  }
+  #intro .tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(14px, 2vw, 20px);
+    color: var(--gold-dim);
+    letter-spacing: 0.3em;
+    margin-top: 16px;
+  }
+  #intro .start-btn {
+    margin-top: 56px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    color: var(--black);
+    background: var(--gold);
+    border: none;
+    padding: 14px 48px;
+    cursor: none;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  #intro .start-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--gold-light);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+  }
+  #intro .start-btn:hover::before { transform: translateX(0); }
+  #intro .start-btn span { position: relative; z-index: 1; color: var(--black); }
+  #intro .version {
+    position: absolute; bottom: 24px; right: 28px;
+    font-size: 10px; color: var(--muted); letter-spacing: 0.3em;
+  }
+
+  /* =================== HUB SCREEN =================== */
+  #hub {
+    background: var(--black);
+    flex-direction: column;
+    gap: 0;
+    padding: 24px;
+  }
+  #hub .hub-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(14px, 2vw, 18px);
+    letter-spacing: 0.5em;
+    color: var(--gold-dim);
+    margin-bottom: 40px;
+  }
+  .node-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+    max-width: 860px;
+  }
+  .node {
+    background: var(--panel);
+    border: 1px solid var(--muted);
+    padding: 24px 20px;
+    cursor: none;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+  .node::after {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .node:hover { border-color: var(--gold); transform: translateY(-3px); }
+  .node:hover::after { transform: scaleX(1); }
+  .node .node-icon {
+    font-size: 28px; margin-bottom: 12px;
+    display: block;
+  }
+  .node .node-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 0.1em;
+    color: var(--gold); display: block;
+    margin-bottom: 6px;
+  }
+  .node .node-sub {
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--muted); line-height: 1.6;
+  }
+  .node .node-xp {
+    position: absolute; top: 12px; right: 14px;
+    font-size: 10px; color: var(--gold-dim);
+    letter-spacing: 0.2em;
+  }
+  #hub .back-btn {
+    margin-top: 40px;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: var(--muted); background: none; border: none;
+    cursor: none; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  #hub .back-btn:hover { color: var(--gold); }
+
+  /* =================== NODE DETAIL SCREEN =================== */
+  #detail {
+    background: var(--black);
+    padding: 48px 32px;
+    overflow-y: auto;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  #detail .detail-inner {
+    max-width: 720px; width: 100%; margin: auto;
+  }
+  #detail .detail-category {
+    font-size: 10px; letter-spacing: 0.5em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  #detail .detail-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 7vw, 80px);
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    line-height: 0.9;
+    text-shadow: var(--glow);
+    margin-bottom: 32px;
+  }
+  #detail .detail-divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin-bottom: 32px;
+  }
+  .detail-blocks { display: flex; flex-direction: column; gap: 20px; }
+  .detail-block {
+    background: var(--panel);
+    border-left: 2px solid var(--gold-dim);
+    padding: 20px 24px;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .detail-block.revealed { opacity: 1; transform: translateX(0); }
+  .detail-block .block-label {
+    font-size: 9px; letter-spacing: 0.5em;
+    color: var(--gold-dim); text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .detail-block .block-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; line-height: 1.7;
+    color: var(--white); font-weight: 300;
+  }
+  .detail-block .block-text em {
+    color: var(--gold); font-style: normal;
+    font-weight: 400;
+  }
+  .progress-bar-wrap {
+    margin-top: 10px; background: #1a1500;
+    height: 3px; width: 100%;
+  }
+  .progress-bar {
+    height: 100%; background: var(--gold);
+    width: 0%; transition: width 1.2s ease 0.3s;
+  }
+  #detail .detail-back {
+    margin-top: 48px;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: var(--muted); background: none; border: none;
+    cursor: none; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  #detail .detail-back:hover { color: var(--gold); }
+
+  /* =================== TODAY SCREEN =================== */
+  #today-screen {
+    background: var(--black);
+    padding: 48px 32px;
+  }
+  #today-screen .today-inner {
+    max-width: 600px; width: 100%;
+  }
+  #today-screen .today-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px; color: var(--gold);
+    letter-spacing: 0.1em; margin-bottom: 8px;
+    text-shadow: var(--glow);
+  }
+  #today-screen .today-sub {
+    font-size: 10px; letter-spacing: 0.4em;
+    color: var(--muted); margin-bottom: 40px;
+  }
+  .checklist { display: flex; flex-direction: column; gap: 12px; }
+  .check-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 20px;
+    background: var(--panel);
+    border: 1px solid var(--muted);
+    cursor: none; transition: all 0.3s;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.4s, transform 0.4s, border-color 0.3s, background 0.3s;
+  }
+  .check-item.revealed { opacity: 1; transform: translateY(0); }
+  .check-item.done {
+    border-color: var(--gold);
+    background: #1a1500;
+  }
+  .check-item .check-box {
+    width: 18px; height: 18px; min-width: 18px;
+    border: 1px solid var(--gold-dim);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--gold);
+    transition: all 0.3s;
+  }
+  .check-item.done .check-box {
+    background: var(--gold); border-color: var(--gold);
+    color: var(--black);
+  }
+  .check-item .check-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; color: var(--white);
+    font-weight: 300;
+  }
+  .check-item.done .check-text {
+    color: var(--gold); text-decoration: line-through;
+    text-decoration-color: var(--gold-dim);
+  }
+  .check-item .check-tag {
+    margin-left: auto; font-size: 9px;
+    letter-spacing: 0.3em; color: var(--muted);
+    white-space: nowrap;
+  }
+  #today-screen .xp-bar-wrap {
+    margin-top: 32px; padding: 16px 20px;
+    background: var(--panel); border: 1px solid var(--muted);
+  }
+  #today-screen .xp-label {
+    font-size: 9px; letter-spacing: 0.4em;
+    color: var(--gold-dim); margin-bottom: 10px;
+  }
+  #today-screen .xp-track {
+    height: 4px; background: #1a1500;
+  }
+  #today-screen .xp-fill {
+    height: 100%; background: linear-gradient(to right, var(--gold-dim), var(--gold-light));
+    width: 0%; transition: width 0.5s ease;
+  }
+  #today-screen .xp-count {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; color: var(--gold);
+    margin-top: 8px; letter-spacing: 0.1em;
+  }
+  .today-back {
+    margin-top: 32px;
+    font-size: 11px; letter-spacing: 0.35em;
+    color: var(--muted); background: none; border: none;
+    cursor: none; text-transform: uppercase;
+    transition: color 0.3s; display: block;
+  }
+  .today-back:hover { color: var(--gold); }
+
+  /* Scanline overlay */
+  body::after {
+    content: ''; position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.08) 0px,
+      rgba(0,0,0,0.08) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events: none; z-index: 999;
+  }
+
+  /* Grain */
+  body::before {
+    content: ''; position: fixed; inset: -50%;
+    width: 200%; height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1; opacity: 0.3;
+    animation: grainShift 0.5s steps(1) infinite;
+  }
+  @keyframes grainShift {
+    0%   { transform: translate(0,0); }
+    25%  { transform: translate(-3%,1%); }
+    50%  { transform: translate(1%,-2%); }
+    75%  { transform: translate(2%,3%); }
+    100% { transform: translate(-1%,-1%); }
+  }
+
+  /* NAV DOTS */
+  #nav-dots {
+    position: fixed; right: 24px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 100; opacity: 0;
+    transition: opacity 0.5s;
+  }
+  #nav-dots.visible { opacity: 1; }
+  .nav-dot {
+    width: 6px; height: 6px;
+    border: 1px solid var(--muted);
+    border-radius: 50%; cursor: none;
+    transition: background 0.3s, border-color 0.3s, transform 0.2s;
+  }
+  .nav-dot.active { background: var(--gold); border-color: var(--gold); }
+  .nav-dot:hover { transform: scale(1.5); border-color: var(--gold); }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV DOTS -->
+<div id="nav-dots">
+  <div class="nav-dot active" data-screen="hub" title="System"></div>
+  <div class="nav-dot" data-screen="today-screen" title="Today"></div>
+</div>
+
+<!-- ===== INTRO ===== -->
+<div class="screen active" id="intro">
+  <div class="logo">FREESTYLE<br>KING</div>
+  <div class="tagline">life system — v1.0</div>
+  <button class="start-btn" id="startBtn"><span>ENTER THE SYSTEM</span></button>
+  <div class="version">TRANSPARENCY INTERACTIVE © 2026</div>
+</div>
+
+<!-- ===== HUB ===== -->
+<div class="screen" id="hub">
+  <div class="hub-title">— SELECT MODULE —</div>
+  <div class="node-grid" id="nodeGrid"></div>
+  <button class="back-btn" id="hubBack">← BACK TO TITLE</button>
+</div>
+
+<!-- ===== DETAIL ===== -->
+<div class="screen" id="detail">
+  <div class="detail-inner">
+    <div class="detail-category" id="detailCat"></div>
+    <div class="detail-title" id="detailTitle"></div>
+    <div class="detail-divider"></div>
+    <div class="detail-blocks" id="detailBlocks"></div>
+    <button class="detail-back" id="detailBack">← BACK TO SYSTEM</button>
+  </div>
+</div>
+
+<!-- ===== TODAY ===== -->
+<div class="screen" id="today-screen">
+  <div class="today-inner">
+    <div class="today-title">TODAY</div>
+    <div class="today-sub">— DAILY EXECUTION PROTOCOL —</div>
+    <div class="checklist" id="checklist"></div>
+    <div class="xp-bar-wrap">
+      <div class="xp-label">DAILY XP — COMPOUND PROGRESS</div>
+      <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
+      <div class="xp-count" id="xpCount">0 / 7 XP</div>
+    </div>
+    <button class="today-back" id="todayBack">← BACK TO SYSTEM</button>
+  </div>
+</div>
+
+<script>
+// =================== CURSOR ===================
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = -100, my = -100;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  ring.style.left = mx + 'px'; ring.style.top = my + 'px';
+});
+document.querySelectorAll('button, .node, .check-item, .nav-dot').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '20px'; cursor.style.height = '20px';
+    cursor.style.opacity = '0.7';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '12px'; cursor.style.height = '12px';
+    cursor.style.opacity = '1';
+  });
+});
+
+// =================== STARS ===================
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function initStars() {
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  stars = Array.from({ length: 180 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.2 + 0.2,
+    o: Math.random() * 0.6 + 0.1,
+    s: Math.random() * 0.003 + 0.001,
+    t: Math.random() * Math.PI * 2
+  }));
+}
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    s.t += s.s;
+    const alpha = s.o * (0.6 + 0.4 * Math.sin(s.t));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(201,168,76,${alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+window.addEventListener('resize', initStars);
+initStars(); drawStars();
+
+// =================== DATA ===================
+const nodes = [
+  {
+    id: 'foundation', icon: '⚡', label: 'FOUNDATION', sub: 'The daily loop',
+    category: 'CORE SYSTEM',
+    blocks: [
+      { label: 'THE LOOP', text: 'Job → <em>Trailer</em> → Rocket League breaks → <em>Gym</em> → Reward. Clean, repeatable, executable every single day.', progress: 85 },
+      { label: 'INCOME STRATEGY', text: 'Tech jobs as <em>financial infrastructure</em> — take the offer, leave when it doesn\'t fit. Uber as the neutral baseline. You choose the social energy.', progress: 70 },
+      { label: 'BRAIN ESCAPE', text: 'Fighting games and puzzle games for <em>flow state</em>. Mental stimulation on demand. EA Active and Wii Fit pair beautifully with the physical side.', progress: 60 },
+    ]
+  },
+  {
+    id: 'trailer', icon: '🚐', label: 'THE TRAILER', sub: 'Mobile creative base',
+    category: 'INFRASTRUCTURE',
+    blocks: [
+      { label: 'BUILD STEPS', text: 'Foam → <em>poor man\'s fiberglass</em> → wood reinforcement inside. That\'s it. Home Depot run is the unlock. X-acto knife and trailer hitch ordered first.', progress: 30 },
+      { label: 'SYSTEM COMBO', text: 'Trailer + <em>Storage Unit</em> = portable studio and base. Works anywhere. Milwaukee is the training ground. Santa Monica is the vision.', progress: 40 },
+      { label: 'UPGRADE PATH', text: 'Trailer → <em>Cargo Van</em> → full van build. Generator, Starlink, Samsung Dex, convection oven. The undefeatable mobile workstation.', progress: 20 },
+    ]
+  },
+  {
+    id: 'music', icon: '🎵', label: 'MUSIC ENGINE', sub: 'Astro Beats system',
+    category: 'CREATIVE OUTPUT',
+    blocks: [
+      { label: 'DAILY ANCHOR', text: '<em>A cappella remixes</em> are the content engine. Drum loops and drum remixes build the beat library. 404 Mark II + 1GX + H8 is the portable studio.', progress: 75 },
+      { label: 'COMPOUND STACK', text: 'A cappella remixes → guitar set lists → <em>VJ sets</em> → music videos → TikTok activation. Each layer builds on the last, every day.', progress: 65 },
+      { label: 'DISCOVERY MODE', text: 'Music discovery paired with fitness using <em>wireless headphones</em>. Two systems running simultaneously, both compounding.', progress: 55 },
+    ]
+  },
+  {
+    id: 'social', icon: '👥', label: 'SOCIAL OPS', sub: 'Crew & network',
+    category: 'NETWORK SYSTEM',
+    blocks: [
+      { label: 'NIGHTLIFE AS CASTING', text: '<em>Vape sharing</em> at concerts and bars → camera operators → music video crew. Nightlife is a hiring event, not leisure.', progress: 50 },
+      { label: 'STRESS TEST YOUR NETWORK', text: 'Take friends out. Watch who has <em>social reach</em> in the wild. You want to know which relationships extend your gravitational pull.', progress: 45 },
+      { label: 'RELATIONSHIP PHILOSOPHY', text: 'Think in terms of <em>length and variety</em> of conversations. Meet as many random people as possible. The audience comes before the partner.', progress: 40 },
+    ]
+  },
+  {
+    id: 'games', icon: '🎮', label: 'GAME STUDIO', sub: 'Unity + Roblox',
+    category: 'DIGITAL WORLDS',
+    blocks: [
+      { label: 'THE RHYTHM GAME', text: '<em>Infinite EP</em> — a rhythm game that grows with you forever. Freestyle King as an infinite rhythm engine you add to throughout your entire life.', progress: 35 },
+      { label: 'PLATFORM SPLIT', text: 'Roblox for <em>co-op multiplayer</em> — fastest path. Unity for the single-player rhythm game — long-term vision. Different tools, same ecosystem.', progress: 45 },
+      { label: 'DIGITAL MANSION', text: 'Astro Beats + Freestyle King + Virtual Study Hall as rooms in a <em>walkable 3D world</em>. The endgame platform. Built over time, distributed everywhere.', progress: 25 },
+    ]
+  },
+  {
+    id: 'compound', icon: '📈', label: 'COMPOUND LAW', sub: 'Virgo = Taurus × N',
+    category: 'PHILOSOPHY',
+    blocks: [
+      { label: 'THE EQUATION', text: '<em>Deep immersion</em> (Taurus) compounding over time, multiplied by narration and output (N), yields social harvest (Virgo). Stream the life. The life becomes the content.', progress: 90 },
+      { label: 'PROTECT THE RHYTHM', text: 'The <em>daily creative routine is the mission</em>. Incoming signals — social, relational, opportunistic — are data to classify. Never break formation.', progress: 80 },
+      { label: 'WHAT COMPOUNDS', text: '<em>Fitness</em> and your <em>set list</em> grow every single day. Animation is the asset class. The trailer build starts now. Everything compounds from here.', progress: 70 },
+    ]
+  }
+];
+
+const todayTasks = [
+  { text: 'Hit the gym — South 27th, dumbbells + pull-up bars', tag: 'BODY' },
+  { text: 'Music discovery session with wireless headphones', tag: 'MIND' },
+  { text: 'Beat-making on laptop with 1GX controller', tag: 'MUSIC' },
+  { text: 'Order foam + X-acto knife for trailer build', tag: 'TRAILER' },
+  { text: 'One a cappella remix — daily content anchor', tag: 'OUTPUT' },
+  { text: 'Rocket League session — flow state break', tag: 'RESET' },
+  { text: 'Go somewhere. Talk to someone new.', tag: 'NETWORK' },
+];
+
+// =================== SCREENS ===================
+const screens = {};
+document.querySelectorAll('.screen').forEach(s => screens[s.id] = s);
+const navDots = document.getElementById('nav-dots');
+
+function showScreen(id) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[id].classList.add('active');
+  // nav dots
+  const showNav = id === 'hub' || id === 'today-screen';
+  navDots.classList.toggle('visible', showNav);
+  document.querySelectorAll('.nav-dot').forEach(d => {
+    d.classList.toggle('active', d.dataset.screen === id);
+  });
+}
+
+// Nav dots
+document.querySelectorAll('.nav-dot').forEach(dot => {
+  dot.addEventListener('click', () => showScreen(dot.dataset.screen));
+});
+
+// =================== INTRO ===================
+document.getElementById('startBtn').addEventListener('click', () => {
+  buildHub();
+  showScreen('hub');
+});
+
+// =================== HUB ===================
+function buildHub() {
+  const grid = document.getElementById('nodeGrid');
+  grid.innerHTML = '';
+  nodes.forEach((n, i) => {
+    const el = document.createElement('div');
+    el.className = 'node';
+    el.innerHTML = `
+      <span class="node-xp">MODULE ${String(i+1).padStart(2,'0')}</span>
+      <span class="node-icon">${n.icon}</span>
+      <span class="node-label">${n.label}</span>
+      <span class="node-sub">${n.sub}</span>
+    `;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity 0.4s ${i*0.07}s ease, transform 0.4s ${i*0.07}s ease`;
+    el.addEventListener('click', () => showDetail(n));
+    grid.appendChild(el);
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+  });
+}
+
+document.getElementById('hubBack').addEventListener('click', () => showScreen('intro'));
+
+// =================== DETAIL ===================
+function showDetail(node) {
+  document.getElementById('detailCat').textContent = node.category;
+  document.getElementById('detailTitle').textContent = node.label;
+  const blocksEl = document.getElementById('detailBlocks');
+  blocksEl.innerHTML = '';
+  node.blocks.forEach((b, i) => {
+    const el = document.createElement('div');
+    el.className = 'detail-block';
+    el.innerHTML = `
+      <div class="block-label">${b.label}</div>
+      <div class="block-text">${b.text}</div>
+      <div class="progress-bar-wrap"><div class="progress-bar" data-w="${b.progress}"></div></div>
+    `;
+    blocksEl.appendChild(el);
+    setTimeout(() => {
+      el.classList.add('revealed');
+      setTimeout(() => {
+        el.querySelector('.progress-bar').style.width = b.progress + '%';
+      }, 200);
+    }, i * 180);
+  });
+  showScreen('detail');
+}
+
+document.getElementById('detailBack').addEventListener('click', () => showScreen('hub'));
+
+// =================== TODAY ===================
+function buildToday() {
+  const list = document.getElementById('checklist');
+  list.innerHTML = '';
+  let done = 0;
+  todayTasks.forEach((t, i) => {
+    const el = document.createElement('div');
+    el.className = 'check-item';
+    el.innerHTML = `
+      <div class="check-box">✓</div>
+      <div class="check-text">${t.text}</div>
+      <div class="check-tag">${t.tag}</div>
+    `;
+    el.addEventListener('click', () => {
+      el.classList.toggle('done');
+      const checked = list.querySelectorAll('.done').length;
+      const pct = (checked / todayTasks.length) * 100;
+      document.getElementById('xpFill').style.width = pct + '%';
+      document.getElementById('xpCount').textContent = `${checked} / ${todayTasks.length} XP`;
+    });
+    list.appendChild(el);
+    setTimeout(() => el.classList.add('revealed'), i * 100);
+  });
+}
+
+// Nav dot for today
+document.querySelectorAll('.nav-dot').forEach(d => {
+  if (d.dataset.screen === 'today-screen') {
+    d.addEventListener('click', () => {
+      buildToday();
+      showScreen('today-screen');
+    });
+  }
+});
+
+document.getElementById('todayBack').addEventListener('click', () => showScreen('hub'));
+
+// Also wire hub -> today via a special node maybe not needed
+// Quick keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (screens['detail'].classList.contains('active')) showScreen('hub');
+    else if (screens['hub'].classList.contains('active')) showScreen('intro');
+    else if (screens['today-screen'].classList.contains('active')) showScreen('hub');
+  }
+  if (e.key === 't' || e.key === 'T') {
+    if (screens['hub'].classList.contains('active')) {
+      buildToday(); showScreen('today-screen');
+    }
+  }
+});
+</script>
+</body>
+</html>
