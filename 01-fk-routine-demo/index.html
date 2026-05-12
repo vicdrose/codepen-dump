@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREESTYLE KING • JOY RIDE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        :root {
+            --neon: #00ff9d;
+        }
+        
+        body {
+            font-family: 'Press Start 2P', system-ui;
+            background: linear-gradient(45deg, #0a0a0a, #1a0033);
+            color: #00ff9d;
+            overflow: hidden;
+        }
+        
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 157, 0.03) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            animation: scan 4s linear infinite;
+            z-index: 10;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        
+        .neon-text {
+            text-shadow: 
+                0 0 10px var(--neon),
+                0 0 20px var(--neon),
+                0 0 40px var(--neon);
+        }
+        
+        .card {
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 0 30px rgba(0, 255, 157, 0.6);
+        }
+        
+        .location {
+            cursor: pointer;
+            transition: all 0.4s;
+        }
+        
+        .location.active {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px #00ff9d; }
+            50% { box-shadow: 0 0 40px #00ff9d; }
+        }
+        
+        canvas {
+            image-rendering: pixelated;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="scanline"></div>
+    
+    <!-- HEADER -->
+    <header class="border-b border-[#00ff9d] bg-black/80 backdrop-blur-md p-4 fixed w-full z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-[#00ff9d] text-black flex items-center justify-center text-2xl font-bold rotate-12">👑</div>
+                <div>
+                    <h1 class="text-3xl neon-text tracking-widest">FREESTYLE KING</h1>
+                    <p class="text-xs text-[#00ff9d]/70">JOY RIDE PROTOCOL v1.0</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-8 text-sm">
+                <div onclick="switchTab(0)" class="tab-btn active cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-map"></i> MAP
+                </div>
+                <div onclick="switchTab(1)" class="tab-btn cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-dumbbell"></i> FLOW
+                </div>
+                <div onclick="switchTab(2)" class="tab-btn cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-gamepad"></i> STUDIO
+                </div>
+                <div class="flex items-center gap-2 bg-black border border-[#00ff9d]/50 px-4 py-1">
+                    <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    <span id="streak" class="text-xl">7 DAY STREAK 🔥</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="pt-24 pb-8 max-w-7xl mx-auto px-6">
+        <!-- TAB 0: JOY RIDE MAP -->
+        <div id="tab-0" class="tab-content">
+            <div class="grid grid-cols-12 gap-6">
+                <!-- LEFT PANEL -->
+                <div class="col-span-8">
+                    <div class="bg-black/70 border border-[#00ff9d]/30 rounded-xl p-6 h-full">
+                        <h2 class="text-xl mb-6 flex items-center gap-3">
+                            <i class="fas fa-car"></i> JOY RIDE NAV
+                        </h2>
+                        
+                        <div class="grid grid-cols-3 gap-4" id="locations">
+                            <!-- Populated by JS -->
+                        </div>
+                        
+                        <!-- MINI GAME -->
+                        <div class="mt-8 bg-black/90 border border-[#00ff9d]/50 rounded-xl p-4">
+                            <div class="flex justify-between mb-3">
+                                <div class="text-sm">LIVE PERFORMANCE MODE</div>
+                                <div onclick="startJoyRide()" class="bg-[#00ff9d] text-black px-6 py-2 text-xs cursor-pointer hover:bg-white">START JOY RIDE</div>
+                            </div>
+                            <canvas id="joyCanvas" width="700" height="180" class="w-full bg-black rounded-lg"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PRIORITY FILTER -->
+                <div class="col-span-4">
+                    <div class="bg-black/70 border border-[#00ff9d]/30 rounded-xl p-6">
+                        <h2 class="text-xl mb-4">PRIORITY FILTER</h2>
+                        <div id="priority-list" class="space-y-3">
+                            <!-- Draggable items populated by JS -->
+                        </div>
+                        <div onclick="completeDay()" class="mt-8 bg-gradient-to-r from-[#00ff9d] to-cyan-400 text-black py-4 text-center cursor-pointer hover:brightness-110">
+                            COMPLETE DAY • SAVE TO LOG
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAB 1: FLOW JOURNAL -->
+        <div id="tab-1" class="tab-content hidden">
+            <div class="bg-black/70 border border-[#00ff9d]/30 rounded-2xl p-8">
+                <h2 class="text-2xl mb-8 neon-text">FREESTYLE KING JOURNEY LOG</h2>
+                
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-sm mb-4 text-[#00ff9d]/70">TODAY'S WINS</h3>
+                        <textarea id="journal" class="w-full h-64 bg-black border border-[#00ff9d]/40 p-6 text-[#00ff9d] resize-none focus:outline-none" placeholder="Drop today's highlights here..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm mb-4 text-[#00ff9d]/70">GEAR CHECK</h3>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div onclick="toggleGear(this)" class="gear-item card bg-black border border-[#00ff9d]/50 p-4 text-center rounded-xl">KOALA</div>
+                            <div onclick="toggleGear(this)" class="gear-item card bg-black border border-[#00ff9d]/50 p-4 text-center rounded-xl">SP-404 MKII</div>
+                            <div onclick="toggleGear(this)" class="gear-item card bg-black border border-[#00ff9d]/50 p-4 text-center rounded-xl">ZOOM V6</div>
+                            <div onclick="toggleGear(this)" class="gear-item card bg-black border border-[#00ff9d]/50 p-4 text-center rounded-xl">BEATS</div>
+                            <div onclick="toggleGear(this)" class="gear-item card bg-black border border-[#00ff9d]/50 p-4 text-center rounded-xl">USBC HUB</div>
+                            <div onclick="toggleGear(this)" class="gear-item card bg-black border border-[#00ff9d]/50 p-4 text-center rounded-xl">TRAILER</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAB 2: STUDIO -->
+        <div id="tab-2" class="tab-content hidden">
+            <div class="bg-black/70 border border-[#00ff9d]/30 rounded-2xl p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl neon-text">BASEMENT → TRAILER STUDIO</h2>
+                    <div onclick="freestyle()" class="px-8 py-3 border border-[#00ff9d] hover:bg-[#00ff9d] hover:text-black cursor-pointer">FREESTYLE NOW</div>
+                </div>
+                
+                <div id="beat-visual" class="h-64 bg-black rounded-2xl flex items-center justify-center text-6xl mb-8 border border-dashed border-[#00ff9d]/30">
+                    🎤 CLICK TO DROP BEAT
+                </div>
+                
+                <div class="text-center text-xs tracking-widest opacity-70">FREESTYLE KING CONTENT FEED • GAMING HIGHLIGHTS READY</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FOOTER BAR -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-black border-t border-[#00ff9d]/30 py-4">
+        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between text-xs">
+            <div>VEHICLE HEALTH: <span class="text-green-400">98%</span></div>
+            <div class="flex gap-8">
+                <div onclick="switchTab(0)" class="cursor-pointer">MAP</div>
+                <div onclick="switchTab(1)" class="cursor-pointer">JOURNAL</div>
+                <div onclick="switchTab(2)" class="cursor-pointer">STUDIO</div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-[#00ff9d] rounded-full animate-pulse"></div>
+                IN FLOW STATE
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tailwind script already loaded
+        function initTailwind() {
+            // Already using CDN
+        }
+        
+        let currentTab = 0;
+        
+        function switchTab(n) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(`tab-${n}`).classList.remove('hidden');
+            currentTab = n;
+        }
+        
+        // Locations
+        const locations = [
+            { name: "GYM", icon: "🏋️", desc: "ENERGY START" },
+            { name: "CCC", icon: "☕", desc: "COFFEE + FLOW" },
+            { name: "PICNIC", icon: "🌳", desc: "TRAILER COOK" },
+            { name: "TENT", icon: "⛺", desc: "STREET PERF" },
+            { name: "BASEMENT", icon: "🖥️", desc: "KING YT" }
+        ];
+        
+        function renderLocations() {
+            const container = document.getElementById('locations');
+            container.innerHTML = '';
+            
+            locations.forEach((loc, i) => {
+                const div = document.createElement('div');
+                div.className = `location card bg-black/80 border border-[#00ff9d]/40 p-6 rounded-2xl text-center`;
+                div.innerHTML = `
+                    <div class="text-5xl mb-3">${loc.icon}</div>
+                    <div class="font-bold text-lg">${loc.name}</div>
+                    <div class="text-xs text-[#00ff9d]/60">${loc.desc}</div>
+                `;
+                div.onclick = () => {
+                    document.querySelectorAll('.location').forEach(l => l.classList.remove('active'));
+                    div.classList.add('active');
+                    setTimeout(() => div.classList.remove('active'), 2000);
+                };
+                container.appendChild(div);
+            });
+        }
+        
+        // Priority List
+        let priorities = [
+            "GYM - START STRONG",
+            "FREESTYLE KING JOURNEY",
+            "STREET PERFORMANCE",
+            "REPLAY + CLIP"
+        ];
+        
+        function renderPriorities() {
+            const container = document.getElementById('priority-list');
+            container.innerHTML = '';
+            
+            priorities.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = `flex items-center gap-4 bg-black border border-[#00ff9d]/30 p-4 rounded-xl cursor-move`;
+                div.draggable = true;
+                div.innerHTML = `
+                    <span class="text-[#00ff9d]">${index + 1}</span>
+                    <span>${item}</span>
+                `;
+                div.ondragstart = (e) => {
+                    e.dataTransfer.setData('text', index);
+                };
+                container.appendChild(div);
+            });
+        }
+        
+        // Simple Joy Ride Canvas Game
+        let canvas, ctx, x = 50;
+        
+        function startJoyRide() {
+            canvas = document.getElementById('joyCanvas');
+            ctx = canvas.getContext('2d');
+            
+            let position = 50;
+            let speed = 8;
+            
+            const interval = setInterval(() => {
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Road
+                ctx.fillStyle = '#111';
+                ctx.fillRect(0, 80, canvas.width, 40);
+                
+                // Dashed lines
+                ctx.strokeStyle = '#00ff9d';
+                ctx.setLineDash([20, 30]);
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(0, 100);
+                ctx.lineTo(canvas.width, 100);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Car
+                position += speed;
+                if (position > canvas.width - 80) position = -60;
+                
+                ctx.fillStyle = '#00ff9d';
+                ctx.fillRect(position, 70, 80, 30);
+                ctx.fillStyle = '#000';
+                ctx.fillRect(position + 10, 75, 20, 10);
+                ctx.fillRect(position + 50, 75, 20, 10);
+                
+                // Random scenery
+                ctx.fillStyle = '#00ff9d';
+                ctx.fillRect((position * 0.6) % canvas.width, 40, 8, 30);
+                
+                if (Math.random() > 0.9) {
+                    alert("🔥 SICK SPOT FOUND! TikTok clip recorded!");
+                    clearInterval(interval);
+                }
+            }, 40);
+        }
+        
+        function toggleGear(el) {
+            if (el.style.backgroundColor === 'rgb(0, 255, 157)') {
+                el.style.backgroundColor = '';
+                el.style.color = '';
+            } else {
+                el.style.backgroundColor = '#00ff9d';
+                el.style.color = '#000';
+            }
+        }
+        
+        function completeDay() {
+            const streakEl = document.getElementById('streak');
+            let streak = parseInt(streakEl.textContent);
+            streakEl.textContent = `${streak + 1} DAY STREAK 🔥`;
+            
+            alert("🌟 DAY LOGGED TO THE ARCHIVES!\nFreestyle King energy at maximum!");
+        }
+        
+        function freestyle() {
+            const visual = document.getElementById('beat-visual');
+            const emojis = ['🎤', '🔥', '🎹', '🕹️', '👑'];
+            let i = 0;
+            
+            const int = setInterval(() => {
+                visual.textContent = emojis[i % emojis.length] + " FREESTYLE DROP " + emojis[(i+1) % emojis.length];
+                i++;
+                if (i > 12) {
+                    clearInterval(int);
+                    visual.innerHTML = `✅ CLIP SAVED<br><span class="text-sm">Freestyle King content uploaded</span>`;
+                }
+            }, 180);
+        }
+        
+        // Keyboard support for immersion
+        document.addEventListener('keydown', (e) => {
+            if (e.key === " " && currentTab === 2) {
+                e.preventDefault();
+                freestyle();
+            }
+            if (e.key === "r" || e.key === "R") {
+                startJoyRide();
+            }
+        });
+        
+        // Initialize everything
+        window.onload = function() {
+            renderLocations();
+            renderPriorities();
+            switchTab(0);
+            
+            // Random motivational tip
+            setTimeout(() => {
+                console.log("%c🚀 You're in flow. Keep joy riding!", "color:#00ff9d; font-family:monospace");
+            }, 1500);
+        };
+    </script>
+</body>
+</html>
