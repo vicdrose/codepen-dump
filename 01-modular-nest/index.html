@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journal — Daily Circuit</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-dim: #7a5f2a;
+    --gold-glow: rgba(201,168,76,0.12);
+    --black: #080806;
+    --ink: #1a1a14;
+    --text: #e8dfc0;
+    --muted: #6b6247;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* starfield */
+  .stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(1px 1px at 12% 18%, rgba(201,168,76,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 34% 72%, rgba(201,168,76,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 58% 11%, rgba(201,168,76,0.35) 0%, transparent 100%),
+      radial-gradient(1px 1px at 77% 55%, rgba(201,168,76,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 91% 29%, rgba(201,168,76,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 88%, rgba(201,168,76,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 48% 43%, rgba(201,168,76,0.15) 0%, transparent 100%),
+      radial-gradient(1px 1px at 22% 61%, rgba(201,168,76,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 67% 84%, rgba(201,168,76,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 83% 7%, rgba(201,168,76,0.35) 0%, transparent 100%);
+  }
+
+  .container {
+    position: relative; z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 28px 120px;
+  }
+
+  /* Header */
+  .header {
+    display: flex; align-items: baseline; gap: 18px;
+    margin-bottom: 56px;
+    opacity: 0; animation: fadeSlide 0.8s 0.1s forwards;
+  }
+
+  .brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--gold-dim);
+  }
+
+  .datestamp {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold-dim), transparent);
+  }
+
+  /* Title block */
+  .title-block {
+    margin-bottom: 52px;
+    opacity: 0; animation: fadeSlide 0.8s 0.2s forwards;
+  }
+
+  .entry-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 8vw, 72px);
+    letter-spacing: 0.04em;
+    color: var(--gold);
+    line-height: 0.95;
+    text-shadow: 0 0 60px rgba(201,168,76,0.2);
+  }
+
+  h1 span {
+    color: var(--text);
+    opacity: 0.15;
+  }
+
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--muted);
+    margin-top: 14px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Pillars */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-bottom: 52px;
+    opacity: 0; animation: fadeSlide 0.8s 0.3s forwards;
+  }
+
+  .pillar {
+    background: var(--ink);
+    border-top: 1px solid var(--gold-dim);
+    padding: 18px 16px;
+    transition: background 0.3s;
+  }
+  .pillar:hover { background: var(--gold-glow); }
+
+  .pillar-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--gold);
+    opacity: 0.3;
+    line-height: 1;
+  }
+
+  .pillar-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin: 4px 0 8px;
+  }
+
+  .pillar-desc {
+    font-size: 10px;
+    line-height: 1.6;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 48px;
+    opacity: 0; animation: fadeSlide 0.8s forwards;
+  }
+  .section:nth-child(1) { animation-delay: 0.4s; }
+  .section:nth-child(2) { animation-delay: 0.5s; }
+  .section:nth-child(3) { animation-delay: 0.6s; }
+  .section:nth-child(4) { animation-delay: 0.7s; }
+  .section:nth-child(5) { animation-delay: 0.8s; }
+
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .section-tag {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--black);
+    background: var(--gold-dim);
+    padding: 3px 8px;
+    white-space: nowrap;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    color: var(--text);
+  }
+
+  .section-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--ink), transparent);
+    border-top: 1px solid var(--ink);
+  }
+
+  .body-text {
+    font-size: 12.5px;
+    line-height: 1.9;
+    color: var(--text);
+    opacity: 0.75;
+    letter-spacing: 0.02em;
+  }
+
+  .body-text + .body-text { margin-top: 16px; }
+
+  em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--gold);
+    opacity: 0.9;
+  }
+
+  /* Sequence flow */
+  .sequence {
+    margin: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .seq-item {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .seq-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 32px;
+    flex-shrink: 0;
+  }
+
+  .seq-dot {
+    width: 8px; height: 8px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+    background: var(--black);
+    transition: background 0.3s;
+  }
+  .seq-item:hover .seq-dot { background: var(--gold); }
+
+  .seq-line {
+    width: 1px;
+    flex: 1;
+    background: linear-gradient(180deg, var(--gold-dim), transparent);
+    margin: 2px 0;
+  }
+
+  .seq-body {
+    padding: 0 0 20px 12px;
+    flex: 1;
+  }
+
+  .seq-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .seq-text {
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+
+  /* Stack chips */
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 16px;
+  }
+
+  .chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    padding: 5px 12px;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold-dim);
+    background: transparent;
+    transition: all 0.2s;
+  }
+  .chip:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+  .chip.primary { border-color: var(--gold); color: var(--gold); }
+
+  /* Living arc */
+  .arc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    margin-top: 20px;
+  }
+
+  .arc-card {
+    background: var(--ink);
+    padding: 16px;
+    border-left: 2px solid transparent;
+    transition: border-color 0.3s;
+  }
+  .arc-card:hover { border-color: var(--gold-dim); }
+  .arc-card.target { border-color: var(--gold); }
+
+  .arc-card-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .arc-card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--text);
+    letter-spacing: 0.05em;
+  }
+  .arc-card.target .arc-card-name { color: var(--gold); }
+
+  .arc-card-note {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* Insight callout */
+  .callout {
+    border-left: 2px solid var(--gold);
+    padding: 16px 20px;
+    margin: 24px 0;
+    background: var(--gold-glow);
+  }
+
+  .callout-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0; animation: fadeSlide 0.8s 1s forwards;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+  }
+
+  .footer-note {
+    font-size: 10px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .pillars { grid-template-columns: 1fr; }
+    .arc-grid { grid-template-columns: 1fr; }
+    .footer { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="container">
+
+  <div class="header">
+    <div class="brand">Transparency Interactive</div>
+    <div class="divider-line"></div>
+    <div class="datestamp">Part I — Daily Circuit Journal</div>
+  </div>
+
+  <div class="title-block">
+    <div class="entry-label">Entry / Voice Log</div>
+    <h1>WAKE UP<br>WITHOUT THE<br>AMNESIA <span>///</span></h1>
+    <div class="subtitle">The order is clear. The rhythm holds. The system works if you work the system.</div>
+  </div>
+
+  <!-- Three pillars -->
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-num">01</div>
+      <div class="pillar-name">Beat / Music</div>
+      <div class="pillar-desc">Ableton or 404A → Box.com → Freestyle King beats folder → live on site</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">02</div>
+      <div class="pillar-name">Cook + Fitness</div>
+      <div class="pillar-desc">Cook on live → crowd joins → exercises begin. People trigger the workout.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">03</div>
+      <div class="pillar-name">Code + Astro Beats</div>
+      <div class="pillar-desc">Unity/dev stream paired with Astro Beats set. VR Chat folded in for clips.</div>
+    </div>
+  </div>
+
+  <!-- Morning ignition -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">IGNITION</div>
+      <div class="section-title">Morning Setup</div>
+      <div class="section-line"></div>
+    </div>
+    <p class="body-text">
+      Unity skill playing on loop all night. Waking into the material rather than cold-starting. The first move after eyes open is <em>not</em> gaming — it's music. Get the electricity running through beats first, then everything downstream flows.
+    </p>
+    <p class="body-text">
+      Gaming is allowed to jumpstart the brain if needed, but music is the true morning anchor. That's the correction: beats before play, always.
+    </p>
+  </div>
+
+  <!-- Stream sequence -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">SEQUENCE</div>
+      <div class="section-title">The Daily Stream Order</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="sequence">
+      <div class="seq-item">
+        <div class="seq-connector"><div class="seq-dot"></div><div class="seq-line"></div></div>
+        <div class="seq-body">
+          <div class="seq-label">01 — Beat Stream</div>
+          <div class="seq-text">YouTube live. Ableton or 404A. Beats exported → Box.com → auto-sync to Freestyle King site. People react most to this. Lead with the thing that lands.</div>
+        </div>
+      </div>
+      <div class="seq-item">
+        <div class="seq-connector"><div class="seq-dot"></div><div class="seq-line"></div></div>
+        <div class="seq-body">
+          <div class="seq-label">02 — Cook + Fitness Live</div>
+          <div class="seq-text">Start cooking on camera. Hold the energy. When the live fills up and people start joining — that's the cue. Drop the spatula, hit the exercises. The audience triggers the workout. Brilliant method.</div>
+        </div>
+      </div>
+      <div class="seq-item">
+        <div class="seq-connector"><div class="seq-dot"></div><div class="seq-line"></div></div>
+        <div class="seq-body">
+          <div class="seq-label">03 — Code Stream + Astro Beats</div>
+          <div class="seq-text">Unity/Blender dev work paired with Astro Beats set list running underneath. VR Chat integrated here — you're watching your own feed live to pull clips in real time.</div>
+        </div>
+      </div>
+      <div class="seq-item">
+        <div class="seq-connector"><div class="seq-dot"></div></div>
+        <div class="seq-body">
+          <div class="seq-label">Bonus — Gaming Stream</div>
+          <div class="seq-text">Optional fourth window. Flex slot. Plugs the gaps and keeps the channel active without forcing it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Basement rig -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">HARDWARE</div>
+      <div class="section-title">Basement PC — Three Apps Only</div>
+      <div class="section-line"></div>
+    </div>
+    <p class="body-text">Lock the rig. Nothing open that doesn't need to be open. The discipline is in the constraint.</p>
+    <div class="chips">
+      <div class="chip primary">OBS</div>
+      <div class="chip primary">Resolum</div>
+      <div class="chip primary">Ableton</div>
+      <div class="chip">Roblox (optional)</div>
+    </div>
+
+    <div class="callout" style="margin-top: 24px;">
+      <div class="callout-text">"The basement PC is a broadcast station. Not a general computer. Three apps defines the intention."</div>
+    </div>
+  </div>
+
+  <!-- Living arc -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">LIVING ARC</div>
+      <div class="section-title">Security Stack</div>
+      <div class="section-line"></div>
+    </div>
+    <p class="body-text">The progression is clear. Modular Nest is the floor. Tiny house is the ceiling. Asia activates on tech job. The vehicle is the connective tissue across all phases.</p>
+
+    <div class="arc-grid">
+      <div class="arc-card">
+        <div class="arc-card-label">Current / Near</div>
+        <div class="arc-card-name">Modular Nest</div>
+        <div class="arc-card-note">Roommates optional. Good stop on the road.</div>
+      </div>
+      <div class="arc-card target">
+        <div class="arc-card-label">Top Desired Outcome</div>
+        <div class="arc-card-name">Tiny House</div>
+        <div class="arc-card-note">Owned. Portable. The endgame domestic unit.</div>
+      </div>
+      <div class="arc-card">
+        <div class="arc-card-label">Vehicle Phase</div>
+        <div class="arc-card-name">Work Vehicle</div>
+        <div class="arc-card-note">Van, Honda Element, or — food truck. LLC potential. Cook, host, broadcast.</div>
+      </div>
+      <div class="arc-card">
+        <div class="arc-card-label">Trigger: Tech Job</div>
+        <div class="arc-card-name">Asia Arc</div>
+        <div class="arc-card-note">Thailand, Philippines, Indonesia, Japan. Any tech offer flips the switch.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Food truck insight -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-tag">INSIGHT</div>
+      <div class="section-title">The Food Truck Reframe</div>
+      <div class="section-line"></div>
+    </div>
+    <p class="body-text">
+      The food truck isn't just a vehicle. It's a mobile kitchen, a party venue, a broadcast studio, and an LLC. You cook for yourself. You host events. You build a business from the thing that already feeds you. It collapses four separate infrastructure pieces into one mobile unit.
+    </p>
+    <div class="callout">
+      <div class="callout-text">"The life works in my favorite way when it works out of a work vehicle." — this is the sentence that matters. Everything should be able to move.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-brand">Freestyle King / Astro Beats / Transparency Interactive</div>
+    <div class="footer-note">Part II incoming — highly considered.</div>
+  </div>
+
+</div>
+</body>
+</html>
